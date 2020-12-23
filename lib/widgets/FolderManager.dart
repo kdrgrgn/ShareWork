@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:mobi/widgets/buildBottomNavigationBar.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FolderManager extends StatefulWidget {
@@ -11,109 +12,222 @@ class FolderManager extends StatefulWidget {
 
 class _FolderManagerState extends State<FolderManager> {
   Color themeColor;
-bool isLoading=true;
-@override
+  bool isLoading = true;
+  String googleDocs = "https://docs.google.com/gview?embedded=true&url=";
+  String pdfurl = "https://www.era-learn.eu/documents/03_call_documents.pdf";
+  String url;
+  PdfViewerController _pdfViewerController;
+  bool isGridView = true;
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    _pdfViewerController = PdfViewerController();
+    url = googleDocs + pdfurl;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
   @override
   Widget build(BuildContext context) {
-    themeColor=Theme.of(context).accentColor;
+    themeColor = Theme.of(context).accentColor;
     return Scaffold(
+      bottomNavigationBar: BuildBottomNavigationBar(),
       appBar: AppBar(
-        iconTheme: IconThemeData(
-            color: themeColor,
-                size: 30,
-        ),
+        title: Text("File Manager"),
         actions: [
-          Icon(Icons.add,),
-          Icon(Icons.search,),
-        ],
-      ),
-      floatingActionButton: SpeedDial(
-        // both default to 16
-        marginRight: 18,
-        marginBottom: 20,
-         child: Icon(Icons.add,size: 30.0),
-        closeManually: false,
-        curve: Curves.bounceIn,
-        overlayColor: Colors.black,
-        overlayOpacity: 0.5,
-        heroTag: 'speed-dial-hero-tag',
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        elevation: 8.0,
-        shape: CircleBorder(),
-        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.add, color: Colors.black, size: 32),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.search, color: Colors.black, size: 32),
+          )      ,
 
-          SpeedDialChild(
-            child: Icon(Icons.create_new_folder),
-            backgroundColor: Colors.blue,
-            label: 'Add Folder',
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('SECOND CHILD'),
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.photo_camera_sharp),
-            backgroundColor: Colors.red,
-            label: 'Take Photo',
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('THIRD CHILD'),
-          ),
         ],
       ),
-      body:Column(
-children: [
-  Container(
-    decoration: BoxDecoration(
-      border: Border(bottom: BorderSide(width: 0.3))
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("Oldest",style: TextStyle(color: Colors.black),),
-        Row(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.camera_alt_outlined,
+          size: 32,
+        ),
+        onPressed: () {},
+        tooltip: "Camera",
+      ),
+
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+
+        child: Column(
           children: [
+            buildRowButton(),
 
-            Icon(Icons.list,color: themeColor,),
-            SizedBox(width: 10,),
-            Icon(Icons.grid_view,color: themeColor,),
+            isGridView
+                ? ListView(
+              shrinkWrap: true,
+                  controller: ScrollController(keepScrollOffset: false),
+                  children: [
+                    buildGridView(buildDirectory()),
+                    buildGridView(buildFile()),
+                  ],
+                )
+                : ListView.builder(
+              shrinkWrap: true,
+              controller: ScrollController(keepScrollOffset: false),
+              itemCount: 10,
+              itemBuilder: (contex, index) {
+                return buildList();
+              },
+            ),
           ],
         ),
-      ],
-    ),
-  ),
+      ),
+    );
+  }
 
-Expanded(
-  child:   WebView(
-    initialUrl: "https://pub.dev/packages/webview_flutter",
+  Widget buildRowButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
 
-    javascriptMode: JavascriptMode.unrestricted,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isGridView = false;
+                  });
+                },
+                child: Icon(
+                  Icons.list,
+                  color: Colors.black,
+                  size: 32,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isGridView = true;
+                  });
+                },
+                child: Icon(
+                  Icons.grid_view,
+                  color: Colors.black,
+                  size: 32,
+                ),
+              ),
 
-    onWebResourceError: (err){
-      print("error =  "+ err.description);
-    },
-    onWebViewCreated: (w){
-      setState(() {
-        isLoading=false;
+            ],
+          ),
+          Divider()
+        ],
+      ),
+    );
+  }
 
+  Widget buildFile() {
+    return Column(children: [
+      Expanded(
+          flex: 3,
+          child: Container(
+            width: 80,
+            child: Stack(
+              children: [
+                SfPdfViewer.network(
+                  pdfurl,
+
+                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(color: Colors.red,child: Text("PDF",style: TextStyle(color: Colors.white,fontSize: 16),),),
+                    ],
+                  ),
+                ],
+              ),
+                Container(color: Colors.transparent,)
+              ],
+            ),
+          )),
+      Expanded(
+        flex: 1,
+        child: Text(
+
+          "Dosya Adı",
+          style: TextStyle(fontSize: 15, color: Colors.black),
+        ),
+      ),
+
+      Expanded(
+        flex: 1,
+        child: Text(
+            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+          style: TextStyle(fontSize: 12),
+
+        ),
+      ),
+    ]);
+  }
+
+  GridView buildGridView(Widget child) {
+    return GridView.builder(
+      itemCount: 4,
+      padding: const EdgeInsets.all(20),
+      shrinkWrap: true,
+      controller: ScrollController(keepScrollOffset: false),
+      itemBuilder: (context, index) {
+        return child;
       },
-      );
-    },
-  ),
-),
-/*  ListView(
-    shrinkWrap: true,
-    children: [
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 10,crossAxisSpacing: 10,
+       crossAxisCount: 2),
+    );
+  }
 
-    ],
-  )*/
+  Widget buildDirectory() {
+    return Column(children: [
+      Expanded(
+          flex: 3,
+          child: Image.asset(
+            "assets/images/directory.png",
+          )),
+      Expanded(
+        flex: 1,
+        child: Text(
+          "Dosya Adı",
+          style: TextStyle(fontSize: 15, color: Colors.black),
+        ),
+      ),
 
-],
-      ) ,
+      Expanded(flex: 1,
+          child: Text(
+        "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+        style: TextStyle(fontSize: 12),
+      )),
+    ]);
+  }
+
+  Widget buildList() {
+    return Card(
+      child: ListTile(
+        leading: Image.asset("assets/images/directory.png"),
+        title: Text("Dosya Adı"),
+        subtitle: Text(
+            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+          style: TextStyle(fontSize: 12),
+        ),
+        trailing: Icon(Icons.arrow_forward_ios),
+      ),
     );
   }
 }

@@ -23,9 +23,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carousel_pro: ^1.0.0
+  carousel_slider: ^2.3.1
   flutter_speed_dial: ^1.2.5
+  animated_splash_screen: ^1.0.1+2
   webview_flutter: ^1.0.7
+  syncfusion_flutter_pdfviewer: ^18.3.52-beta
+  get: ^3.22.2
+  http: ^0.12.2
+  flutter_chat_bubble: ^1.0.2
+  syncfusion_flutter_calendar: ^18.3.53
+  camera: ^0.5.8+17
+  animated_bottom_navigation_bar: ^0.2.0
+  scroll_to_index: ^1.0.6
+
 
 
 
@@ -52,14 +62,10 @@ flutter:
   uses-material-design: true
   assets:
 
-    - assets/images/logo/png logo/1024h/Artboard 1.png
-    - assets/images/logo/logoson.svg
-    - assets/images/logo/png logo/512h/Artboard 1.png
-    - assets/images/logo/logo text.svg
-    - assets/images/logo/png logo/256h/Artboard 1.png
-    - assets/images/logo/png txt/256h/Artboard 1.png
-    - assets/images/logo/png txt/512h/Artboard 1.png
-    - assets/images/logo/png txt/1024h/Artboard 1.png
+    - assets/images/logo/sharework_logo.png
+    - assets/images/Login/
+    - assets/images/splashScreen/
+    - assets/images/directory.png
     - assets/images/svg_png/add on/add on full white/
     - assets/images/svg_png/add on/add on red/
     - assets/images/svg_png/add on/add on white/
