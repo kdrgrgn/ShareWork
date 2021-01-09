@@ -5,10 +5,9 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'MyCircularProgress.dart';
 
 class BuildWidgetDays extends StatefulWidget {
+  ValueChanged onSelectedDate;
 
-   ValueChanged onSelectedDate;
-
-   BuildWidgetDays({this.onSelectedDate});
+  BuildWidgetDays({this.onSelectedDate});
 
   @override
   _BuildWidgetDaysState createState() => _BuildWidgetDaysState();
@@ -33,7 +32,6 @@ class _BuildWidgetDaysState extends State<BuildWidgetDays> {
     "Dec",
   ];
 
-
   List<DateTime> dateList = [];
 
   DateTime _selectedDay;
@@ -57,7 +55,7 @@ class _BuildWidgetDaysState extends State<BuildWidgetDays> {
     int indexDate = _selectedDay.difference(beforeDate).inDays;
 
     _scrollController = AutoScrollController(
-        initialScrollOffset: (indexDate * 85).toDouble(),
+        initialScrollOffset: (indexDate * 70).toDouble(),
         viewportBoundaryGetter: () =>
             Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
         axis: scrollDirection);
@@ -74,7 +72,7 @@ class _BuildWidgetDaysState extends State<BuildWidgetDays> {
     return isLoading
         ? MyCircular()
         : Container(
-            height: 70,
+            height: 65,
             child: ListView(
               scrollDirection: scrollDirection,
               controller: _scrollController,
@@ -99,54 +97,57 @@ class _BuildWidgetDaysState extends State<BuildWidgetDays> {
                         },
                         child: isSameDate(dateList[index], _selectedDay)
                             ? Container(
-width: 60,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-
-                              decoration: BoxDecoration(
-                                color: themeColor,
-                                border: Border.all(
-
-                                    width: 1, color: themeColor),
-                                borderRadius: BorderRadius.circular(12),
-
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    dayName[dateList[index].weekday - 1],
-                                    style: TextStyle(fontSize: 16,color: Colors.white),
-                                  ), Text(
-                                    dateList[index].day.toString(),
-                                    style: TextStyle(fontSize: 16,color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            )
+                                width: 60,
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                decoration: BoxDecoration(
+                                  color: themeColor,
+                                  border:
+                                      Border.all(width: 1, color: themeColor),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      dayName[dateList[index].weekday - 1],
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                    SizedBox(height: 3),
+                                    Text(
+                                      dateList[index].day.toString(),
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              )
                             : Container(
-                          width: 60,
+                                width: 60,
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border:
+                                      Border.all(width: 1, color: themeColor),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
 
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-
-                                    width: 1, color: themeColor),
+                                  children: [
+                                    Text(
+                                      dayName[dateList[index].weekday - 1],
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      dateList[index].day.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    dayName[dateList[index].weekday - 1],
-                                    style: TextStyle(fontSize: 16),
-                                  ), Text(
-                                    dateList[index].day.toString(),
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-
-                            ),
                       ),
                     ),
                     highlightColor: Colors.black.withOpacity(0.1),

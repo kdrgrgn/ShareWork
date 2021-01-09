@@ -1,41 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobi/Controller/ControllerChange.dart';
 
-enum TabItem { HomePage, MyCloud, Communication, Search,Profile }
+enum TabItem { HomePage, MyCloud, Communication, Search, Profile }
 
 class TabItemData {
   final Widget icon;
   final String label;
- static double size=32.0;
+  static double size = 30.0;
+  static double selectSize = 35.0;
+
+  static ControllerChange _controllerChange = Get.put(ControllerChange());
 
   TabItemData({this.icon, this.label});
 
   static Map<TabItem, TabItemData> tumTablar = {
     TabItem.HomePage: TabItemData(
-      icon: Image.network(
-        "https://www.share-work.com/newsIcons/thumbnail_ikon_5_7.png",
-        height: size,
+      icon: InkWell(
+        onTap: () {
+          _controllerChange.updateTabState(0);
+        },
+        child: Image.network(
+          "https://www.share-work.com/newsIcons/thumbnail_ikon_5_7.png",
+          height: size,
+        ),
       ),
       label: "Home",
     ),
     TabItem.MyCloud: TabItemData(
-      icon: Image.network(
-        "https://www.share-work.com//newsIcons/thumbnail_ikon_3_8.png",
-        height: size,
+      icon: InkWell(
+        onTap: () {
+          _controllerChange.updateTabState(1);
+        },
+        child: Image.network(
+          "https://www.share-work.com//newsIcons/thumbnail_ikon_3_8.png",
+          height: size,
+        ),
       ),
       label: "Message",
     ),
-
     TabItem.Communication: TabItemData(
-      icon: Image.network(
-        "https://www.share-work.com/newsIcons/thumbnail_ikon_3_10.png",
-        height: size,
+      icon: InkWell(
+        onTap: () {
+          _controllerChange.updateTabState(2);
+        },
+        child: Image.network(
+          "https://www.share-work.com/newsIcons/thumbnail_ikon_3_10.png",
+          height: size,
+        ),
       ),
       label: "Communication",
     ),
     TabItem.Search: TabItemData(
-      icon: Image.network(
-        "https://www.share-work.com/newsIcons/thumbnail_ikon_7_11.png",
-        height: size,
+      icon: InkWell(
+        onTap: () {
+          _controllerChange.updateTabState(3);
+        },
+        child: Image.network(
+          "https://www.share-work.com/newsIcons/thumbnail_ikon_7_11.png",
+          height: size,
+        ),
       ),
       label: "Search",
     ),

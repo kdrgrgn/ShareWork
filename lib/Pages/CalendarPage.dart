@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:get/get.dart';
 
@@ -20,6 +21,18 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Tab(
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        ),
+        bottomNavigationBar: BuildBottomNavigationBar(),
         appBar: AppBar(
           title: Text("Calendar"),
         ),

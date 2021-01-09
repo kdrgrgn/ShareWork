@@ -38,7 +38,17 @@ Department _department;
 
     return Scaffold(
       bottomNavigationBar: BuildBottomNavigationBar(),
-
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Tab(
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 40,
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Text(
           "Department",

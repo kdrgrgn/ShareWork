@@ -1,13 +1,13 @@
 import 'package:mobi/model/User/UserData.dart';
 
-import 'FamilyTasks.dart';
+import 'Task/FamilyTasks.dart';
 
 class FamilyPerson {
   int statusCode;
   Null exceptionInfo;
   Null pageSortSearch;
   bool hasError;
-  Data data;
+  FamilyPersonData data;
 
   FamilyPerson(
       {this.statusCode,
@@ -21,7 +21,7 @@ class FamilyPerson {
     exceptionInfo = json['exceptionInfo'];
     pageSortSearch = json['pageSortSearch'];
     hasError = json['hasError'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new FamilyPersonData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -37,30 +37,36 @@ class FamilyPerson {
   }
 }
 
-class Data {
+class FamilyPersonData {
   int id;
   int familyId;
   int personType;
+  int debt;
+  int taskCount;
   UserData user;
   String icon;
   int age;
   String createDate;
   List<FamilyTaskData> ownedFamilyTaskList;
 
-  Data(
+  FamilyPersonData(
       {this.id,
         this.familyId,
         this.personType,
+        this.debt,
+        this.taskCount,
         this.user,
         this.icon,
         this.age,
         this.createDate,
         this.ownedFamilyTaskList});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  FamilyPersonData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     familyId = json['familyId'];
     personType = json['personType'];
+    debt = json['debt'];
+    taskCount = json['taskCount'];
     user = json['user'] != null ? new UserData.fromJson(json['user']) : null;
     icon = json['icon'];
     age = json['age'];
@@ -78,6 +84,8 @@ class Data {
     data['id'] = this.id;
     data['familyId'] = this.familyId;
     data['personType'] = this.personType;
+    data['debt'] = this.debt;
+    data['taskCount'] = this.taskCount;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
@@ -91,5 +99,6 @@ class Data {
     return data;
   }
 }
+
 
 

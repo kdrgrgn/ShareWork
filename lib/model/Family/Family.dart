@@ -1,13 +1,13 @@
 import 'package:mobi/model/User/UserData.dart';
 
-import 'FamilyTasks.dart';
+import 'Task/FamilyTasks.dart';
 
 class Family {
   int statusCode;
   Null exceptionInfo;
   Null pageSortSearch;
   bool hasError;
-  Data data;
+  FamilyData data;
 
   Family(
       {this.statusCode,
@@ -21,7 +21,7 @@ class Family {
     exceptionInfo = json['exceptionInfo'];
     pageSortSearch = json['pageSortSearch'];
     hasError = json['hasError'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new FamilyData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -35,9 +35,14 @@ class Family {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Family{statusCode: $statusCode, exceptionInfo: $exceptionInfo, pageSortSearch: $pageSortSearch, hasError: $hasError, data: $data}';
+  }
 }
 
-class Data {
+class FamilyData {
   int id;
   int chatId;
   String createDate;
@@ -47,7 +52,7 @@ class Data {
   List<FamilyTaskData> availableTaskList;
   List<FamilyTaskData> allTaskList;
 
-  Data(
+  FamilyData(
       {this.id,
         this.chatId,
         this.createDate,
@@ -57,7 +62,7 @@ class Data {
         this.availableTaskList,
         this.allTaskList});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  FamilyData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     chatId = json['chatId'];
     createDate = json['createDate'];
@@ -102,12 +107,19 @@ class Data {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Data{id: $id, chatId: $chatId, createDate: $createDate, picture: $picture, title: $title, personList: $personList, availableTaskList: $availableTaskList, allTaskList: $allTaskList}';
+  }
 }
 
 class PersonList {
   int id;
   int familyId;
   int personType;
+  int debt;
+  int taskCount;
   UserData user;
   String icon;
   int age;
@@ -118,6 +130,8 @@ class PersonList {
       {this.id,
         this.familyId,
         this.personType,
+        this.debt,
+        this.taskCount,
         this.user,
         this.icon,
         this.age,
@@ -128,6 +142,8 @@ class PersonList {
     id = json['id'];
     familyId = json['familyId'];
     personType = json['personType'];
+    debt = json['debt'];
+    taskCount = json['taskCount'];
     user = json['user'] != null ? new UserData.fromJson(json['user']) : null;
     icon = json['icon'];
     age = json['age'];
@@ -140,6 +156,8 @@ class PersonList {
     data['id'] = this.id;
     data['familyId'] = this.familyId;
     data['personType'] = this.personType;
+    data['debt'] = this.debt;
+    data['taskCount'] = this.taskCount;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
@@ -149,6 +167,10 @@ class PersonList {
     data['ownedFamilyTaskList'] = this.ownedFamilyTaskList;
     return data;
   }
-}
 
+  @override
+  String toString() {
+    return 'PersonList{id: $id, familyId: $familyId, personType: $personType, debt: $debt, taskCount: $taskCount, user: $user, icon: $icon, age: $age, createDate: $createDate, ownedFamilyTaskList: $ownedFamilyTaskList}';
+  }
+}
 

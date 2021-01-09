@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class MailPage extends StatefulWidget {
   @override
@@ -68,14 +69,21 @@ class _MailPageState extends State<MailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 35,
+        onPressed: () {
+        },
+        child: Tab(
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 40,
+          ),
         ),
       ),
+      bottomNavigationBar: BuildBottomNavigationBar(),
+
       appBar: AppBar(
         backgroundColor: themeColor,
           textTheme: TextTheme(

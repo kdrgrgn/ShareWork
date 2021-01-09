@@ -16,7 +16,7 @@ class _FolderManagerState extends State<FolderManager> {
   String googleDocs = "https://docs.google.com/gview?embedded=true&url=";
   String pdfurl = "https://www.era-learn.eu/documents/03_call_documents.pdf";
   String url;
-  PdfViewerController _pdfViewerController;
+//  PdfViewerController _pdfViewerController;
   bool isGridView = true;
 
   @override
@@ -24,7 +24,7 @@ class _FolderManagerState extends State<FolderManager> {
     // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    _pdfViewerController = PdfViewerController();
+  //  _pdfViewerController = PdfViewerController();
     url = googleDocs + pdfurl;
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
@@ -48,13 +48,16 @@ class _FolderManagerState extends State<FolderManager> {
 
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.camera_alt_outlined,
-          size: 32,
-        ),
         onPressed: () {},
-        tooltip: "Camera",
+        child: Tab(
+          icon: Icon(
+            Icons.camera_alt_outlined,
+            color: Colors.white,
+            size: 40,
+          ),
+        ),
       ),
 
       body: SingleChildScrollView(

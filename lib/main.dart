@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(
             color: themeColor,
             fontSize: 16,
-            fontFamily: 'NeueHaasGrotesk',
-            fontWeight: FontWeight.w100,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
           ),
         ),
         primaryColor: themeColor,
@@ -47,7 +47,10 @@ class MyApp extends StatelessWidget {
             ),
             textTheme: TextTheme(
               headline6: TextStyle(
-                fontSize: 18,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+
+                fontSize: 20,
                 color: themeColor,
               ),
             )),
@@ -55,7 +58,7 @@ class MyApp extends StatelessWidget {
         iconTheme: IconThemeData(
           color: themeColor,
         ),
-        fontFamily: 'NeueHaasGrotesk',
+        fontFamily: 'Montserrat',
         // hintColor:Colors.grey,
         backgroundColor: yellowColor,
         //.fromRGBO(246, 78, 96, 1),

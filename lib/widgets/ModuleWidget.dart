@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/widgets/FolderManager.dart';
 
@@ -26,64 +25,77 @@ class _ModuleWidgetState extends State<ModuleWidget> {
   @override
   Widget build(BuildContext context) {
     themeColor = Theme.of(context).accentColor;
-    return InkWell(
-      onTap: () {
-        Get.to(widget.page ?? FolderManager());
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Container(
-          height: 75,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.grey[100],
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10,right: 10),
+      child: InkWell(
+        onTap: () {
+          Get.to(widget.page ?? FolderManager());
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    widget.title,
-
-                    style: TextStyle(color: Colors.black, fontSize: 16,),
-                  ),
+              Container(
+                width: 50 ,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                  color:themeColor.withOpacity(0.05),
                 ),
-              ),
-              Expanded(
-                flex: 1,
                 child: Stack(
                   children: [
                     Align(
-                      alignment: Alignment(0.5, 0),
+                      alignment: Alignment.center,
                       child: Container(
-                        width: 50,
-                        height: 50,
+                        width: 40,
+                        height: 30,
                         child: Image.network(
                           _controllerChange.baseUrl + widget.path,
                           fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                    widget.notification == null
-                        ? Container()
-                        : Align(
-                            alignment: Alignment.topRight,
-                            child: CircleAvatar(
-                              radius: 13,
-                              backgroundColor: Get.theme.backgroundColor,
-                              child: Text(
-                                "${widget.notification}",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          )
+
                   ],
                 ),
               ),
+              SizedBox(width: 2,),
+
+              Container(
+                width: MediaQuery.of(context).size.width-100,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:themeColor.withOpacity(0.05),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.title,
+
+                        style: TextStyle(color: Colors.black, fontSize: 16,),
+                      ),
+
+                      widget.notification == null
+                          ? Container()
+                          : CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Get.theme.backgroundColor,
+                            child: Text(
+                              "${widget.notification}",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),

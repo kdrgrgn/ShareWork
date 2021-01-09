@@ -43,6 +43,18 @@ class _OfficePageState extends State<OfficePage> {
   Widget build(BuildContext context) {
     themeColor = Theme.of(context).accentColor;
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Tab(
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        ),
+
       bottomNavigationBar: BuildBottomNavigationBar(),
 
       backgroundColor: Colors.white,

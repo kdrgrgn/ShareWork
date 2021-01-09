@@ -1,72 +1,119 @@
+class ServiceUrl {
+  static final String baseUrlShareWork = "https://api.share-work.com";
+
+  final String login = baseUrlShareWork + "/Account/login";
+
+  final String register = baseUrlShareWork + "/Account/Signup";
+
+  final String getBuro = baseUrlShareWork + "/Office/getoffice";
+
+  final String getPersonal = baseUrlShareWork + "/Personel/GetPersonelList";
+
+  final String getDepartment =
+      baseUrlShareWork + "/Department/getdepartmentlist";
+
+  final String getCustomers = baseUrlShareWork + "/Customer/getcustomerlist";
+
+  final String foldersNew =
+      baseUrlShareWork + "/File/GetFilesByUserIdForDirectory";
+
+  final String filesUpload = baseUrlShareWork + "/File/UploadFiles";
+
+  final String deleteFileDirectory =
+      baseUrlShareWork + "/File/DeleteMultiFileAndDirectory";
+
+  final String fileRename = baseUrlShareWork + "/File/FileRename";
+
+  final String createFolder = baseUrlShareWork + "/File/CreateDirectory";
+
+  final String renameDirectory = baseUrlShareWork + "/File/RenameDirectory";
+
+  final String addNewCustomer = baseUrlShareWork + "/Customer/addcustomer";
+
+  final String getPluginList = baseUrlShareWork + "/Plugin/getpluginlist";
+
+  final String getAddUserPlugin = baseUrlShareWork + "/Plugin/adduserplugin";
+
+  final String getCustomeList = baseUrlShareWork + "/Customer/getcustomerlist";
+
+  final String getProjectList = baseUrlShareWork + "/Project/GetProjects";
+
+  final String getAllFamilyTaskList =
+      baseUrlShareWork + "/Family/GetAllFamilyTaskList";
+
+  final String getFamilyPersonWithId =
+      baseUrlShareWork + "/Family/GetFamilyPersonWithId";
+
+  final String getFamily = baseUrlShareWork + "/Family/GetFamily";
+
+  final String getFamilyPersonTaskListRepeat = baseUrlShareWork + "/Family/GetFamilyPersonTaskListRepeat";
+
+  final String insertFamilyPersonTask =
+      baseUrlShareWork + "/Family/InsertFamilyPersonTask";
+
+  final String multipleInsertFamilyPersonTask =
+      baseUrlShareWork + "/Family/InsertFamilyPersonTaskMultiple";
+
+  final String getFamilyShopItemList =
+      baseUrlShareWork + "/Family/GetFamilyShopItemList";
+
+  final String getFamilyShopOrderList =
+      baseUrlShareWork + "/Family/GetFamilyShopOrderList";
+
+  final String insertFamilyShopOrder =
+      baseUrlShareWork + "/Family/InsertFamilyShopOrder";
+
+  final String insertFamilyShopOrderMultiple =
+      baseUrlShareWork + "/Family/InsertFamilyShopOrderMultiple";
+
+  final String getFamilyBudgetItemList =
+      baseUrlShareWork + "/Family/GetFamilyBudgetList";
+
+  final String insertFamilyBudgetItem =
+      baseUrlShareWork + "/Family/InsertFamilyBudgetItem";
+
+  final String insertFamilyGift =
+      baseUrlShareWork + "/Family/InsertFamilyGift";
+
+  final String getFamilyGiftList =
+      baseUrlShareWork + "/Family/GetFamilyGiftList";
+
+  final String createFamily =
+      baseUrlShareWork + "/Family/InsertFamily";
+
+  final String addPerson =
+      baseUrlShareWork + "/Family/AddPerson";
 
 
-
-class ServiceUrl{
-
-
+  final String getFamilyPersonTaskMessageList =
+      baseUrlShareWork + "/Family/GetFamilyPersonTaskMessageList";
 
 
-
-   static final String baseUrlShareWork="https://api.share-work.com";
-
-
-
-    final String LOGIN_SCAN = baseUrlShareWork
-      + "/Account/login";
-
-    final String GET_BURO = baseUrlShareWork
-      + "/Office/getoffice";
-
-    final String GET_PERSONAL_SCAN = baseUrlShareWork
-      + "/Personel/GetPersonelList";
-
-    final String GET_DEPARTMENT_SCAN = baseUrlShareWork
-      + "/Department/getdepartmentlist";
-
-    final String GET_CUSTOMERS_SCAN = baseUrlShareWork
-      + "/Customer/getcustomerlist";
-
-    final String FOLDERS_NEW = baseUrlShareWork
-      + "/File/GetFilesByUserIdForDirectory";
+  final String insertFamilyPersonTaskMessage =
+      baseUrlShareWork + "/Family/InsertFamilyPersonTaskMessage";
 
 
-    final String FILES_UPLOAD = baseUrlShareWork
-      + "/File/UploadFiles";
+  final String editFamilyPersonTaskDetails =
+      baseUrlShareWork + "/Family/EditFamilyPersonTaskDetails";
 
-    final String DELETE_FILE_DIRECTORY = baseUrlShareWork
-      + "/File/DeleteMultiFileAndDirectory";
-
-
-    final String FILE_RENAME = baseUrlShareWork
-      + "/File/FileRename";
+  final String editFamilyPersonTaskDetailsWithPersonId =
+      baseUrlShareWork + "/Family/EditFamilyPersonTaskDetailsWithPersonId";
 
 
-    final String CREATE_FOLDER = baseUrlShareWork
-      + "/File/CreateDirectory";
+  final String editFamilyShopOrder =
+      baseUrlShareWork + "/Family/EditFamilyShopOrder";
 
 
-    final String RENAME_DIRECTORY = baseUrlShareWork
-      + "/File/RenameDirectory";
+  final String deleteFamilyShopOrder =
+      baseUrlShareWork + "/Family/DeleteFamilyShopOrder";
 
-    final String  ADD_NEW_CUSTOMER = baseUrlShareWork
-      + "/Customer/addcustomer";
 
-    final String  GET_PLUG_IN_LIST = baseUrlShareWork
-      + "/Plugin/getpluginlist";
+  final String buyFamilyShopOrder =
+      baseUrlShareWork + "/Family/BuyFamilyShopOrder";
 
-    final String  GET_ADD_USER_PLUG_IN = baseUrlShareWork
-      + "/Plugin/adduserplugin";
 
-    final String  GET_CUSTOME_LIST = baseUrlShareWork
-      + "/Customer/getcustomerlist";
+  final String editFamilyPersonTaskPersonId =
+      baseUrlShareWork +"/Family/EditFamilyPersonTaskPersonId";
 
-    final String  GET_PROJECT_LIST = baseUrlShareWork
-      + "/Project/GetProjects";
-    final String  GET_All_FAMILY_TASK_LIST = baseUrlShareWork
-      + "/Family/GetAllFamilyTaskList";
-    final String  GET_FAMILY_PERSON_WITH_ID = baseUrlShareWork
-      + "/Family/GetFamilyPersonWithId";
-    final String  GET_FAMILY = baseUrlShareWork
-      + "/Family/GetFamily";
 
 }

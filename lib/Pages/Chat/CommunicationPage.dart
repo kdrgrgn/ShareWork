@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import 'ChatList.dart';
 
 class CommunicationPage extends StatefulWidget {
+
+  Widget bottomNavBar;
+
+
+  CommunicationPage({this.bottomNavBar});
+
   @override
   _CommunicationPageState createState() => _CommunicationPageState();
 }
@@ -19,10 +26,24 @@ class _CommunicationPageState extends State<CommunicationPage> {
       length: 4,
       initialIndex: 1,
       child: Scaffold(
+        bottomNavigationBar:widget.bottomNavBar?? BuildBottomNavigationBar(),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+          },
+          child: Tab(
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        ),
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
-            "Faircircle",
+            "ShareWork",
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -67,11 +88,7 @@ class _CommunicationPageState extends State<CommunicationPage> {
             Container(child: Text(" Calls Page")),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.chat),
-          onPressed: () {},
-          backgroundColor: themeColor,
-        ),
+
       ),
     );
   }
