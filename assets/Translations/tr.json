@@ -1,0 +1,10 @@
+{
+  "msg":"{} bu yazi {} bu dil ile yazildi",
+  "msg_named":"Easy localization ile isimlendirilmis parametre {lang} language",
+  "msg_mixed":"{} hem normal hem isimlendirilmis {lang} language",
+  "gender":{
+    "male":"Selam adamim ;) {}",
+    "female":"Selam guzellik :) {}",
+    "other":"Hello {}"
+  }
+}

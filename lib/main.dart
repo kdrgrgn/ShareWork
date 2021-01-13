@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Pages/SplashPage.dart';
@@ -16,8 +17,13 @@ Future<void> main() async {
         "  Eror descp = " +
         e.description);
   }
+  EasyLocalization(
+      supportedLocales: [Locale('en', 'US'), Locale('tr', 'TR')],
+      path: 'assets/Translations', // <-- change patch to your
+      fallbackLocale: Locale('en', 'US'),
+      child: MyApp()
 
-  runApp(MyApp());
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,6 +35,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(

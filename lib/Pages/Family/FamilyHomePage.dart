@@ -48,21 +48,18 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
     return isLoading
         ? MyCircular()
         : GetBuilder<ControllerDB>(builder: (db) {
-      if(family.data.personList==null){
-
-        if (db.family.value != family) {
+            if (family.data.personList == null) {
+              if (db.family.value != family) {
                 db
                     .getFamily(
-                    headers: _controller.headers(),
-                    date: buildStringDate(DateTime.now()))
+                        headers: _controller.headers(),
+                        date: buildStringDate(DateTime.now()))
                     .then((value) {
                   setState(() {
                     family = value;
                   });
                 });
-
               }
-
             }
 
             return family.data.personList == null
@@ -97,7 +94,6 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Icon(Icons.share),
-
                       Container(
                           width: 30,
                           height: 30,
@@ -109,13 +105,17 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
                                 alignment: Alignment.topRight,
                                 child: Container(
                                   padding: EdgeInsets.all(2),
-                              /*    width: 10,
+                                  /*    width: 10,
                                   height: 10,*/
                                   decoration: BoxDecoration(
                                     color: background,
                                     borderRadius: BorderRadius.circular(30),
                                   ),
-                                  child: Text("12",style: TextStyle(color: Colors.white,fontSize: 11),),
+                                  child: Text(
+                                    "12",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 11),
+                                  ),
                                 ),
                               ),
                             ],
@@ -129,10 +129,7 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
                   SizedBox(
                     height: 20,
                   ),
-
                   buildCirclePerson(),
-
-
                   Divider(),
                   SizedBox(
                     height: 10,
@@ -255,18 +252,15 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           route: 3),
       FamilyModules(
           picture:
-              "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_3.png",
+              "https://share-work.com/newsIcons/thumbnail_ikon_shopping.png",
           name: "Shop",
           route: 4),
       FamilyModules(
-          picture:
-              "https://share-work.com/newsIcons/thumbnail_Asset6.png",
-          name: "Health",
+          picture: "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png",
+          name: "Takvim",
           route: 4),
     ];
   }
-
-
 
   Widget buildCirclePerson() {
     return Padding(
@@ -290,19 +284,33 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
     person = [
       InkWell(
         onTap: () {
-          Get.to(AddUserPage());
+          Get.to(AddUserPage()).then((value) {
+            _controller
+                .getFamily(
+                    headers: _controller.headers(),
+                    date: buildStringDate(DateTime.now()))
+                .then((value) {
+              setState(() {
+                family = value;
+              });
+            });
+          });
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 0, right: 0,bottom: 15),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: themeColor,
-            child: Icon(
+          padding: const EdgeInsets.only(left: 0, right: 0, bottom: 15),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: Colors.transparent,
+              border: Border.all(color: background)
 
-              Icons.add,
-              color: Colors.white,
-              size: 40,
             ),
+            width: 65,
+            height: 35,
+            child: Image.network(
+                    "https://share-work.com/newsIcons/thumbnail_ikon_3_2.png",fit: BoxFit.contain,)
+                ,
           ),
         ),
       )
@@ -316,45 +324,38 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
 
     return person;
   }
+
   Padding buildPadding(int index) {
     return Padding(
-      padding: const EdgeInsets.only(left: 0, right: 0),
-      child:  Container(
-            width: 75,
-            child: InkWell(
-              onTap: () {
-                Get.to(UserInfo(family.data.personList[index]));
-              },
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 30,
-                      backgroundImage: Image.network(
-                          _controllerChange.urlUsers +
-                              family.data.personList[index].user
-                                  .profilePhoto)
-                          .image,
-                    ),
+        padding: const EdgeInsets.only(left: 0, right: 0),
+        child: Container(
+          width: 75,
+          child: InkWell(
+            onTap: () {
+              Get.to(UserInfo(family.data.personList[index]));
+            },
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: 30,
+                    backgroundImage: Image.network(_controllerChange.urlUsers +
+                            family.data.personList[index].user.profilePhoto)
+                        .image,
                   ),
-                  Text(
-                    family.data.personList[index].user.firstName,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12),
-                  )
-                ],
-              ),
+                ),
+                Text(
+                  family.data.personList[index].user.firstName,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12),
+                )
+              ],
             ),
-          )
-
-    );
+          ),
+        ));
   }
-
-
-
-
 }
 
 class FamilyModules {

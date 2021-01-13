@@ -1,5 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mobi/Controller/ControllerChange.dart';
+import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Pages/Family/FamilyTabBar.dart';
+import 'package:mobi/model/Family/Family.dart';
+import 'package:mobi/model/User/User.dart';
+import 'package:mobi/widgets/InsertFamily.dart';
+import 'package:mobi/widgets/MyCircularProgress.dart';
 import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class AccountPage extends StatefulWidget {
@@ -8,263 +15,223 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  Color themeColor = Get.theme.accentColor;
+  Color background = Get.theme.backgroundColor;
+  final ControllerDB _controller = Get.put(ControllerDB());
+
+  List<AccountModules> modules;
+
+  bool isLoading = true;
+
+  TextStyle subStyle = TextStyle(color: Colors.grey, fontSize: 15);
+  User user;
+  ControllerChange _controllerChange = Get.put(ControllerChange());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    moduleBuilder();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      user = _controller.user.value;
+
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    return isLoading
+        ? MyCircular()
+        : GetBuilder<ControllerDB>(builder: (db) {
+            return buildHomePage();
+          });
+  }
+
+  buildHomePage() {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BuildBottomNavigationBar(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-        },
-        child: Icon(
+        onPressed: () {},
+        child: Tab(
+          icon: Icon(
             Icons.add,
-                color: Colors.white,
+            color: Colors.white,
+            size: 40,
+          ),
         ),
       ),
+      bottomNavigationBar: BuildBottomNavigationBar(),
       body: Stack(
         children: [
-          Column(
-            children: [
-              Expanded(
-                flex:2,
-                child:Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.deepPurple[800],Colors.deepPurpleAccent],
-                    ),
-                  ),
-                  child: Column(
-                      children: [
-                        SizedBox(height: 110.0,),
-                        CircleAvatar(
-                          radius: 65.0,
-                          backgroundImage: AssetImage('assets/erza.jpg'),
-                          backgroundColor: Colors.white,
-                        ),
-                        SizedBox(height: 10.0,),
-                        Text('Erza Scarlet',
-                            style: TextStyle(
-                              color:Colors.white,
-                              fontSize: 20.0,
-                            )),
-                        SizedBox(height: 10.0,),
-                        Text('S Class Mage',
-                          style: TextStyle(
-                            color:Colors.white,
-                            fontSize: 15.0,
-                          ),)
-                      ]
-                  ),
-                ),
-              ),
-
-              Expanded(
-                flex:3,
-                child: Container(
-                  color: Colors.grey[200],
-                  child: Center(
-                      child:Card(
-                          margin: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
-                          child: Container(
-                              width: 310.0,
-                              height:290.0,
-                              child: Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Information",
-                                      style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.w800,
-                                      ),),
-                                    Divider(color: Colors.grey[300],),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.home,
-                                          color: Colors.blueAccent[400],
-                                          size: 35,
-                                        ),
-                                        SizedBox(width: 20.0,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Guild",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                              ),),
-                                            Text("FairyTail, Magnolia",
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.grey[400],
-                                              ),)
-                                          ],
-                                        )
-
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.0,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.auto_awesome,
-                                          color: Colors.yellowAccent[400],
-                                          size: 35,
-                                        ),
-                                        SizedBox(width: 20.0,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Magic",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                              ),),
-                                            Text("Spatial & Sword Magic, Telekinesis",
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.grey[400],
-                                              ),)
-                                          ],
-                                        )
-
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.0,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.favorite,
-                                          color: Colors.pinkAccent[400],
-                                          size: 35,
-                                        ),
-                                        SizedBox(width: 20.0,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Loves",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                              ),),
-                                            Text("Eating cakes",
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.grey[400],
-                                              ),)
-                                          ],
-                                        )
-
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.0,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.people,
-                                          color: Colors.lightGreen[400],
-                                          size: 35,
-                                        ),
-                                        SizedBox(width: 20.0,),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Team",
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                              ),),
-                                            Text("Team Natsu",
-                                              style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: Colors.grey[400],
-                                              ),)
-                                          ],
-                                        )
-
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
-                          )
-                      )
-                  ),
-                ),
-              ),
-
-            ],
+          Container(
+            width: Get.size.width,
+            height: Get.size.height,
+            color: Colors.blue[200],
           ),
-          Positioned(
-              top:MediaQuery.of(context).size.height*0.45,
-              left: 20.0,
-              right: 20.0,
-              child: Card(
-                  child: Padding(
-                    padding:EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                            child:Column(
-                              children: [
-                                Text('Battles',
-                                  style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 14.0
-                                  ),),
-                                SizedBox(height: 5.0,),
-                                Text("5",
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                  ),)
-                              ],
-                            )
-                        ),
-
-                        Container(
-                          child: Column(
-                              children: [
-                                Text('Birthday',
-                                  style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 14.0
-                                  ),),
-                                SizedBox(height: 5.0,),
-                                Text('April 7th',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                  ),)
-                              ]),
-                        ),
-
-                        Container(
-                            child:Column(
-                              children: [
-                                Text('Age',
-                                  style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 14.0
-                                  ),),
-                                SizedBox(height: 5.0,),
-                                Text('19 yrs',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                  ),)
-                              ],
-                            )
-                        ),
-                      ],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              width: Get.size.width,
+              height: Get.size.height - 180,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30))),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          width: 30,
+                          height: 30,
+                          child: Image.network(
+                              "https://share-work.com/newsIcons/thumbnail_ikon_logout.png")),
+                      Container(
+                          width: 30,
+                          height: 30,
+                          child: Stack(
+                            children: [
+                              Image.network(
+                                  "https://share-work.com/newsIcons/ikonlar_ek_6.png"),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  /*    width: 10,
+                                  height: 10,*/
+                                  decoration: BoxDecoration(
+                                    color: background,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    "12",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 11),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(user.data.firstName + " " + user.data.lastName),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    'msg'.trArgs(['Easy localization', 'Dart'])//(args: ['Easy localization', 'Dart'])
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 600,
+                      child: cardBuilder(),
                     ),
                   )
-              )
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment(0, -0.80),
+            child: CircleAvatar(
+              backgroundImage: Image.network(
+                user.data.profilePhoto,
+                fit: BoxFit.fill,
+              ).image,
+              radius: 60,
+            ),
           )
         ],
-
       ),
     );
   }
+
+  cardBuilder() {
+    return ListView.builder(
+      itemCount: modules.length,
+      padding: const EdgeInsets.all(0),
+      shrinkWrap: true,
+      //physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      controller: ScrollController(keepScrollOffset: true),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(15)),
+            padding: EdgeInsets.only(bottom: 5, top: 5, right: 5, left: 5),
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () async {},
+                  leading: CircleAvatar(
+                    radius: 15,
+                    backgroundImage:
+                        Image.network(modules[index].picture).image,
+                    backgroundColor: Colors.transparent,
+                  ),
+                  title: Text(modules[index].name),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String buildStringDate(DateTime date) {
+    return date.day.toString() +
+        "/" +
+        date.month.toString() +
+        "/" +
+        date.year.toString();
+  }
+
+  moduleBuilder() {
+    modules = [
+      AccountModules(
+          picture:
+              "https://share-work.com/newsIcons/thumbnail_ikon_settings.png",
+          name: "Settings",
+          route: 0),
+      AccountModules(
+          picture:
+              "https://share-work.com/newsIcons/thumbnail_ikon_agreement.png",
+          name: "Agreement",
+          route: 2),
+      AccountModules(
+          picture:
+              "https://share-work.com/newsIcons/thumbnail_ikon_security.png",
+          name: "Security",
+          route: 3),
+      AccountModules(
+          picture: "https://share-work.com/newsIcons/thumbnail_ikon_help.png",
+          name: "Help",
+          route: 4),
+    ];
+  }
+}
+
+class AccountModules {
+  String picture;
+  String name;
+  int route;
+
+  AccountModules({this.picture, this.name, this.route});
 }

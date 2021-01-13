@@ -23,7 +23,7 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
   bool isOpen = false;
-  List<bool> isWithPerson=[];
+  List<bool> isWithPerson = [];
 
   FamilyTasks tasks;
   List<FamilyTaskData> taskData = [];
@@ -67,9 +67,7 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
       for (int i = 0; i < _selectedTaskState.length; i++) {
         _selectedTaskState[i] = false;
         isWithPerson.add(false);
-
       }
-      print("fordan cikti");
 
       setState(() {
         isLoading = false;
@@ -159,17 +157,14 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
               ignoring: isWithPerson[index],
               child: InkWell(
                 onTap: () {
-
-
-                    setState(() {
-                      _selectedTaskState[index] = !_selectedTaskState[index];
-                      if (_selectedTaskState[index]) {
-                        _selectedTask.add(taskData[index]);
-                      } else {
-                        _selectedTask.remove(taskData[index]);
-                      }
-                    });
-
+                  setState(() {
+                    _selectedTaskState[index] = !_selectedTaskState[index];
+                    if (_selectedTaskState[index]) {
+                      _selectedTask.add(taskData[index]);
+                    } else {
+                      _selectedTask.remove(taskData[index]);
+                    }
+                  });
                 },
                 child: Draggable(
                   maxSimultaneousDrags: taskData.length,
@@ -184,7 +179,8 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
                                 color: _selectedTaskState[index]
                                     ? Colors.grey[300]
                                     : Colors.white,
-                                border: Border.all(color: themeColor, width: 0.5),
+                                border:
+                                    Border.all(color: themeColor, width: 0.5),
                                 borderRadius: BorderRadius.circular(10)),
                             child: CircleAvatar(
                                 backgroundColor: Colors.transparent,
@@ -193,16 +189,21 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
                                   fit: BoxFit.contain,
                                 )),
                           ),
-                          isWithPerson[index]?Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.green
-                              ),
-                              child: Icon(Icons.check,color: Colors.white,size: 10,),
-                            ),
-                          ):Container()
+                          isWithPerson[index]
+                              ? Align(
+                                  alignment: Alignment.topRight,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.green),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 10,
+                                    ),
+                                  ),
+                                )
+                              : Container()
                         ],
                       ),
                       Text(
@@ -369,8 +370,11 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
                           index: index);
                     }
                   } else {
-                    editFamilyPersonTaskPersonId(index,id:int.parse(value));
+                    editFamilyPersonTaskPersonId(index, id: int.parse(value));
                   }
+                  setState(() {
+                    onMove[index] = false;
+                  });
                 },
                 builder: (context, List<String> candidateData, rejectedData) {
                   return Container(
@@ -446,19 +450,25 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
                         containerH = 40;
                       });
                     },
-                    child: Icon(Icons.search)),
+                    child: Container(
+                        width: 30,
+                        height: 30,
+                        child: Image.network(
+                          "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_1.png",
+                          fit: BoxFit.contain,
+                        ))),
               )
-            : Expanded(
-                flex: 1,
-                child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        containerW = 0;
-                        containerH = 0;
-                      });
-                    },
-                    child: Icon(Icons.close)),
-              ),
+            : Padding(
+              padding: const EdgeInsets.only(left:12.0),
+              child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      containerW = 0;
+                      containerH = 0;
+                    });
+                  },
+                  child: Icon(Icons.close)),
+            ),
         containerH != 0
             ? Container()
             : Expanded(
@@ -603,36 +613,32 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
           child: Form(
             key: _formkey,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Container(
-                height: 50,
-                child: TextFormField(
-                  onChanged: (value) {
-                    if (value.length == 0) {
-                      setState(() {
-                        taskData = tasks.data;
-                      });
-                    } else {
-                      setState(() {
-                        taskData = [];
+              padding: const EdgeInsets.only(left: 10, right: 20),
+              child: TextFormField(
+                onChanged: (value) {
+                  if (value.length == 0) {
+                    setState(() {
+                      taskData = tasks.data;
+                    });
+                  } else {
+                    setState(() {
+                      taskData = [];
 
-                        for (int i = 0; i < tasks.data.length; i++) {
-                          if (tasks.data[i].title
-                              .toLowerCase()
-                              .contains(value.toLowerCase())) {
-                            taskData.add(tasks.data[i]);
-                          }
+                      for (int i = 0; i < tasks.data.length; i++) {
+                        if (tasks.data[i].title
+                            .toLowerCase()
+                            .contains(value.toLowerCase())) {
+                          taskData.add(tasks.data[i]);
                         }
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      prefixIcon: Icon(Icons.search),
-                      suffixIcon: Icon(Icons.filter_list_outlined),
-                      hintText: "Search Task"),
-                ),
+                      }
+                    });
+                  }
+                },
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    suffixIcon: Icon(Icons.filter_list_outlined),
+                    labelText: "Search Task",),
               ),
             ),
           ),
@@ -1061,17 +1067,16 @@ if (result == 200) {
 
     if (type == 0) {
       taskData = [];
-      isWithPerson=[];
+      isWithPerson = [];
 
       setState(() {
         taskData = tasks.data;
-        int i =0;
+        int i = 0;
         taskData.forEach((element) {
           isWithPerson.add(false);
           i++;
         });
       });
-
     } else if (type == null) {
       _repeatTask = await _controller.getFamilyPersonTaskListRepeat(
           familyId: family.data.id, headers: _controller.headers());
@@ -1084,7 +1089,7 @@ if (result == 200) {
         firstDay = DateTime(today.year, today.month, 1);
       }
       taskData = [];
-      isWithPerson=[];
+      isWithPerson = [];
       for (RepeatTaskData value in _repeatTask.data) {
         print("for varr");
         if (value.familyTask.repeatType == type) {
@@ -1096,12 +1101,10 @@ if (result == 200) {
               firstDay.day == dateString.day) {
             setState(() {
               taskData.add(value.familyTask);
-              if(value.familyPerson.id!=0){
+              if (value.familyPerson.id != 0) {
                 isWithPerson.add(true);
-              }
-              else{
+              } else {
                 isWithPerson.add(false);
-
               }
             });
           }
@@ -1115,7 +1118,7 @@ if (result == 200) {
         firstDay = DateTime(today.year, today.month, 1);
       }
       taskData = [];
-      isWithPerson=[];
+      isWithPerson = [];
 
       for (RepeatTaskData value in _repeatTask.data) {
         print("for varr");
@@ -1128,12 +1131,10 @@ if (result == 200) {
               firstDay.day == dateString.day) {
             setState(() {
               taskData.add(value.familyTask);
-              if(value.familyPerson.id!=0){
+              if (value.familyPerson.id != 0) {
                 isWithPerson.add(true);
-              }
-              else{
+              } else {
                 isWithPerson.add(false);
-
               }
             });
           }
@@ -1159,58 +1160,51 @@ if (result == 200) {
     }
   }
 
-  Future<void> editFamilyPersonTaskPersonId(int index,{int id}) async {
-List<int>  idList=[];
-List<int>  idTask=[];
-List<int>  idIndex=[];
+  Future<void> editFamilyPersonTaskPersonId(int index, {int id}) async {
+    List<int> idList = [];
+    List<int> idTask = [];
+    List<int> idIndex = [];
 
-
-if(_selectedTask.length!=0) {
-  _selectedTask.forEach((element) {
-    idList.add(element.familyPersonTaskId);
-    idTask.add(element.id);
-  });
-
-}
-else{
-  taskData.forEach((element) {
-    if (element.id==id) {
-      idList.add(element.familyPersonTaskId);
-
+    if (_selectedTask.length != 0) {
+      _selectedTask.forEach((element) {
+        idList.add(element.familyPersonTaskId);
+        idTask.add(element.id);
+      });
+    } else {
+      taskData.forEach((element) {
+        if (element.id == id) {
+          idList.add(element.familyPersonTaskId);
+        }
+      });
+      idTask.add(id);
     }
-  });
-  idTask.add(id);
 
-}
-
-    int result = await _controller
-        .editFamilyPersonTaskPersonId(
-        fptIds:idList,
-        personId:family.data.personList[index].id,
-
+    int result = await _controller.editFamilyPersonTaskPersonId(
+      fptIds: idList,
+      personId: family.data.personList[index].id,
       headers: _controller.headers(),
-
     );
     if (result == 200) {
       setState(() {
-        _selectedTask=[];
-        int i =0;
+        _selectedTask = [];
+        int i = 0;
         taskData.forEach((element) {
-          _selectedTaskState[i]=false;
+          _selectedTaskState[i] = false;
           i++;
         });
-        family.data.personList[index].taskCount=idList.length+family.data.personList[index].taskCount;
+        family.data.personList[index].taskCount =
+            idList.length + family.data.personList[index].taskCount;
       });
-      int i =0;
+      int i = 0;
       taskData.forEach((element) {
-        if(idTask.contains(element.id)){
+        if (idTask.contains(element.id)) {
           idIndex.add(i);
         }
         i++;
       });
       setState(() {
         idIndex.forEach((element) {
-          isWithPerson[element]=true;
+          isWithPerson[element] = true;
         });
       });
       _scaffoldKey.currentState.showSnackBar(
@@ -1228,5 +1222,4 @@ else{
       );
     }
   }
-
 }

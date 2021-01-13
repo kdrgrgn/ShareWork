@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Pages/CalendarPage.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/model/Family/FamilyPerson.dart';
 import 'package:mobi/model/Family/Task/FamilyTasks.dart';
@@ -36,7 +38,7 @@ class _UserInfoState extends State<UserInfo>
   List<FamilyTaskData> _taskDataW = [];
   List<FamilyTaskData> _taskDataD = [];
   List<FamilyTaskData> _taskDataM = [];
-
+  List<bool> isFav = [];
   FamilyPerson _familyPerson;
 
   @override
@@ -72,7 +74,9 @@ class _UserInfoState extends State<UserInfo>
       bottomNavigationBar: BuildBottomNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          userAddTaskBottom();
+        },
         child: Tab(
           icon: Icon(
             Icons.add,
@@ -114,11 +118,15 @@ class _UserInfoState extends State<UserInfo>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    child: Image.network(
-                                      "https://www.share-work.com/newsIcons/thumbnail_ikon_3_8.png",
+                                  InkWell(
+                                    onTap: () {
+                                      Get.to(CalendarPage());
+                                    },
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      child: Image.network(
+                                          "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png"),
                                     ),
                                   ),
                                   Column(
@@ -140,10 +148,10 @@ class _UserInfoState extends State<UserInfo>
                                                 BorderRadius.circular(30),
                                           ),
                                           child: Text(
-                                            "12",
+                                            _familyPerson.data.point.toString(),
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 9),
+                                                fontSize: 12),
                                           ),
                                         ),
                                       )
@@ -168,7 +176,7 @@ class _UserInfoState extends State<UserInfo>
                                 height: 20,
                               ),
                               Container(
-                                height: 50,
+                                height: 60,
                                 child: TabBar(
                                   labelStyle: TextStyle(
                                       fontSize: 18,
@@ -189,6 +197,7 @@ class _UserInfoState extends State<UserInfo>
                             //  height: 270,
                             width: Get.width,
                             child: TabBarView(
+                              dragStartBehavior: DragStartBehavior.start,
                               physics: NeverScrollableScrollPhysics(),
                               controller: _controller,
                               children: [
@@ -218,146 +227,36 @@ class _UserInfoState extends State<UserInfo>
     );
   }
 
-  /*
-  *
-  *
-  * SwipeActionCell(
-          key: ValueKey(taskData[index]),
-          leadingActions: [
-                  SwipeAction(
-                content:Container(
-                              width: 30,
-                              height: 30,
-                              child: Image.network(
-                                  "https://share-work.com/newsIcons/thumbnail_ikon_score.png"),
-                            )
-                color: Colors.transparent,
-                onTap: (handler) {}),
-
-            SwipeAction(
-                content:Container(
-                              width: 30,
-                              height: 30,
-                              child: Image.network(
-                                  "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png"),
-                            )
-                color: Colors.transparent,
-                onTap: (handler) {}),
-          ],
-          child: Container(
-            padding: EdgeInsets.only(
-                bottom: 10, top: 10, right: 5, left: 10),
-            decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(width: 0.3))),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: themeColor, width: 0.5),
-                          borderRadius:
-                          BorderRadius.circular(10)),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.network(url).image,
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          _orderData[index].familyShopItem.name,
-                          style: TextStyle(
-                              fontSize: 17, color: Colors.black),
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          _orderData[index].unit == 1
-                              ? "Adet"
-                              : "Kilogram",
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Column(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              editFamilyShopOrder(
-                                  id: _orderData[index].id,
-                                  count:
-                                  _orderData[index].count + 1,
-                                  unit: _orderData[index].unit);
-                              setState(() {
-                                _orderData[index].count++;
-                              });
-                            },
-                            child: Icon(Icons.add)),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          padding:
-                          EdgeInsets.fromLTRB(10, 5, 10, 5),
-                          decoration: BoxDecoration(
-                              color: background,
-                              borderRadius:
-                              BorderRadius.circular(5)),
-                          child: Text(
-                            _orderData[index].count.toString(),
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white),
-                          ),
-                        ),
-                        InkWell(
-                            onTap: () {
-                              editFamilyShopOrder(
-                                  id: _orderData[index].id,
-                                  count:
-                                  _orderData[index].count - 1,
-                                  unit: _orderData[index].unit);
-                              setState(() {
-                                _orderData[index].count--;
-                              });
-                            },
-                            child: Icon(Icons.remove)),
-                        SizedBox(
-                          height: 5,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-  *
-  * */
-
   cardBuilder(List<FamilyTaskData> taskData) {
+    taskData.forEach((element) {
+      isFav.add(false);
+    });
+
     return ListView.builder(
       itemCount: taskData.length,
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      controller: ScrollController(keepScrollOffset: false),
+      physics: BouncingScrollPhysics(),
+      controller: ScrollController(
+        keepScrollOffset: true,
+      ),
       itemBuilder: (context, index) {
+
+        print("stattusss $index = " + taskData[index].status.toString());
+        print("id $index  = " + taskData[index].familyPersonTaskId.toString() + taskData[index].title);
+
+
         String url = _controllerChange.urlTask +
             taskData[index].category +
             "/" +
             taskData[index].picture;
+
+        taskData[index].likePersonList.forEach((element) {
+          if (element.id == _familyPerson.data.id) {
+            isFav[index] = true;
+          }
+        });
+
         return Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: Container(
@@ -391,14 +290,22 @@ class _UserInfoState extends State<UserInfo>
                     onTap: (handler) {
                       commentBottom(taskData[index].familyPersonTaskId);
                     }),
+                SwipeAction(
+                    content: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                      size: 32,
+                    ),
+                    color: Colors.transparent,
+                    onTap: (handler) {}),
               ],
               child: Container(
                 padding:
-                    EdgeInsets.only(bottom: 10, top: 10, right: 5, left: 10),
+                    EdgeInsets.only(bottom: 10, top: 10, right: 10, left: 10),
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           padding: EdgeInsets.all(8),
@@ -430,9 +337,39 @@ class _UserInfoState extends State<UserInfo>
                           ],
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 50,
                         ),
-                        Text(taskData[index].points.toString())
+                        Row(
+                          children: [
+                            Text(taskData[index].points.toString()),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 20,
+                              height: 30,
+                              child: Image.network(
+                                  "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png"),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            isFav[index]
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : InkWell(
+                                    onTap: () async {
+                                      await insertFamilyPersonTaskLike(
+                                          taskData[index].familyPersonTaskId);
+                                      setState(() {
+                                        isFav[index] = true;
+                                      });
+                                    },
+                                    child: Icon(Icons.favorite_outline)),
+                          ],
+                        )
                       ],
                     ),
                   ],
@@ -491,7 +428,8 @@ class _UserInfoState extends State<UserInfo>
                       child: Column(
                         children: [
                           Text(
-                            messages.data[index].createDate.replaceAll(RegExp('T'), ' '),
+                            messages.data[index].createDate
+                                .replaceAll(RegExp('T'), ' '),
                             style: TextStyle(color: background, fontSize: 16),
                           ),
                           Row(
@@ -637,5 +575,174 @@ class _UserInfoState extends State<UserInfo>
             )),
           );
         });
+  }
+
+  Future<void> userAddTaskBottom() async {
+    FamilyTasks tasks;
+    List<FamilyTaskData> taskData = [];
+    tasks = await _controllerDB.getAllFamilyTaskList(
+        headers: _controllerDB.headers());
+
+    taskData = tasks.data;
+    ScrollController _taskController = ScrollController();
+    List<bool> _selectedTaskState;
+    List<FamilyTaskData> _selectedTask = [];
+
+    List<int> ids = [];
+    _taskDataD.forEach((element) {
+      print(element.id);
+      ids.add(element.id);
+    });
+
+    _selectedTaskState = List(taskData.length);
+    for (int i = 0; i < _selectedTaskState.length; i++) {
+      _selectedTaskState[i] = false;
+    }
+
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              child: Wrap(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: () {
+                        multipeInsertFamilyPersonTask(tasks: _selectedTask);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Task Gonder",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 400,
+                    child: GridView.builder(
+                      itemCount: taskData.length,
+                      padding: const EdgeInsets.all(15),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      controller: _taskController,
+                      itemBuilder: (context, index) {
+                        String url = _controllerChange.urlTask +
+                            taskData[index].category +
+                            "/" +
+                            taskData[index].picture;
+
+                        return IgnorePointer(
+                          ignoring: ids.contains(taskData[index].id),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _selectedTaskState[index] =
+                                    !_selectedTaskState[index];
+                                if (_selectedTaskState[index]) {
+                                  _selectedTask.add(taskData[index]);
+                                } else {
+                                  _selectedTask.remove(taskData[index]);
+                                }
+                              });
+                            },
+                            child: Wrap(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          color: _selectedTaskState[index]
+                                              ? Colors.grey[300]
+                                              : Colors.white,
+                                          border: Border.all(
+                                              color: themeColor, width: 0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          child: Image.network(
+                                            url,
+                                            fit: BoxFit.contain,
+                                          )),
+                                    ),
+                                    ids.contains(taskData[index].id)
+                                        ? Align(
+                                            alignment: Alignment.topRight,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.green),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                                size: 14,
+                                              ),
+                                            ),
+                                          )
+                                        : Container()
+                                  ],
+                                ),
+                                Text(
+                                  taskData[index].title,
+                                  style: TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 1.5,
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 0),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+        });
+  }
+
+  Future<void> multipeInsertFamilyPersonTask(
+      {List<FamilyTaskData> tasks}) async {
+    List<int> idList = [];
+
+    tasks.forEach((element) {
+      idList.add(element.id);
+    });
+
+    int result = await _controllerDB.multipleInsertFamilyPersonTask(
+        headers: _controllerDB.headers(),
+        personID: _familyPerson.data.id,
+        familyID: _familyPerson.data.familyId,
+        taskID: idList,
+        date: buildStringDate(DateTime.now()));
+    if (result == 200) {
+      setState(() {
+        tasks.forEach((element) {
+          _taskDataD.add(element);
+        });
+        Get.back();
+      });
+    }
+  }
+
+  Future<void> insertFamilyPersonTaskLike(int familyPersonTaskId) async {
+    await _controllerDB.insertFamilyPersonTaskLike(
+        headers: _controllerDB.headers(),
+        familyPersonTaskId: familyPersonTaskId);
   }
 }

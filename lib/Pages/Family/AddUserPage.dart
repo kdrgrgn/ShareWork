@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/model/Family/Family.dart';
+import 'package:mobi/widgets/MyCircularProgress.dart';
 import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class AddUserPage extends StatefulWidget {
@@ -24,6 +25,7 @@ class _AddUserPageState extends State<AddUserPage> {
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controller = Get.put(ControllerDB());
   Family family;
+  bool isLoading=false;
 
   @override
   void initState() {
@@ -51,7 +53,7 @@ class _AddUserPageState extends State<AddUserPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
+      body: isLoading?MyCircular():SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height - 200,
           child: Form(
@@ -67,6 +69,10 @@ class _AddUserPageState extends State<AddUserPage> {
                       onTap: () async {
                         if (_formkey.currentState.validate()) {
                           _formkey.currentState.save();
+
+                          setState(() {
+                            isLoading=true;
+                          });
                           await _controller.addPerson(
                               headers: _controller.headers(),
                               email: email,
@@ -75,6 +81,10 @@ class _AddUserPageState extends State<AddUserPage> {
                               lastName: lastName,
                               familyId: family.data.id,
                               age: age);
+
+                          setState(() {
+                            isLoading=false;
+                          });
 
                           Get.back();
                         }

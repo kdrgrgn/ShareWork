@@ -40,6 +40,8 @@ class FamilyPerson {
 class FamilyPersonData {
   int id;
   int familyId;
+  int point;
+
   int personType;
   int debt;
   int taskCount;
@@ -57,6 +59,7 @@ class FamilyPersonData {
         this.taskCount,
         this.user,
         this.icon,
+        this.point,
         this.age,
         this.createDate,
         this.ownedFamilyTaskList});
@@ -66,6 +69,7 @@ class FamilyPersonData {
     familyId = json['familyId'];
     personType = json['personType'];
     debt = json['debt'];
+    point = json['point'];
     taskCount = json['taskCount'];
     user = json['user'] != null ? new UserData.fromJson(json['user']) : null;
     icon = json['icon'];
@@ -85,6 +89,7 @@ class FamilyPersonData {
     data['familyId'] = this.familyId;
     data['personType'] = this.personType;
     data['debt'] = this.debt;
+    data['point'] = this.point;
     data['taskCount'] = this.taskCount;
     if (this.user != null) {
       data['user'] = this.user.toJson();

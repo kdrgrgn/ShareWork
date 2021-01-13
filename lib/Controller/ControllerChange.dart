@@ -10,7 +10,8 @@ class ControllerChange extends GetxController {
   RxBool familyIsActive=false.obs;
   RxInt initialPage =0.obs;
   Rx<DateTime> selectedDay=DateTime.now().obs;
-  RxList<int> tabIndex=[0].obs;
+  RxList<int> tabIndexList=[0].obs;
+  RxInt tabIndex=0.obs;
   RxList<int> familiyTabIndex=[0].obs;
 
 
@@ -51,20 +52,15 @@ class ControllerChange extends GetxController {
 
   void updateTabState(int state) {
 
-if(tabIndex.contains(state)){
-  tabIndex.remove(state);
-}
-tabIndex.add(state);
+/*if(tabIndexList.contains(state)){
+  tabIndexList.remove(state);
+}*/
+tabIndexList.add(state);
+    update();
+    tabIndex=state.obs;
     update();
   }
-  void updateFamilyTabState(int state) {
 
-if(familiyTabIndex.contains(state)){
-  familiyTabIndex.remove(state);
-}
-familiyTabIndex.add(state);
-    update();
-  }
 
   void updateFamily(int i) {
 
@@ -89,19 +85,15 @@ familiyTabIndex.add(state);
   }
 
   void removeTab() {
-    if(tabIndex.length!=1) {
-      tabIndex.removeLast();
+    if(tabIndexList.length!=1) {
+      tabIndexList.removeLast();
+      update();
+      tabIndex=tabIndexList.last.obs;
       update();
     }
 
   }
-  void removeFamilyTab() {
-    if(familiyTabIndex.length!=1) {
-      familiyTabIndex.removeLast();
-      update();
-    }
 
-  }
 
 
 

@@ -227,6 +227,21 @@ class ControllerDB extends GetxController {
         amount: amount,
         personList: personList);
   }
+  void editFamilyBudgetItem(
+      {Map<String, String> headers,
+      int budgetItemId,
+      int payerPerson,
+      String title,
+      int amount,
+      List<Map<String, int>> personList}) {
+    _dbService.editFamilyBudgetItem(
+        headers: headers,
+        budgetItemId: budgetItemId,
+        payerPerson: payerPerson,
+        title: title,
+        amount: amount,
+        personList: personList);
+  }
 
   Future<Gift> getFamilyGiftList(
       {Map<String, String> headers, int familyId}) async {
@@ -332,6 +347,18 @@ class ControllerDB extends GetxController {
          file: file
 
     );
+
+  }
+
+  insertFamilyPersonTaskLike({Map<String, String> headers, int familyPersonTaskId}) async {
+    await _dbService.insertFamilyPersonTaskLike(headers:headers,familyPersonTaskId:familyPersonTaskId);
+
+
+  }
+
+  getFamilyBudgetItem({Map<String, String> headers, int id}) async {
+
+   return  await _dbService.getFamilyBudgetItem(headers:headers,id:id);
 
   }
 }

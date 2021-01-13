@@ -83,11 +83,11 @@ class _GiftListState extends State<GiftList> {
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(15)),
                     padding:
-                        EdgeInsets.only(bottom: 8, top: 8, right: 5, left: 5),
+                        EdgeInsets.only(bottom: 12, top: 12, right: 5, left: 5),
                     child: ListTile(
                       leading: Container(
-                        width: 50,
-                        height: 50,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -95,13 +95,44 @@ class _GiftListState extends State<GiftList> {
                         child: Center(
                             child: Image.network(
                           url,
-                          width: 35,
-                          height: 35,
+                          width: 60,
+                          height: 60
                           //  fit: BoxFit.contain,
                         )),
                       ),
-                      title: Text(_gift.data[index].title),
-                      trailing: Text(_gift.data[index].point.toString()),
+                      title: Center(child: Text(_gift.data[index].title)),
+                      trailing: Container(
+                        width: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.network(
+                                    "https://share-work.com/newsIcons/thumbnail_ikon_score.png")),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                padding: EdgeInsets.all(2),
+                                /*    width: 10,
+                                    height: 10,*/
+                                decoration: BoxDecoration(
+                                  color: background,
+                                  borderRadius:
+                                  BorderRadius.circular(30),
+                                ),
+                                child: Text(
+                                  _gift.data[index].point.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 );

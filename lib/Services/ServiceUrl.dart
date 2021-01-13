@@ -69,8 +69,14 @@ class ServiceUrl {
   final String getFamilyBudgetItemList =
       baseUrlShareWork + "/Family/GetFamilyBudgetList";
 
+  final String getFamilyBudgetItem =
+      baseUrlShareWork + "/Family/GetFamilyBudgetItem";
+
   final String insertFamilyBudgetItem =
       baseUrlShareWork + "/Family/InsertFamilyBudgetItem";
+
+  final String editFamilyBudgetItem =
+      baseUrlShareWork + "/Family/EditBudgetItem";
 
   final String insertFamilyGift =
       baseUrlShareWork + "/Family/InsertFamilyGift";
@@ -114,6 +120,11 @@ class ServiceUrl {
 
   final String editFamilyPersonTaskPersonId =
       baseUrlShareWork +"/Family/EditFamilyPersonTaskPersonId";
+
+
+  final String insertFamilyPersonTaskLike =
+      baseUrlShareWork +"/Family/InsertFamilyPersonTaskLike";
+
 
 
 }

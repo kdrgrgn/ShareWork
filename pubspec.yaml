@@ -38,6 +38,7 @@ dependencies:
   path: ^1.7.0
   shared_preferences: ^0.5.12+4
   flutter_swipe_action_cell: ^1.3.2
+  easy_localization: ^2.3.3
 
 
 
@@ -68,6 +69,7 @@ flutter:
   assets:
 
     - assets/images/logo/sharework_logo.png
+    - assets/Translations/
     - assets/images/Login/
     - assets/images/account/
     - assets/images/family/

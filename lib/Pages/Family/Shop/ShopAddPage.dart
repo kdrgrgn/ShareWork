@@ -628,7 +628,13 @@ class _ShopAddPageState extends State<ShopAddPage> {
                         containerH = 40;
                       });
                     },
-                    child: Icon(Icons.search)),
+                    child: Container(
+                        width: 30,
+                        height: 30,
+                        child: Image.network(
+                          "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_1.png",
+                          fit: BoxFit.contain,
+                        ))),
               )
             : Expanded(
                 flex: 1,
@@ -778,9 +784,9 @@ class _ShopAddPageState extends State<ShopAddPage> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    prefixIcon: Icon(Icons.search),
+
                     suffixIcon: Icon(Icons.filter_list_outlined),
-                    hintText: "Search Shop"),
+                    labelText: "Search Shop"),
               ),
             ),
           ),
@@ -1091,6 +1097,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
                                   value.isEmpty ? "Bos olamaz" : null,
                               maxLines: 1,
                               decoration: InputDecoration(
+                                suffix: Text("€"),
                                   border: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.circular(10))),

@@ -1,3 +1,5 @@
+import 'package:mobi/model/Family/Family.dart';
+
 class Budget {
   int statusCode;
   Null exceptionInfo;
@@ -43,7 +45,7 @@ class BudgetData {
   int familyId;
   String title;
   int amount;
-  Null personList;
+  List<PersonList> personList;
   PayerPerson payerPerson;
   String createDate;
 
@@ -61,7 +63,12 @@ class BudgetData {
     familyId = json['familyId'];
     title = json['title'];
     amount = json['amount'];
-    personList = json['personList'];
+    if (json['personList'] != null) {
+      personList = new List<PersonList>();
+      json['personList'].forEach((v) {
+        personList.add(new PersonList.fromJson(v));
+      });
+    }
     payerPerson = json['payerPerson'] != null
         ? new PayerPerson.fromJson(json['payerPerson'])
         : null;
@@ -80,6 +87,11 @@ class BudgetData {
     }
     data['createDate'] = this.createDate;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'BudgetData{id: $id, familyId: $familyId, title: $title, amount: $amount, personList: $personList, payerPerson: $payerPerson, createDate: $createDate}';
   }
 }
 
@@ -136,6 +148,8 @@ class PayerPerson {
     data['ownedFamilyTaskList'] = this.ownedFamilyTaskList;
     return data;
   }
+
+
 }
 
 class BudgetUser {

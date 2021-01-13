@@ -114,6 +114,10 @@ class DbService {
   Future<FamilyPerson> getFamilyPersonWithId(
       {Map<String, String> headers, int id, String date}) async {
     try {
+
+      print("jsoonn get family with id "+ jsonEncode({"personId": id, "date": date}));
+
+
       var response = await http.post(_serviceUrl.getFamilyPersonWithId,
           headers: headers, body: jsonEncode({"personId": id, "date": date}));
       log("responsee get person with id " + response.body);
@@ -327,6 +331,16 @@ class DbService {
       int amount,
       List<Map<String, int>> personList}) async {
     try {
+
+
+      log("jsoonn insertFamilyBudgetItem" + jsonEncode({
+        "FamilyId": familyId,
+        "PayerPerson": {"Id": payerPerson},
+        "Title": title,
+        "Amount": amount,
+        "personList": personList
+      }));
+
       await http.post(
         _serviceUrl.insertFamilyBudgetItem,
         body: jsonEncode({
@@ -345,6 +359,31 @@ class DbService {
     } catch (e) {
       print("family hata shop multiple  service= " + e.toString());
     }
+  }
+  Future<void> editFamilyBudgetItem(
+      {Map<String, String> headers,
+      int budgetItemId,
+      int payerPerson,
+      String title,
+      int amount,
+      List<Map<String, int>> personList}) async {
+
+   var response=   await http.post(
+        _serviceUrl.editFamilyBudgetItem,
+        body: jsonEncode({
+            "Id": budgetItemId,
+            "PayerPerson": {"Id": payerPerson},
+            "Title": title,
+            "Amount": amount,
+            "personList": personList
+        }),
+        headers: headers,
+      );
+log("reess edit budget id = " + response.body);
+      // final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      // return Budget.fromJson(responseData);
+
   }
 
   Future<Gift> getFamilyGiftList(
@@ -501,6 +540,15 @@ class DbService {
       int familyPersonTaskId,
       int status,
       int points}) async {
+
+
+    log("reeqqqq= " +jsonEncode({
+      "id": familyPersonTaskId,
+      "status": status,
+      "points": points,
+      "FamilyPerson": {"Id": personId}
+    }));
+
     var response =
         await http.post(_serviceUrl.editFamilyPersonTaskDetailsWithPersonId,
             headers: headers,
@@ -579,17 +627,7 @@ class DbService {
       List<int> imageBytes = file.readAsBytesSync();
       String fileName = basename(file.path).toString();
       String content = base64Encode(imageBytes);
-      log("jsssoonn  = " +
-          jsonEncode({
-            "familyId": familyId,
-            "title": title,
-            "point": point,
-            "Picture": {
-              "Directory": "",
-              "FileContent": content,
-              "FileName": fileName
-            }
-          }));
+
 
       var response = await http.post(
         _serviceUrl.insertFamilyGift,
@@ -606,11 +644,34 @@ class DbService {
         }),
         headers: headers,
       );
-      log("ress create giftt= " + response.body);
-      log("ress create giftt code= " + response.statusCode.toString());
+
 
     } catch (e) {
       print("ress create giftt  service= " + e.toString());
     }
   }
+
+  insertFamilyPersonTaskLike({Map<String, String> headers, int familyPersonTaskId}) async {
+    var response = await http.get(
+      _serviceUrl.insertFamilyPersonTaskLike+"?familyPersonTaskId=$familyPersonTaskId",
+
+      headers: headers,
+    );
+
+log("insertFamilyPersonTaskLike = " + response.body);
+
+  }
+
+  getFamilyBudgetItem({Map<String, String> headers, int id}) async {
+    var response = await http.get(
+      _serviceUrl.getFamilyBudgetItem + "?id=$id",
+      headers: headers,
+    );
+log("Reessss budget = " + response.body);
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+    return BudgetData.fromJson(responseData['data']);
+  }
+
+
 }

@@ -1,3 +1,5 @@
+import 'package:mobi/model/User/UserData.dart';
+
 class FamilyTasks {
   int statusCode;
   Null exceptionInfo;
@@ -52,6 +54,9 @@ class FamilyTaskData {
   int familyPersonTaskId;
   int repeatId;
   int repeatType;
+  List<LikePersonList> likePersonList;
+
+
 
   FamilyTaskData(
       {this.id,
@@ -61,6 +66,7 @@ class FamilyTaskData {
         this.description,
         this.picture,
         this.title,
+        this.likePersonList,
         this.category,
         this.status,
         this.points,
@@ -72,10 +78,16 @@ class FamilyTaskData {
     id = json['id'];
     createDate = json['createDate'];
     date = json['date'];
-    dateString = json['dateString'];
+    dateString = json['dateString']??"";
     description = json['description'];
     picture = json['picture'];
     title = json['title'];
+     if (json['likePersonList'] != null) {
+      likePersonList = new List<LikePersonList>();
+      json['likePersonList'].forEach((v) {
+        likePersonList.add(new LikePersonList.fromJson(v));
+      });
+    }
     category = json['category'];
     status = json['status'];
     points = json['points'];
@@ -95,10 +107,67 @@ class FamilyTaskData {
     data['title'] = this.title;
     data['category'] = this.category;
     data['status'] = this.status;
+    data['likePersonList'] = this.likePersonList;
     data['points'] = this.points;
     data['familyPersonTaskId'] = this.familyPersonTaskId;
     data['repeatId'] = this.repeatId;
     data['repeatType'] = this.repeatType;
+    return data;
+  }
+}
+
+
+class LikePersonList {
+  int id;
+  int familyId;
+  int personType;
+  int debt;
+  int taskCount;
+  UserData user;
+  Null icon;
+  int age;
+  String createDate;
+  Null ownedFamilyTaskList;
+
+  LikePersonList(
+      {this.id,
+        this.familyId,
+        this.personType,
+        this.debt,
+        this.taskCount,
+        this.user,
+        this.icon,
+        this.age,
+        this.createDate,
+        this.ownedFamilyTaskList});
+
+  LikePersonList.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    familyId = json['familyId'];
+    personType = json['personType'];
+    debt = json['debt'];
+    taskCount = json['taskCount'];
+    user = json['user'] != null ? new UserData.fromJson(json['user']) : null;
+    icon = json['icon'];
+    age = json['age'];
+    createDate = json['createDate'];
+    ownedFamilyTaskList = json['ownedFamilyTaskList'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['familyId'] = this.familyId;
+    data['personType'] = this.personType;
+    data['debt'] = this.debt;
+    data['taskCount'] = this.taskCount;
+    if (this.user != null) {
+      data['user'] = this.user.toJson();
+    }
+    data['icon'] = this.icon;
+    data['age'] = this.age;
+    data['createDate'] = this.createDate;
+    data['ownedFamilyTaskList'] = this.ownedFamilyTaskList;
     return data;
   }
 }

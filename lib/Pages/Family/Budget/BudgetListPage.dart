@@ -33,7 +33,6 @@ class _BudgetListState extends State<BudgetList> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       family = _controller.family.value;
 
-
       _budget = await _controller.getFamilyBudgetItemList(
           headers: _controller.headers(), familyId: family.data.id);
 
@@ -49,13 +48,28 @@ class _BudgetListState extends State<BudgetList> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          int id;
+          for (PersonList element in family.data.personList) {
+            if (element.user.id == _controller.user.value.data.id) {
+              id = element.id;
+            }
+          }
+          //  Get.to(BudgetPage(id));
           navigatorPush();
+          //navigatorPush();
         },
+        backgroundColor: Colors.white,
         child: Tab(
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 40,
+          icon: Container(
+            width: 30,
+            height: 30,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5.0),
+              child: Image.network(
+                "https://share-work.com/newsIcons/thumbnail_thumbnail_ikon_4_15_1.png",
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
         ),
       ),
@@ -71,16 +85,13 @@ class _BudgetListState extends State<BudgetList> {
                     decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(15)),
-                    padding: EdgeInsets.only(
-                        bottom: 5, top: 5, right: 5, left: 5),
-
+                    padding:
+                        EdgeInsets.only(bottom: 5, top: 5, right: 5, left: 5),
                     child: Column(
                       children: [
                         ListTile(
                           onTap: () async {
-                                await navigatorPush(index:index);
-
-
+                            await navigatorPush(index: index);
                           },
                           leading: CircleAvatar(
                             radius: 30,
@@ -98,9 +109,14 @@ class _BudgetListState extends State<BudgetList> {
                                 _budget.data[index].payerPerson.user.lastName,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          trailing: Text(_budget.data[index].amount.toString()+" €"),
+                          trailing: Text(
+                            _budget.data[index].amount.toString() + " €",
+                            style: TextStyle(
+                                color: _budget.data[index].payerPerson.debt >= 0
+                                    ? Colors.green
+                                    : Colors.red),
+                          ),
                         ),
-
                       ],
                     ),
                   ),
@@ -111,43 +127,44 @@ class _BudgetListState extends State<BudgetList> {
   }
 
   Future navigatorPush({int index}) async {
+    BudgetData data;
+    ;
 
-    if(index==null){
-int id;
-
-for(PersonList element in family.data.personList){
-
-
-  if(element.user.id ==_controller.user.value.data.id){
-    id=element.id;
-  }
-
-}
-
-
-      Get.to(BudgetPage(id)).then((value) async {
-        await buildPage();
-      });
-    }else{
-      Get.to(BudgetPage(_budget.data[index].payerPerson.id)).then((value) async {
-        await buildPage();
-      });
+    if (index == null) {
+/*
+      for (PersonList element in family.data.personList) {
+        if (element.user.id == _controller.user.value.data.id) {
+          id = element.id;
+        }
+      }
+*/
+      data = null;
+    } else {
+      data = _budget.data[index];
     }
 
+    Get.to(BudgetPage(
+      budgetData: data,
+    )).then((value) async {
+      await buildPage();
+    });
   }
 
   Future buildPage() async {
-       setState(() {
+    setState(() {
       isLoading = true;
     });
 
-
-
-    Budget result = await _controller.getFamilyBudgetItemList(
-        headers: _controller.headers(), familyId: family.data.id);
+    _controller
+        .getFamilyBudgetItemList(
+            headers: _controller.headers(), familyId: family.data.id)
+        .then((value) {
+      setState(() {
+        _budget = value;
+      });
+    });
 
     setState(() {
-      _budget=result;
       isLoading = false;
     });
   }

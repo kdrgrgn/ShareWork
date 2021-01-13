@@ -37,7 +37,7 @@ class BuildBottomNavigationBar extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () async {
-                    if (c.tabIndex.last == 0) {
+                    if (c.tabIndexList.last == 0) {
                       c.removeTab();
                       Get.back();
                     } else {
@@ -47,12 +47,12 @@ class BuildBottomNavigationBar extends StatelessWidget {
                   },
                   child: Image.network(
                     "https://www.share-work.com/newsIcons/thumbnail_ikon_5_7.png",
-                    height: c.tabIndex.last == 0 ? selectSize : size,
+                    height: c.tabIndex.value == 0 ? selectSize : size,
                   ),
                 ),
                 InkWell(
                   onTap: () {
-                    if (c.tabIndex.last == 1) {
+                    if (c.tabIndexList.last == 1) {
                       c.removeTab();
 
                       Get.back();
@@ -62,8 +62,8 @@ class BuildBottomNavigationBar extends StatelessWidget {
                     }
                   },
                   child: Image.network(
-                    "https://www.share-work.com/newsIcons/thumbnail_ikon_3_8.png",
-                    height: c.tabIndex.last == 1 ? selectSize : size,
+                    "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png",
+                    height: c.tabIndex.value== 1 ? selectSize : size,
                   ),
                 ),
                 SizedBox(
@@ -71,7 +71,7 @@ class BuildBottomNavigationBar extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    if (c.tabIndex.last == 2) {
+                    if (c.tabIndexList.last == 2) {
                       c.removeTab();
 
                       Get.back();
@@ -82,12 +82,12 @@ class BuildBottomNavigationBar extends StatelessWidget {
                   },
                   child: Image.network(
                     "https://share-work.com/newsIcons/thumbnail_ikon_5_2.png",
-                    height: c.tabIndex.last == 2 ? selectSize : size,
+                    height: c.tabIndex.value == 2 ? selectSize : size,
                   ),
                 ),
                 InkWell(
                   onTap: () {
-                    if (c.tabIndex.last == 3) {
+                    if (c.tabIndexList.last == 3) {
                       c.removeTab();
 
                       Get.back();
@@ -98,7 +98,7 @@ class BuildBottomNavigationBar extends StatelessWidget {
                   },
                   child: Image.network(
                     "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_4.png",
-                    height: c.tabIndex.last == 3 ? selectSize : size,
+                    height: c.tabIndex.value == 3 ? selectSize : size,
                   ),
                 ),
               ],

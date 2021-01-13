@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
@@ -10,9 +9,7 @@ import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import 'package:mobi/widgets/buildFamilyBottomNavigationBar.dart';
 
 class FamilyTabBar extends StatefulWidget {
-
   int tabIndex;
-
 
   FamilyTabBar({this.tabIndex});
 
@@ -20,13 +17,13 @@ class FamilyTabBar extends StatefulWidget {
   _FamilyTabBarState createState() => _FamilyTabBarState();
 }
 
-class _FamilyTabBarState extends State<FamilyTabBar>   with SingleTickerProviderStateMixin {
+class _FamilyTabBarState extends State<FamilyTabBar>
+    with SingleTickerProviderStateMixin {
   TabController _controller;
 
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controllerDB = Get.put(ControllerDB());
-
 
   List<Widget> listTab = [
     Tab(icon: Text("Task")),
@@ -40,24 +37,35 @@ class _FamilyTabBarState extends State<FamilyTabBar>   with SingleTickerProvider
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller=TabController(initialIndex: widget.tabIndex??0,length: listTab.length,vsync: this);
+    _controller = TabController(
+        initialIndex: widget.tabIndex ?? 0,
+        length: listTab.length,
+        vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         actions: [
           Container(
-            width: 30,
-            height: 30,
+            width: 25,
+            height: 25,
             child: Image.network(
                 "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png"),
           ),
-          SizedBox(width: 10,)
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+              width: 20,
+              height: 20,
+              child: Image.network(
+                  "https://share-work.com/newsIcons/ikonlar_ek_6.png")),
+          SizedBox(
+            width: 10,
+          )
         ],
-
         bottom: TabBar(
           onTap: (index) {
             // Should not used it as it only called when tab options are clicked,
@@ -68,19 +76,19 @@ class _FamilyTabBarState extends State<FamilyTabBar>   with SingleTickerProvider
           labelColor: themeColor,
           tabs: listTab,
           isScrollable: true,
-
         ),
         title: Text("Family"),
       ),
-      body:TabBarView(
+      body: TabBarView(
         controller: _controller,
         children: [
           FamilyAddTaskPage(),
-          Center(child: Text("Social"),),
+          Center(
+            child: Text("Social"),
+          ),
           GiftList(),
           BudgetList(),
           ShopAddPage()
-
         ],
       ),
     );

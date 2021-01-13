@@ -24,6 +24,7 @@ class _SignInPageState extends State<SignInPage> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
+        keyboardType: isPassword?TextInputType.visiblePassword:TextInputType.emailAddress,
         onTap: () {
           if (isPassword) {
             setState(() {

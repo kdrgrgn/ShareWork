@@ -35,6 +35,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       child: TextFormField(
         style: TextStyle(color: Colors.black, fontSize: 17),
+        keyboardType: key==0?TextInputType.emailAddress:TextInputType.name,
+
         validator: (value) {
           if (value.isEmpty) {
             return "Doldurunuz";
