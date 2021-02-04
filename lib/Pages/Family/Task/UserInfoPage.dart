@@ -34,6 +34,8 @@ class _UserInfoState extends State<UserInfo>
     Tab(icon: Text("Weekly")),
     Tab(icon: Text("Monthly")),
   ];
+  int newPoint = 0;
+  int currentTab = 0;
   TabController _controller;
   List<FamilyTaskData> _taskDataW = [];
   List<FamilyTaskData> _taskDataD = [];
@@ -71,8 +73,9 @@ class _UserInfoState extends State<UserInfo>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BuildBottomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
+     // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           userAddTaskBottom();
@@ -178,6 +181,9 @@ class _UserInfoState extends State<UserInfo>
                               Container(
                                 height: 60,
                                 child: TabBar(
+                                  onTap: (index) {
+                                    currentTab = index;
+                                  },
                                   labelStyle: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
@@ -241,11 +247,6 @@ class _UserInfoState extends State<UserInfo>
         keepScrollOffset: true,
       ),
       itemBuilder: (context, index) {
-
-        print("stattusss $index = " + taskData[index].status.toString());
-        print("id $index  = " + taskData[index].familyPersonTaskId.toString() + taskData[index].title);
-
-
         String url = _controllerChange.urlTask +
             taskData[index].category +
             "/" +
@@ -277,7 +278,8 @@ class _UserInfoState extends State<UserInfo>
                     ),
                     color: Colors.transparent,
                     onTap: (handler) {
-                      missionCompleted(taskData[index].familyPersonTaskId);
+                      missionCompleted(
+                          taskData[index].familyPersonTaskId, index);
                     }),
                 SwipeAction(
                     content: Container(
@@ -527,7 +529,7 @@ class _UserInfoState extends State<UserInfo>
         });
   }
 
-  missionCompleted(int familyPersonTaskId) {
+  missionCompleted(int familyPersonTaskId, index) {
     final _formKeyDiolog = GlobalKey<FormState>();
     int points;
 
@@ -548,8 +550,19 @@ class _UserInfoState extends State<UserInfo>
                         status: 1,
                         familyPersonTaskId: familyPersonTaskId,
                         headers: _controllerDB.headers());
+                    setState(() {
+                      if (currentTab == 0) {
+                        _taskDataD[index].points += points;
+                      } else if (currentTab == 1) {
+                        _taskDataW[index].points += points;
+                      } else if (currentTab == 2) {
+                        _taskDataM[index].points += points;
+                      }
+                      _familyPerson.data.point+=points;
 
-                    Get.back();
+                    });
+
+                    Get.back(closeOverlays: true);
                   }
                 },
               ),
@@ -594,10 +607,10 @@ class _UserInfoState extends State<UserInfo>
       ids.add(element.id);
     });
 
-    _selectedTaskState = List(taskData.length);
-    for (int i = 0; i < _selectedTaskState.length; i++) {
+    _selectedTaskState = List.filled(taskData.length, false, growable: true);
+    /* for (int i = 0; i < _selectedTaskState.length; i++) {
       _selectedTaskState[i] = false;
-    }
+    }*/
 
     showModalBottomSheet(
         shape: RoundedRectangleBorder(

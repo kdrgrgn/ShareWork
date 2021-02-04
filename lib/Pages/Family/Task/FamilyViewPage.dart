@@ -169,8 +169,7 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
             Row(children: [
               InkWell(
                 onTap: () {
-                  Get.to(CommunicationPage(
-                      bottomNavBar: BuildBottomNavigationBar()));
+                  Get.to(CommunicationPage());
                 },
                 child: Container(
                     width: 30,

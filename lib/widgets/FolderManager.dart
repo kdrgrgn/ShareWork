@@ -33,7 +33,7 @@ class _FolderManagerState extends State<FolderManager> {
   Widget build(BuildContext context) {
     themeColor = Theme.of(context).accentColor;
     return Scaffold(
-      bottomNavigationBar: BuildBottomNavigationBar(),
+   //   bottomNavigationBar: BuildBottomNavigationBar(),
       appBar: AppBar(
         title: Text("File Manager"),
         actions: [
@@ -48,7 +48,7 @@ class _FolderManagerState extends State<FolderManager> {
 
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+  //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(

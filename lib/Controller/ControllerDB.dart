@@ -21,6 +21,7 @@ import 'package:mobi/model/Personels/Personels.dart';
 import 'package:mobi/model/Project/Project.dart';
 import 'package:mobi/model/User/Plugins.dart';
 import 'package:mobi/model/User/User.dart';
+import 'package:mobi/model/User/UserData.dart';
 
 class ControllerDB extends GetxController {
   AuthService _authService = AuthService();
@@ -45,6 +46,9 @@ class ControllerDB extends GetxController {
     };
   }
 
+  final String _urlUsers = "https://share-work.com" +
+      "/media/users/";
+
   Future<Family> createFamily(
       {Map<String, String> headers, String title, File file}) async {
     Family result = await _dbService.createFamily(
@@ -53,14 +57,13 @@ class ControllerDB extends GetxController {
     update();
   }
 
-  signUp(
-      {String mail,
-      String password,
-      String firstName,
-      String lastName,
-      int regType,
-      bool rememberMe,
-      String title}) async {
+  signUp({String mail,
+    String password,
+    String firstName,
+    String lastName,
+    int regType,
+    bool rememberMe,
+    String title}) async {
     try {
       isLoading = true.obs;
       update();
@@ -139,12 +142,11 @@ class ControllerDB extends GetxController {
         headers: headers, id: id, date: date);
   }
 
-  Future<int> insertFamilyPersonTask(
-      {Map<String, String> headers,
-      int personID,
-      int familyID,
-      int taskID,
-      String date}) async {
+  Future<int> insertFamilyPersonTask({Map<String, String> headers,
+    int personID,
+    int familyID,
+    int taskID,
+    String date}) async {
     return await _dbService.insertFamilyPersonTask(
         headers: headers,
         personID: personID,
@@ -153,13 +155,12 @@ class ControllerDB extends GetxController {
         date: date);
   }
 
-  Future<int> multipleInsertFamilyPersonTask(
-      {Map<String, String> headers,
-      int personID,
-      int familyID,
-      List<int> taskID,
-      String date,
-      int repeatType}) async {
+  Future<int> multipleInsertFamilyPersonTask({Map<String, String> headers,
+    int personID,
+    int familyID,
+    List<int> taskID,
+    String date,
+    int repeatType}) async {
     return await _dbService.multipleInsertFamilyPersonTask(
         headers: headers,
         personID: personID,
@@ -191,13 +192,11 @@ class ControllerDB extends GetxController {
         headers: headers, itemID: itemID, familyID: familyID);
   }
 
-  Future<ShopOrder> insertFamilyShopOrderMultiple(
-      {int familyID,
-      int repeatType,
-        String date,
-
-        List<int> itemID,
-      Map<String, String> headers}) async {
+  Future<ShopOrder> insertFamilyShopOrderMultiple({int familyID,
+    int repeatType,
+    String date,
+    List<int> itemID,
+    Map<String, String> headers}) async {
     return await _dbService.insertFamilyShopOrderMultiple(
         headers: headers,
         itemID: itemID,
@@ -212,13 +211,12 @@ class ControllerDB extends GetxController {
         headers: headers, familyId: familyId);
   }
 
-  void insertFamilyBudgetItem(
-      {Map<String, String> headers,
-      int familyId,
-      int payerPerson,
-      String title,
-      int amount,
-      List<Map<String, int>> personList}) {
+  void insertFamilyBudgetItem({Map<String, String> headers,
+    int familyId,
+    int payerPerson,
+    String title,
+    int amount,
+    List<Map<String, int>> personList}) {
     _dbService.insertFamilyBudgetItem(
         headers: headers,
         familyId: familyId,
@@ -227,13 +225,13 @@ class ControllerDB extends GetxController {
         amount: amount,
         personList: personList);
   }
-  void editFamilyBudgetItem(
-      {Map<String, String> headers,
-      int budgetItemId,
-      int payerPerson,
-      String title,
-      int amount,
-      List<Map<String, int>> personList}) {
+
+  void editFamilyBudgetItem({Map<String, String> headers,
+    int budgetItemId,
+    int payerPerson,
+    String title,
+    int amount,
+    List<Map<String, int>> personList}) {
     _dbService.editFamilyBudgetItem(
         headers: headers,
         budgetItemId: budgetItemId,
@@ -253,14 +251,13 @@ class ControllerDB extends GetxController {
     return await _dbService.getPluginList(headers: headers);
   }
 
-  addPerson(
-      {Map<String, String> headers,
-      int age,
-      String email,
-      String phone,
-      String firstName,
-      String lastName,
-      int familyId}) async {
+  addPerson({Map<String, String> headers,
+    int age,
+    String email,
+    String phone,
+    String firstName,
+    String lastName,
+    int familyId}) async {
     Family result = await _dbService.addPerson(
         headers: headers,
         age: age,
@@ -293,10 +290,10 @@ class ControllerDB extends GetxController {
 
   Future<int> editFamilyPersonTaskDetailsWithPersonId(
       {Map<String, String> headers,
-      int personId,
-      int familyPersonTaskId,
-      int status,
-      int points}) async {
+        int personId,
+        int familyPersonTaskId,
+        int status,
+        int points}) async {
     return await _dbService.editFamilyPersonTaskDetailsWithPersonId(
         headers: headers,
         personId: personId,
@@ -319,46 +316,90 @@ class ControllerDB extends GetxController {
     _dbService.deleteFamilyShopOrder(id: id, headers: headers);
   }
 
-  buyFamilyShopOrder({int familyId, Map<String, String> headers, List<int> fsoIds, int price}) {
-
+  buyFamilyShopOrder({int familyId,
+    Map<String, String> headers,
+    List<int> fsoIds,
+    int price}) {
     _dbService.buyFamilyShopOrder(
-        familyId: familyId, headers: headers,fsoIds:fsoIds,price:price);
-
-
-
+        familyId: familyId, headers: headers, fsoIds: fsoIds, price: price);
   }
 
-  Future<int> editFamilyPersonTaskPersonId({List<int> fptIds, int personId, Map<String, String> headers}) async {
-   return await _dbService.editFamilyPersonTaskPersonId(
-      fptIds:fptIds,
-      personId:personId,
-
-      headers:headers,
-
+  Future<int> editFamilyPersonTaskPersonId(
+      {List<int> fptIds, int personId, Map<String, String> headers}) async {
+    return await _dbService.editFamilyPersonTaskPersonId(
+      fptIds: fptIds,
+      personId: personId,
+      headers: headers,
     );
   }
 
-  insertFamilyGift({int familyId, Map<String, String> headers, String title, int point, File file}) async {
-     await _dbService.insertFamilyGift(
-         familyId:familyId,
-         headers: headers,
-         title: title,
-         point:point,
-         file: file
-
-    );
-
+  insertFamilyGift({int familyId,
+    Map<String, String> headers,
+    String title,
+    int point,
+    File file}) async {
+    await _dbService.insertFamilyGift(
+        familyId: familyId,
+        headers: headers,
+        title: title,
+        point: point,
+        file: file);
   }
 
-  insertFamilyPersonTaskLike({Map<String, String> headers, int familyPersonTaskId}) async {
-    await _dbService.insertFamilyPersonTaskLike(headers:headers,familyPersonTaskId:familyPersonTaskId);
-
-
+  insertFamilyPersonTaskLike(
+      {Map<String, String> headers, int familyPersonTaskId}) async {
+    await _dbService.insertFamilyPersonTaskLike(
+        headers: headers, familyPersonTaskId: familyPersonTaskId);
   }
 
   getFamilyBudgetItem({Map<String, String> headers, int id}) async {
+    return await _dbService.getFamilyBudgetItem(headers: headers, id: id);
+  }
 
-   return  await _dbService.getFamilyBudgetItem(headers:headers,id:id);
+  logOut() {
+    try {
+      isLoading = true.obs;
+      update();
+      RememberMeControl.instance.setRemember("login", null);
+      token = "".obs;
+      user = null.obs;
+      update();
+    } catch (e) {} finally {
+      isLoading = false.obs;
+      update();
+    }
+  }
 
+  Future<void> updateUserInfo(
+      {String firstName, String lastName, String pass, String email, Map<
+          String,
+          String> headers,}) async {
+    RememberMeControl.instance.setRemember("login", null);
+    await _authService.updateUserInfo(
+        firstName: firstName,
+        lastName: lastName,
+        pass: pass,
+        email: email,
+        header: headers);
+    user.value.data.firstName = firstName;
+    update();
+    user.value.data.lastName = lastName;
+    update();
+
+    user.value.data.email = email;
+    update();
+  }
+
+  changeProfilePhoto({File file, Map<String, String> header}) async {
+    String url = await _authService.changeProfilePhoto(
+        file: file, header: header);
+    user.value.data.profilePhoto = _urlUsers + url;
+    update();
+    return url;
+  }
+
+  Future<List<UserData>> getUserListExceptCurrent({Map<String, String> header}) async {
+
+return await _authService.getUserListExceptCurrent(header: header);
   }
 }

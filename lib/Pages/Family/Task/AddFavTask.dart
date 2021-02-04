@@ -61,8 +61,8 @@ class _AddFavTaskState extends State<AddFavTask>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BuildBottomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(

@@ -41,9 +41,9 @@ class _AddGiftPageState extends State<AddGiftPage> {
         appBar: AppBar(
           title: Text("Add Gift"),
         ),
-        bottomNavigationBar: BuildBottomNavigationBar(),
+       // bottomNavigationBar: BuildBottomNavigationBar(),
         resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Tab(

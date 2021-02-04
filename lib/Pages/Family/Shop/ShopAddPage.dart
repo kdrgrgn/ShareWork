@@ -99,7 +99,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+   //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         onPressed: () {
@@ -110,8 +110,8 @@ class _ShopAddPageState extends State<ShopAddPage> {
             Align(
               alignment: Alignment.center,
               child: Tab(
-                icon: Image.network(
-                  "https://share-work.com/newsIcons/thumbnail_ikon_shopping.png",
+                icon: Image.asset(
+                  "assets/newsIcons/thumbnail_ikon_shopping.png",
                   width: 25,
                   height: 20,
                   //  fit: BoxFit.contain,
@@ -135,7 +135,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+   //   bottomNavigationBar: BuildBottomNavigationBar(),
       body: isLoading
           ? MyCircular()
           : Column(
@@ -345,8 +345,8 @@ class _ShopAddPageState extends State<ShopAddPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Opacity(
                   opacity: 0.5,
-                  child: Image.network(
-                    "https://share-work.com/newsIcons/thumbnail_ikon_shopping.png",
+                  child: Image.asset(
+                    "assets/newsIcons/thumbnail_ikon_shopping.png",
                     height: 150,
 
                     //  fit: BoxFit.contain,
@@ -631,8 +631,8 @@ class _ShopAddPageState extends State<ShopAddPage> {
                     child: Container(
                         width: 30,
                         height: 30,
-                        child: Image.network(
-                          "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_1.png",
+                        child: Image.asset(
+                          "assets/newsIcons/thumbnail_ikonlar_ek_1.png",
                           fit: BoxFit.contain,
                         ))),
               )

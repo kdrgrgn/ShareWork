@@ -11,8 +11,8 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final ControllerDB c = Get.put(ControllerDB());
 
-  String mail = "o1@o1.com";
-  String password = "123";
+  String mail ;
+  String password ;
   Color themeColor = Get.theme.accentColor;
   final _formKey = GlobalKey<FormState>();
   bool isMail = false;
@@ -38,7 +38,6 @@ class _SignInPageState extends State<SignInPage> {
             });
           }
         },
-        initialValue: isPassword ? password : mail,
         style: TextStyle(color: Colors.black, fontSize: 17),
         validator: (value) {
           if (value.isEmpty) {

@@ -40,9 +40,9 @@ class _AddUserPageState extends State<AddUserPage> {
       appBar: AppBar(
         title: Text("Add Person"),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+     // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(

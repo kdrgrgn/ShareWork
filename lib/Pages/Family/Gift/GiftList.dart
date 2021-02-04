@@ -45,10 +45,13 @@ class _GiftListState extends State<GiftList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+     // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(AddGiftPage()).then((value) {
+
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  AddGiftPage())).then((value) {
             _controller
                 .getFamilyGiftList(
                     headers: _controller.headers(), familyId: family.data.id)
@@ -67,7 +70,7 @@ class _GiftListState extends State<GiftList> {
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
       body: isLoading
           ? MyCircular()
           : ListView.builder(

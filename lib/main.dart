@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Pages/SplashPage.dart';
@@ -9,6 +9,8 @@ List<CameraDescription> cameras = [];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     cameras = await availableCameras();
   } on CameraException catch (e) {
@@ -17,15 +19,13 @@ Future<void> main() async {
         "  Eror descp = " +
         e.description);
   }
-  EasyLocalization(
-      supportedLocales: [Locale('en', 'US'), Locale('tr', 'TR')],
-      path: 'assets/Translations', // <-- change patch to your
-      fallbackLocale: Locale('en', 'US'),
-      child: MyApp()
+  runApp(
+ MyApp()
 
   );
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   Color themeColor = Color.fromRGBO(15, 85, 124, 1);
 
@@ -35,9 +35,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
+  /*    supportedLocales:  [Locale('en', 'US'), Locale('tr', 'TR')],
+      locale: Locale('en', 'US'),
+      translations: Messages(), // your translations
+      fallbackLocale: Locale('en', 'US'), // specify the fallback locale in case an invalid locale is selected
+*/
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
@@ -76,5 +78,17 @@ class MyApp extends StatelessWidget {
       home: SplashPages(),
     );
   }
+}
+
+class Messages extends Translations {
+  @override
+  Map<String, Map<String, String>> get keys => {
+    'en_US': {
+      'hello': 'Hello World %s dsasdas %s',
+    },
+    'tr_TR': {
+      'hello': 'Hallo Welt %s  dsasdas %s',
+    }
+  };
 }
 

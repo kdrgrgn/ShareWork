@@ -5,8 +5,6 @@ import 'package:mobi/Pages/Family/Budget/BudgetListPage.dart';
 import 'package:mobi/Pages/Family/Gift/GiftList.dart';
 import 'package:mobi/Pages/Family/Shop/ShopAddPage.dart';
 import 'package:mobi/Pages/Family/Task/FamilyAddTaskPage.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
-import 'package:mobi/widgets/buildFamilyBottomNavigationBar.dart';
 
 class FamilyTabBar extends StatefulWidget {
   int tabIndex;

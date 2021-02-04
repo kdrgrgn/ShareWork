@@ -1,22 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Pages/Family/FamilyHomePage.dart';
-import 'package:mobi/Pages/Family/Task/AddFavTask.dart';
 import 'package:mobi/Pages/Project/ProjectList.dart';
 import 'package:mobi/model/User/Plugins.dart';
 import 'package:mobi/widgets/DrawerMenuWidget.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
-import 'package:mobi/widgets/buildFamilyBottomNavigationBar.dart';
-
-import '../Family/Task/FamilyAddTaskPage.dart';
+import '../../NotificationHandler.dart';
 import 'PluginListPage.dart';
 import 'PluginPage.dart';
-import 'HomePage.dart';
 
 class Dashboard extends StatefulWidget {
   int page;
@@ -28,8 +24,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  bool isOpen = false;
 
+  bool isOpen = false;
   Color themeColor=Get.theme.accentColor;
   Color backGround = Get.theme.backgroundColor;
   List<Widget> item;
@@ -44,12 +40,14 @@ class _DashboardState extends State<Dashboard> {
   ControllerChange _controllerChange = Get.put(ControllerChange());
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+
       setState(() {
         initialPage = widget.page ?? 0;
       });
@@ -58,9 +56,7 @@ class _DashboardState extends State<Dashboard> {
 
 
       drawerStyle = TextStyle(color: themeColor, fontSize: 15);
-      print("title oncesi");
       await titleBuilder();
-      print("title sonrasi");
 
       setState(() {
         isloading = false;
@@ -93,7 +89,6 @@ item=[];
       }
     }
 
-    print("item = " + item.length.toString());
   }
 
   Future<void> titleBuilder() async {
@@ -159,8 +154,8 @@ title=[];
                     child: Container(
                       width: 30,
                       height: 30,
-                      child: Image.network(
-                        "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_4.png",
+                      child: Image.asset(
+                        "assets/newsIcons/thumbnail_ikonlar_ek_4.png",
                       ),
                     ),
                   ),
@@ -173,8 +168,8 @@ title=[];
                       Container(
                         width: 30,
                         height: 30,
-                        child: Image.network(
-                            "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png"),
+                        child: Image.asset(
+                            "assets/newsIcons/thumbnail_ikon_7_5.png"),
                       ),
                       SizedBox(
                         width: 5,
@@ -182,8 +177,8 @@ title=[];
                       Container(
                         width: 30,
                         height: 30,
-                        child: Image.network(
-                            "https://share-work.com/newsIcons/ikonlar_ek_6.png"),
+                        child: Image.asset(
+                            "assets/newsIcons/ikonlar_ek_6.png"),
                       ),
                     ],
                   )
@@ -237,18 +232,8 @@ title=[];
                 ),
               ),
             ]),
-      bottomNavigationBar:BuildBottomNavigationBar(), /*_controllerChange.familyIsActive.value &&
-              _controllerChange.familyCount.value ==
-                  _controllerChange.initialPage.value
-          ? FamilyBottomNavigationBar()
-          : BuildBottomNavigationBar(),*/
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: /*_controllerChange.familyIsActive.value
-          ? _controllerChange.initialPage.value !=
-                  _controllerChange.familyCount.value
-              ? buildFabPlugin()
-              : buildFamilyFab()
-          :*/ buildFabPlugin(),
+
+      floatingActionButton: buildFabPlugin(),
     );
   }
 

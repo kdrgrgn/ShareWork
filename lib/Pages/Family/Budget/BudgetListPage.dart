@@ -45,7 +45,7 @@ class _BudgetListState extends State<BudgetList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+  //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           int id;
@@ -65,15 +65,15 @@ class _BudgetListState extends State<BudgetList> {
             height: 30,
             child: Padding(
               padding: const EdgeInsets.only(left: 5.0),
-              child: Image.network(
-                "https://share-work.com/newsIcons/thumbnail_thumbnail_ikon_4_15_1.png",
+              child: Image.asset(
+                "assets/newsIcons/thumbnail_thumbnail_ikon_4_15_1.png",
                 fit: BoxFit.contain,
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
       body: isLoading
           ? MyCircular()
           : ListView.builder(
@@ -142,10 +142,11 @@ class _BudgetListState extends State<BudgetList> {
     } else {
       data = _budget.data[index];
     }
-
-    Get.to(BudgetPage(
-      budgetData: data,
-    )).then((value) async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            BudgetPage(
+              budgetData: data,
+            ))).then((value) async {
       await buildPage();
     });
   }

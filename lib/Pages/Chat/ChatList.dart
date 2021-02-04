@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/Controller/ControllerChat.dart';
+import 'package:mobi/Controller/ControllerDB.dart';
+import 'MySharedPreferencesForChat.dart';
+import 'NewChat.dart';
+import 'package:mobi/model/Chat/Chat.dart';
+import 'package:mobi/widgets/MyCircularProgress.dart';
 import 'ChatRoom.dart';
 
 class ChatList extends StatefulWidget {
@@ -9,67 +15,146 @@ class ChatList extends StatefulWidget {
 
 class _ChatListState extends State<ChatList> {
   Color themeColor = Get.theme.accentColor;
+  bool isLoading = true;
+  Chat _chat;
+  List<String> count;
 
-  final List<ChatListItem> chatListItems = [
-    ChatListItem(
-        profileURL:
-            "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        personName: "Kadir",
-        date: "9:10 am",
-        lastMessage: "sfsdfsdfsdf"),
-    ChatListItem(
-        profileURL:
-            "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        personName: "Ahmet",
-        date: "9:10 am",
-        lastMessage: "sddfgd ggdfg dfgd gdfgsdgag fjj"),
-    ChatListItem(
-        profileURL:
-            "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        personName: "Mehmet",
-        date: "9:10 am",
-        lastMessage: "dsfsdfs gfg jdsg sjfdg sodfg odfg dfg ojdssdgsgdfgdfhdghdh"),
-    ChatListItem(
-        profileURL:
-            "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        personName: "Selin",
-        date: "9:10 am",
-        lastMessage: "dfsfdsgdfsg sdgsg")
-  ];
+  ControllerChat _controllerChat = Get.put(ControllerChat());
+  ControllerDB _controllerDB = Get.put(ControllerDB());
+  MySharedPreferencesForChat _countDB;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _countDB = MySharedPreferencesForChat.instance;
+
+
+      _chat = await _controllerChat.getChatListWithoutMessages(
+          header: _controllerDB.headers());
+      count=List.filled(_chat.data.length,null,growable: true);
+      int i=0;
+      _chat.data.forEach((element) {
+        count[i]=null;
+        i++;
+      });
+
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  ListView.builder(
-          itemCount: chatListItems.length,
-          itemBuilder: (context, i) {
-            return Container(
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))
-              ),
-              child: ListTile(isThreeLine:true ,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => NewChat(),
+          ));
+        },
+        heroTag: "hero",
+        child: Tab(
+          icon: Icon(
+            Icons.message,
+            color: Colors.white,
+            size: 30,
+          ),
+        ),
+      ),
+      body: isLoading
+          ? MyCircular()
+          : GetBuilder<ControllerChat>(
+            builder: (_chatC) {
+              return ListView.builder(
+                  itemCount: _chatC.chatData.length,
+                  itemBuilder: (context, index) {
+                    _countDB.getCount(_chatC.chatData[index].id.toString()).then((value) {
 
-                title: Text(chatListItems[i].personName, style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: Text(chatListItems[i].lastMessage, style: TextStyle(fontSize: 15), overflow: TextOverflow.ellipsis,
-                ),
-                trailing: Text(chatListItems[i].date,style: TextStyle(fontSize: 14),),
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(chatListItems[i].profileURL),
-                ),
-                onTap: () {
-                  Get.to(ChatRoom(person:chatListItems[i],));
-                },
-              ),
-            );
-          });
+                      if (value != null) {
+
+                        setState(() {
+                          count[index] = value.first;
+
+                        });
+
+
+
+                      } else {
+                        setState(() {
+                          count[index] = null;
+
+                        });
+                      }
+
+                    });
+                    return Container(
+                      decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 0.2))),
+                      child: ListTile(
+                        isThreeLine: true,
+                        title: Text(
+                          _chatC.chatData[index].isGroup == 1
+                              ? _chatC.chatData[index].title
+                              : _chatC.chatData[index].userList.first.firstName +
+                                  " " +
+                              _chatC.chatData[index].userList.first.lastName,
+                          style: TextStyle(fontSize: 18),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(
+                          _chatC.chatData[index].messageList.first.message ?? "",
+                          style: TextStyle(fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Container(
+                          child: Column(
+                            children: [
+                              Text(
+                          _chatC.chatData[index].lastMessageDate.substring(11),
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              count[index] ==
+                                      null
+                                  ? Text("")
+                                  : CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: Get.theme.backgroundColor,
+                                      child: Text(
+                                        count[index] ?? 0.toString(),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )
+                            ],
+                          ),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(_chatC.chatData[index]
+                                  .groupPhoto
+                                  .isEmpty
+                              ? "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                              : _chatC.chatData[index].groupPhoto),
+                        ),
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true)
+                              .pushReplacement(MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => ChatRoom(
+                                        id: _chatC.chatData[index].id,
+                                      )));
+                        },
+                      ),
+                    );
+                  });
+            }
+          ),
+    );
+  }
+
+  String dateCut(String date) {
+    date.substring(11);
   }
 }
-
-/*class ChatListItem {
-  final String profileURL;
-  final String personName;
-  final String lastMessage;
-  final String date;
-
-  ChatListItem({this.profileURL, this.personName, this.lastMessage, this.date});
-}*/

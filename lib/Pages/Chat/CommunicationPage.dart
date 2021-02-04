@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
+import '../../NotificationHandler.dart';
 import 'ChatList.dart';
 
 class CommunicationPage extends StatefulWidget {
@@ -18,6 +18,16 @@ class _CommunicationPageState extends State<CommunicationPage> {
   Color themeColor = Get.theme.accentColor;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+     // NotificationHandler().init(context);
+
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     double orjWidth = MediaQuery.of(context).size.width;
     double cameraWidth = orjWidth/24;
@@ -26,20 +36,8 @@ class _CommunicationPageState extends State<CommunicationPage> {
       length: 4,
       initialIndex: 1,
       child: Scaffold(
-        bottomNavigationBar:widget.bottomNavBar?? BuildBottomNavigationBar(),
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-          },
-          child: Tab(
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 40,
-            ),
-          ),
-        ),
+
+
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(

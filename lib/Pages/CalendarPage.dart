@@ -21,7 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: Tab(
@@ -32,7 +32,7 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
         ),
-        bottomNavigationBar: BuildBottomNavigationBar(),
+     //   bottomNavigationBar: BuildBottomNavigationBar(),
         appBar: AppBar(
           title: Text("Calendar"),
         ),

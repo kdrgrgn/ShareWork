@@ -99,8 +99,8 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
                           height: 30,
                           child: Stack(
                             children: [
-                              Image.network(
-                                  "https://share-work.com/newsIcons/ikonlar_ek_6.png"),
+                              Image.asset(
+                                  "assets/newsIcons/ikonlar_ek_6.png"),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Container(
@@ -148,9 +148,7 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
             alignment: Alignment(0, -0.80),
             child: CircleAvatar(
               backgroundImage: Image.network(
-                _controllerChange.baseUrl +
-                    "/media/familyPicture/" +
-                    family.data.picture,
+                _controllerChange.urlFamilyPicture + family.data.picture,
                 fit: BoxFit.fill,
               ).image,
               radius: 60,
@@ -172,9 +170,10 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            Get.to(FamilyTabBar(
-              tabIndex: modules[index].route,
-            ));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => FamilyTabBar(
+                      tabIndex: modules[index].route,
+                    )));
           },
           child: Container(
             width: 20,
@@ -198,7 +197,7 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
                 Container(
                     width: 30,
                     height: 30,
-                    child: Image.network(modules[index].picture)),
+                    child: Image.asset(modules[index].picture)),
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -233,31 +232,44 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
     modules = [
       FamilyModules(
           picture:
-              "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_8.png",
+              "assets/newsIcons/thumbnail_ikonlar_ek_8.png",
           name: "Task",
           route: 0),
       FamilyModules(
           picture:
-              "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_5.png",
+              "assets/newsIcons/thumbnail_ikonlar_ek_5.png",
           name: "Social",
           route: 1),
       FamilyModules(
           picture:
-              "https://www.share-work.com/newsIcons/thumbnail_ikon_3_7.png",
+              "assets/newsIcons/thumbnail_ikon_3_7.png",
           name: "Gift",
           route: 2),
       FamilyModules(
-          picture: "https://share-work.com/newsIcons/thumbnail_ikon_4_2.png",
+          picture: "assets/newsIcons/thumbnail_ikon_4_2.png",
           name: "Budget",
           route: 3),
       FamilyModules(
           picture:
-              "https://share-work.com/newsIcons/thumbnail_ikon_shopping.png",
+              "assets/newsIcons/thumbnail_ikon_shopping.png",
           name: "Shop",
           route: 4),
       FamilyModules(
-          picture: "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png",
-          name: "Takvim",
+          picture: "assets/newsIcons/thumbnail_ikon_dugun.png",
+          name: "Düğün",
+          route: 4),
+      FamilyModules(
+          picture: "assets/newsIcons/thumbnail_ikon_hal.png",
+          name: "Kampanya",
+          route: 4),
+      FamilyModules(
+          picture: "assets/newsIcons/thumbnail_ikon_takas.png",
+          name: "Takas",
+          route: 4),
+      FamilyModules(
+          picture:
+              "assets/newsIcons/thumbnail_ikon_yemektarifi.png",
+          name: "Tarif",
           route: 4),
     ];
   }
@@ -284,7 +296,9 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
     person = [
       InkWell(
         onTap: () {
-          Get.to(AddUserPage()).then((value) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddUserPage()))
+              .then((value) {
             _controller
                 .getFamily(
                     headers: _controller.headers(),
@@ -301,16 +315,15 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Colors.transparent,
-              border: Border.all(color: background)
-
-            ),
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.transparent,
+                border: Border.all(color: background)),
             width: 65,
             height: 35,
-            child: Image.network(
-                    "https://share-work.com/newsIcons/thumbnail_ikon_3_2.png",fit: BoxFit.contain,)
-                ,
+            child: Image.asset(
+              "assets/newsIcons/thumbnail_ikon_3_2.png",
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       )
@@ -332,7 +345,9 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           width: 75,
           child: InkWell(
             onTap: () {
-              Get.to(UserInfo(family.data.personList[index]));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      UserInfo(family.data.personList[index])));
             },
             child: Column(
               children: [

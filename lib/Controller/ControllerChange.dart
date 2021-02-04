@@ -45,6 +45,13 @@ class ControllerChange extends GetxController {
 
 
 
+  final String _urlFamilyPicture = "https://share-work.com" +
+      "/media/familyPicture/" ;
+
+  String get urlFamilyPicture => _urlFamilyPicture;
+
+
+
 
 
 

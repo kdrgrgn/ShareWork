@@ -37,8 +37,8 @@ Department _department;
     themeColor = Theme.of(context).accentColor;
 
     return Scaffold(
-      bottomNavigationBar: BuildBottomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //bottomNavigationBar: BuildBottomNavigationBar(),
+    //  floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(

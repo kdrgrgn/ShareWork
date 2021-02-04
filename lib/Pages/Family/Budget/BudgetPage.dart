@@ -57,14 +57,14 @@ class _BudgetPageState extends State<BudgetPage> {
     "Kira",
   ];
   List<String> categoryUrl = [
-    "https://share-work.com/newsIcons/thumbnail_ikon_money.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_shopping.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_food.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_journey.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_kasa.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_bill.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_fuel.png",
-    "https://share-work.com/newsIcons/thumbnail_ikon_rent.png",
+    "assets/newsIcons/thumbnail_ikon_money.png",
+    "assets/newsIcons/thumbnail_ikon_shopping.png",
+    "assets/newsIcons/thumbnail_ikon_food.png",
+    "assets/newsIcons/thumbnail_ikon_journey.png",
+    "assets/newsIcons/thumbnail_ikon_kasa.png",
+    "assets/newsIcons/thumbnail_ikon_bill.png",
+    "assets/newsIcons/thumbnail_ikon_fuel.png",
+    "assets/newsIcons/thumbnail_ikon_rent.png",
   ];
   BudgetData _budgetData;
 
@@ -126,7 +126,7 @@ class _BudgetPageState extends State<BudgetPage> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+   //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(
@@ -137,7 +137,7 @@ class _BudgetPageState extends State<BudgetPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+      //bottomNavigationBar: BuildBottomNavigationBar(),
       appBar: AppBar(title: Text("New Budget")),
       body: isLoading
           ? MyCircular()
@@ -689,7 +689,7 @@ if(Get.isBottomSheetOpen){
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
-                            child: Image.network(
+                            child: Image.asset(
                           categoryUrl[index],
                           width: 25,
                           height: 25,

@@ -29,7 +29,9 @@ class _ModuleWidgetState extends State<ModuleWidget> {
       padding: const EdgeInsets.only(left: 10,right: 10),
       child: InkWell(
         onTap: () {
-          Get.to(widget.page ?? FolderManager());
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+              widget.page ?? FolderManager()));
         },
         child: Padding(
           padding: const EdgeInsets.all(5.0),

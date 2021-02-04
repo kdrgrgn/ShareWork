@@ -5,6 +5,14 @@ class ServiceUrl {
 
   final String register = baseUrlShareWork + "/Account/Signup";
 
+  final String updateUserInfo = baseUrlShareWork + "/Account/UpdateUserInfo";
+
+  final String getUserListExceptCurrent = baseUrlShareWork + "/Account/GetUserListExceptCurrent";
+
+  final String setUserToken = baseUrlShareWork + "/Account/SetUserToken";
+
+  final String changeProfilePhoto = baseUrlShareWork + "/Account/ChangeProfilePhoto";
+
   final String getBuro = baseUrlShareWork + "/Office/getoffice";
 
   final String getPersonal = baseUrlShareWork + "/Personel/GetPersonelList";
@@ -124,6 +132,29 @@ class ServiceUrl {
 
   final String insertFamilyPersonTaskLike =
       baseUrlShareWork +"/Family/InsertFamilyPersonTaskLike";
+
+
+  final String getChatListWithoutMessages =
+      baseUrlShareWork +"/Chat/GetChatListWithoutMessages";
+
+
+  final String insertGroupChat =
+      baseUrlShareWork +"/Chat/InsertGroupChat";
+
+
+  final String getChat =
+      baseUrlShareWork +"/Chat/GetChat";
+
+  final String insertChat =
+      baseUrlShareWork +"/Chat/InsertChat";
+
+
+  final String insertChatMessage =
+      baseUrlShareWork +"/Chat/InsertChatMessage";
+
+
+  final String chatFileUpload =
+      baseUrlShareWork +"/Chat/FileUpload";
 
 
 

@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
-import 'package:mobi/Pages/Family/FamilyTabBar.dart';
-import 'package:mobi/model/Family/Family.dart';
+import 'package:mobi/landingPage.dart';
 import 'package:mobi/model/User/User.dart';
-import 'package:mobi/widgets/InsertFamily.dart';
+
+import 'package:mobi/model/User/UserData.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
 import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
@@ -22,21 +25,23 @@ class _AccountPageState extends State<AccountPage> {
   List<AccountModules> modules;
 
   bool isLoading = true;
+  File _image;
 
   TextStyle subStyle = TextStyle(color: Colors.grey, fontSize: 15);
-  User user;
+  UserData user;
   ControllerChange _controllerChange = Get.put(ControllerChange());
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    moduleBuilder();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      user = _controller.user.value;
-
-      setState(() {
-        isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      moduleBuilder();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        user = _controller.user.value.data;
+        setState(() {
+          isLoading = false;
+        });
       });
     });
   }
@@ -52,7 +57,8 @@ class _AccountPageState extends State<AccountPage> {
 
   buildHomePage() {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: false,
+   //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: Tab(
@@ -63,7 +69,7 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+  //    bottomNavigationBar: BuildBottomNavigationBar(),
       body: Stack(
         children: [
           Container(
@@ -87,18 +93,24 @@ class _AccountPageState extends State<AccountPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                          width: 30,
-                          height: 30,
-                          child: Image.network(
-                              "https://share-work.com/newsIcons/thumbnail_ikon_logout.png")),
+                      InkWell(
+                        onTap: () {
+                          _controller.logOut();
+                          Get.offAll(LandingPage());
+                        },
+                        child: Container(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset(
+                                "assets/newsIcons/thumbnail_ikon_logout.png")),
+                      ),
                       Container(
                           width: 30,
                           height: 30,
                           child: Stack(
                             children: [
-                              Image.network(
-                                  "https://share-work.com/newsIcons/ikonlar_ek_6.png"),
+                              Image.asset(
+                                  "assets/newsIcons/ikonlar_ek_6.png"),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Container(
@@ -123,13 +135,7 @@ class _AccountPageState extends State<AccountPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text(user.data.firstName + " " + user.data.lastName),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'msg'.trArgs(['Easy localization', 'Dart'])//(args: ['Easy localization', 'Dart'])
-                  ),
+                  Text(user.firstName + " " + user.lastName),
                   Divider(),
                   SizedBox(
                     height: 10,
@@ -148,7 +154,7 @@ class _AccountPageState extends State<AccountPage> {
             alignment: Alignment(0, -0.80),
             child: CircleAvatar(
               backgroundImage: Image.network(
-                user.data.profilePhoto,
+                user.profilePhoto,
                 fit: BoxFit.fill,
               ).image,
               radius: 60,
@@ -178,12 +184,19 @@ class _AccountPageState extends State<AccountPage> {
             child: Column(
               children: [
                 ListTile(
-                  onTap: () async {},
-                  leading: CircleAvatar(
-                    radius: 15,
-                    backgroundImage:
-                        Image.network(modules[index].picture).image,
-                    backgroundColor: Colors.transparent,
+                  onTap: () {
+                    bottomChangeProfile();
+                  },
+                  leading: Container(
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Image.asset(
+                      modules[index].picture,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   title: Text(modules[index].name),
                 ),
@@ -206,32 +219,257 @@ class _AccountPageState extends State<AccountPage> {
   moduleBuilder() {
     modules = [
       AccountModules(
-          picture:
-              "https://share-work.com/newsIcons/thumbnail_ikon_settings.png",
-          name: "Settings",
-          route: 0),
+        picture: "assets/newsIcons/thumbnail_ikon_settings.png",
+        name: "Change Profile",
+      ),
       AccountModules(
-          picture:
-              "https://share-work.com/newsIcons/thumbnail_ikon_agreement.png",
-          name: "Agreement",
-          route: 2),
+        picture: "assets/newsIcons/thumbnail_ikon_settings.png",
+        name: "Settings",
+      ),
       AccountModules(
-          picture:
-              "https://share-work.com/newsIcons/thumbnail_ikon_security.png",
-          name: "Security",
-          route: 3),
+        picture:
+            "assets/newsIcons/thumbnail_ikon_agreement.png",
+        name: "Agreement",
+      ),
       AccountModules(
-          picture: "https://share-work.com/newsIcons/thumbnail_ikon_help.png",
-          name: "Help",
-          route: 4),
+        picture: "assets/newsIcons/thumbnail_ikon_help.png",
+        name: "Help",
+      ),
     ];
+  }
+
+  bottomChangeProfile() {
+    String firstName;
+    String lastName;
+    String passWord;
+
+    final _formKeySheet = GlobalKey<FormState>();
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Form(
+              key: _formKeySheet,
+              child: Container(
+                height: 500,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            _showPicker(context, setState);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              backgroundImage: _image == null
+                                  ? Image.network(
+                                      user.profilePhoto,
+                                      fit: BoxFit.fill,
+                                    ).image
+                                  : Image.file(
+                                      _image,
+                                      fit: BoxFit.fill,
+                                    ).image,
+                              radius: 40,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: InkWell(
+                            onTap: () async {
+                              if (_image != null) {
+                               String url=await _controller.changeProfilePhoto(
+                                    file: _image,
+                                    header: _controller.headers());
+                               setState((){
+                                 user.profilePhoto=_controllerChange.urlUsers+url;
+
+                               });
+Get.back(closeOverlays: true);
+                              }
+
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(color: themeColor),
+                              child: Center(
+                                child: Text(
+                                  "Save Photo",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        onSaved: (value) {
+                          firstName = value;
+                          setState(() {
+                            user.firstName = value;
+                          });
+                        },
+                        initialValue: user.firstName,
+                        decoration: buildInputDecoration(isPass: false),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        onSaved: (value) {
+                          lastName = value;
+                          setState(() {
+                            user.lastName = value;
+                          });
+                        },
+                        initialValue: user.lastName,
+                        decoration: buildInputDecoration(isPass: false),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        onSaved: (value) {
+                          passWord = value;
+                        },
+                        obscureText: true,
+                        decoration: buildInputDecoration(isPass: true),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () async {
+                            _formKeySheet.currentState.save();
+
+                            await _controller.updateUserInfo(
+                                firstName: firstName,
+                                lastName: lastName,
+                                pass: passWord,
+                                headers: _controller.headers(),
+                                email: user.email);
+
+                            Get.back(closeOverlays: true);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(15.0),
+                            width: Get.width - 20,
+                            decoration: BoxDecoration(color: themeColor),
+                            child: Center(
+                              child: Text(
+                                "SAVE",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  InputDecoration buildInputDecoration({bool isPass}) {
+    return InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderSide: BorderSide(
+            width: 0,
+            style: BorderStyle.none,
+          ),
+        ),
+        filled: true,
+        fillColor: Color(0xFFF2F3F5),
+        hintText: isPass ? "Password" : "");
+  }
+
+  void _showPicker(context,StateSetter setState) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            actions: [
+              RaisedButton(
+                  color: Colors.red,
+                  child: Text(
+                    "Vazgec",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  }),
+            ],
+            title: Text("Resim kaynagini seciniz"),
+            content: Container(
+                child: Wrap(
+              children: [
+                ListTile(
+                  leading: new Icon(Icons.photo_camera),
+                  title: new Text('Camera'),
+                  onTap: () {
+                    _imgFromCamera(setState);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                    leading: new Icon(Icons.photo_library),
+                    title: new Text('Photo Library'),
+                    onTap: () {
+                      _imgFromGallery(setState);
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            )),
+          );
+        });
+  }
+
+  _imgFromCamera(StateSetter setState) async {
+    final picker = ImagePicker();
+
+    PickedFile image =
+        await picker.getImage(source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+    });
+  }
+
+  _imgFromGallery(StateSetter setState) async {
+    final picker = ImagePicker();
+
+    PickedFile image =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+    });
   }
 }
 
 class AccountModules {
   String picture;
   String name;
-  int route;
 
-  AccountModules({this.picture, this.name, this.route});
+  AccountModules({
+    this.picture,
+    this.name,
+  });
 }

@@ -104,8 +104,8 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: BuildBottomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+   //   bottomNavigationBar: BuildBottomNavigationBar(),
+     // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: buildFab(),
       body: isLoading
           ? MyCircular()
@@ -381,7 +381,9 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
                     width: 75,
                     child: InkWell(
                       onTap: () {
-                        Get.to(UserInfo(family.data.personList[index]));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                            UserInfo(family.data.personList[index])));
                       },
                       child: Column(
                         children: [
@@ -908,8 +910,9 @@ if (result == 200) {
                 onPressed: () {
                   setState(() {
                     isOpen = false;
-                  });
-                  Get.to(AddFavTask()).then((value) {
+                  });    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          AddFavTask())).then((value) {
                     updateTasks();
                   });
                 },

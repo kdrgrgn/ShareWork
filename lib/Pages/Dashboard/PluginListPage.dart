@@ -20,7 +20,7 @@ class _PluginListPageState extends State<PluginListPage> {
       appBar: AppBar(
         title: Text("Plugins"),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+   //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
 floatingActionButton: FloatingActionButton(
   onPressed: () {
@@ -34,7 +34,7 @@ floatingActionButton: FloatingActionButton(
     ),
   ),
 ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+    //  bottomNavigationBar: BuildBottomNavigationBar(),
       body:  ListView.builder(
         shrinkWrap: true,
         controller: ScrollController(keepScrollOffset: false),

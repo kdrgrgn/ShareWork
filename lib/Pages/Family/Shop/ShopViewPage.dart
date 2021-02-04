@@ -46,7 +46,7 @@ class _ShopViewPageState extends State<ShopViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+     // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.to(ShopAddPage());
@@ -59,7 +59,7 @@ class _ShopViewPageState extends State<ShopViewPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+   //   bottomNavigationBar: BuildBottomNavigationBar(),
 
 
 

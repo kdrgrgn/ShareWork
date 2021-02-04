@@ -69,8 +69,8 @@ class _MailPageState extends State<MailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation:
-      FloatingActionButtonLocation.centerDocked,
+   /*   floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerDocked,*/
       floatingActionButton: FloatingActionButton(
         onPressed: () {
         },
@@ -82,7 +82,7 @@ class _MailPageState extends State<MailPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BuildBottomNavigationBar(),
+     // bottomNavigationBar: BuildBottomNavigationBar(),
 
       appBar: AppBar(
         backgroundColor: themeColor,
