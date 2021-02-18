@@ -300,6 +300,7 @@ class _SignUpPageState extends State<SignUpPage> {
             password: keyValue[1],
             firstName: keyValue[2],
             lastName: keyValue[3],
+            rememberMe: rememberMe,
             regType: 1,
             title: keyValue[4]);
       }

@@ -9,6 +9,9 @@ class UserData {
   String lastName;
   Null password;
   String title;
+  int officeServiceId;
+  int officeCityId;
+  int officeCountryId;
   String profilePhoto;
   int ownedOfficeId;
   String officeTitle;
@@ -27,8 +30,11 @@ class UserData {
         this.email,
         this.relationId,
         this.firstName,
+        this.officeServiceId,
         this.lastName,
+        this.officeCityId,
         this.password,
+        this.officeCountryId,
         this.title,
         this.profilePhoto,
         this.ownedOfficeId,
@@ -49,8 +55,11 @@ class UserData {
     relationId = json['relationId'];
     firstName = json['firstName'];
     lastName = json['lastName'];
+    officeCountryId = json['officeCountryId'];
     password = json['password'];
+    officeCityId = json['officeCityId'];
     title = json['title'];
+    officeServiceId = json['officeServiceId'];
     profilePhoto = json['profilePhoto'];
     ownedOfficeId = json['ownedOfficeId'];
     officeTitle = json['officeTitle'];
@@ -78,6 +87,9 @@ class UserData {
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['password'] = this.password;
+    data['officeCityId'] = this.officeCityId;
+    data['officeCountryId'] = this.officeCountryId;
+    data['officeServiceId'] = this.officeServiceId;
     data['title'] = this.title;
     data['profilePhoto'] = this.profilePhoto;
     data['ownedOfficeId'] = this.ownedOfficeId;
@@ -98,6 +110,6 @@ class UserData {
 
   @override
   String toString() {
-    return 'Data{id: $id, email: $email, relationId: $relationId, firstName: $firstName, lastName: $lastName, password: $password, title: $title, profilePhoto: $profilePhoto, ownedOfficeId: $ownedOfficeId, officeTitle: $officeTitle, userType: $userType, status: $status, lastLoginDate: $lastLoginDate, modifiedDate: $modifiedDate, createdDate: $createdDate, createdDateText: $createdDateText, token: $token, selectedPluginId: $selectedPluginId, plugins: $plugins}';
+    return 'Data{id: $id, email: $email, relationId, :officeServiceId: $officeServiceId, relationId: $relationId, firstName: $firstName, lastName: $lastName, password: $password, title: $title, profilePhoto: $profilePhoto, ownedOfficeId: $ownedOfficeId, officeTitle: $officeTitle, userType: $userType, status: $status, lastLoginDate: $lastLoginDate, modifiedDate: $modifiedDate, createdDate: $createdDate, createdDateText: $createdDateText, token: $token, selectedPluginId: $selectedPluginId, plugins: $plugins}';
   }
 }

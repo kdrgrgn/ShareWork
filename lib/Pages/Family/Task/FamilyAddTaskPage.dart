@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/model/Family/FamilyPerson.dart';
 import 'package:mobi/model/Family/Task/FamilyTasks.dart';
 import 'package:mobi/model/Family/Task/RepeatTasks.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import '../../../widgets/BuildDaysWidget.dart';
 import 'AddFavTask.dart';
 import 'UserInfoPage.dart';
@@ -22,6 +22,8 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   bool isOpen = false;
   List<bool> isWithPerson = [];
 
@@ -54,12 +56,12 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
     _selectedDate = _controllerChange.selectedDay.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
 
-      _repeatTask = await _controller.getFamilyPersonTaskListRepeat(
+      _repeatTask = await _controllerFamily.getFamilyPersonTaskListRepeat(
           familyId: family.data.id, headers: _controller.headers());
 
-      tasks = await _controller.getAllFamilyTaskList(
+      tasks = await _controllerFamily.getAllFamilyTaskList(
           headers: _controller.headers());
 
       taskData = tasks.data;
@@ -80,10 +82,9 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ControllerChange>(builder: (c) {
-      print("buraya girdi 2");
 
       if (c.selectedDay.value != _selectedDate) {
-        _controller
+        _controllerFamily
             .getFamily(
                 headers: _controller.headers(),
                 date: buildStringDate(c.selectedDay.value))
@@ -93,7 +94,6 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
           });
         });
       }
-      print("buraya girdi 3");
 
       return buildScaffold();
     });
@@ -102,7 +102,7 @@ class _FamilyAddTaskPageState extends State<FamilyAddTaskPage> {
   Widget buildScaffold() {
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+
       resizeToAvoidBottomInset: false,
    //   bottomNavigationBar: BuildBottomNavigationBar(),
      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -784,7 +784,7 @@ if (result == 200) {
       {int personID, int familyID, int taskID, int index}) async {
     bool isAvailable = false;
 
-    FamilyPerson _person = await _controller.getFamilyPersonWithId(
+    FamilyPerson _person = await _controllerFamily.getFamilyPersonWithId(
         headers: _controller.headers(),
         id: personID,
         date: buildStringDate(_controllerChange.selectedDay.value));
@@ -801,7 +801,7 @@ if (result == 200) {
         ),
       );
     } else {
-      int result = await _controller.insertFamilyPersonTask(
+      int result = await _controllerFamily.insertFamilyPersonTask(
           headers: _controller.headers(),
           personID: personID,
           familyID: familyID,
@@ -839,7 +839,7 @@ if (result == 200) {
     List<int> filtListID = [];
     List<int> deleteId = [];
 
-    FamilyPerson _person = await _controller.getFamilyPersonWithId(
+    FamilyPerson _person = await _controllerFamily.getFamilyPersonWithId(
         headers: _controller.headers(),
         id: personID,
         date: buildStringDate(_controllerChange.selectedDay.value));
@@ -868,7 +868,7 @@ if (result == 200) {
         ),
       );
     } else {
-      int result = await _controller.multipleInsertFamilyPersonTask(
+      int result = await _controllerFamily.multipleInsertFamilyPersonTask(
           headers: _controller.headers(),
           personID: personID,
           familyID: familyID,
@@ -1081,7 +1081,7 @@ if (result == 200) {
         });
       });
     } else if (type == null) {
-      _repeatTask = await _controller.getFamilyPersonTaskListRepeat(
+      _repeatTask = await _controllerFamily.getFamilyPersonTaskListRepeat(
           familyId: family.data.id, headers: _controller.headers());
       type = listTabState.indexOf(true);
 
@@ -1182,7 +1182,7 @@ if (result == 200) {
       idTask.add(id);
     }
 
-    int result = await _controller.editFamilyPersonTaskPersonId(
+    int result = await _controllerFamily.editFamilyPersonTaskPersonId(
       fptIds: idList,
       personId: family.data.personList[index].id,
       headers: _controller.headers(),

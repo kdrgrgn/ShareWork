@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Pages/Family/Social/SocialHomePage.dart';
 import 'package:mobi/Pages/Family/Budget/BudgetListPage.dart';
 import 'package:mobi/Pages/Family/Gift/GiftList.dart';
 import 'package:mobi/Pages/Family/Shop/ShopAddPage.dart';
@@ -21,7 +21,6 @@ class _FamilyTabBarState extends State<FamilyTabBar>
 
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
-  final ControllerDB _controllerDB = Get.put(ControllerDB());
 
   List<Widget> listTab = [
     Tab(icon: Text("Task")),
@@ -81,9 +80,7 @@ class _FamilyTabBarState extends State<FamilyTabBar>
         controller: _controller,
         children: [
           FamilyAddTaskPage(),
-          Center(
-            child: Text("Social"),
-          ),
+         SocialHomePage(),
           GiftList(),
           BudgetList(),
           ShopAddPage()

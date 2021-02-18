@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/CalendarPage.dart';
 import 'package:mobi/model/Family/Family.dart';
@@ -10,7 +11,6 @@ import 'package:mobi/model/Family/FamilyPerson.dart';
 import 'package:mobi/model/Family/Task/FamilyTasks.dart';
 import 'package:mobi/model/Family/Task/TaskMessage.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class UserInfo extends StatefulWidget {
   PersonList _personList;
@@ -27,6 +27,8 @@ class _UserInfoState extends State<UserInfo>
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controllerDB = Get.put(ControllerDB());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   final ControllerChange _controllerChange = Get.put(ControllerChange());
   TextStyle subStyle = TextStyle(color: Colors.grey, fontSize: 15);
   List<Widget> listTab = [
@@ -50,7 +52,7 @@ class _UserInfoState extends State<UserInfo>
     _controller = TabController(length: listTab.length, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _familyPerson = await _controllerDB.getFamilyPersonWithId(
+      _familyPerson = await _controllerFamily.getFamilyPersonWithId(
           headers: _controllerDB.headers(),
           id: widget._personList.id,
           date: buildStringDate(DateTime.now()));
@@ -128,8 +130,8 @@ class _UserInfoState extends State<UserInfo>
                                     child: Container(
                                       width: 30,
                                       height: 30,
-                                      child: Image.network(
-                                          "https://www.share-work.com/newsIcons/thumbnail_ikon_7_5.png"),
+                                      child: Image.asset(
+                                          "assets/newsIcons/thumbnail_ikon_7_5.png"),
                                     ),
                                   ),
                                   Column(
@@ -137,8 +139,8 @@ class _UserInfoState extends State<UserInfo>
                                       Container(
                                           width: 30,
                                           height: 30,
-                                          child: Image.network(
-                                              "https://share-work.com/newsIcons/thumbnail_ikon_score.png")),
+                                          child: Image.asset(
+                                              "assets/newsIcons/thumbnail_ikon_score.png")),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: Container(
@@ -273,8 +275,8 @@ class _UserInfoState extends State<UserInfo>
                     content: Container(
                       width: 30,
                       height: 30,
-                      child: Image.network(
-                          "https://share-work.com/newsIcons/thumbnail_ikon_score.png"),
+                      child: Image.asset(
+                          "assets/newsIcons/thumbnail_ikon_score.png"),
                     ),
                     color: Colors.transparent,
                     onTap: (handler) {
@@ -285,8 +287,8 @@ class _UserInfoState extends State<UserInfo>
                     content: Container(
                       width: 30,
                       height: 30,
-                      child: Image.network(
-                          "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png"),
+                      child: Image.asset(
+                          "assets/newsIcons/thumbnail_ikon_3_3.png"),
                     ),
                     color: Colors.transparent,
                     onTap: (handler) {
@@ -350,8 +352,8 @@ class _UserInfoState extends State<UserInfo>
                             Container(
                               width: 20,
                               height: 30,
-                              child: Image.network(
-                                  "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png"),
+                              child: Image.asset(
+                                  "assets/newsIcons/thumbnail_ikon_3_3.png"),
                             ),
                             SizedBox(
                               width: 10,
@@ -401,7 +403,7 @@ class _UserInfoState extends State<UserInfo>
 
     String newMessage;
 
-    TaskMessage messages = await _controllerDB.getFamilyPersonTaskMessageList(
+    TaskMessage messages = await _controllerFamily.getFamilyPersonTaskMessageList(
         id: id, headers: _controllerDB.headers());
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -501,12 +503,12 @@ class _UserInfoState extends State<UserInfo>
                         if (_formSheet.currentState.validate()) {
                           _formSheet.currentState.save();
 
-                          await _controllerDB.insertFamilyPersonTaskMessage(
+                          await _controllerFamily.insertFamilyPersonTaskMessage(
                               id: id,
                               message: newMessage,
                               headers: _controllerDB.headers());
 
-                          _controllerDB
+                          _controllerFamily
                               .getFamilyPersonTaskMessageList(
                                   id: id, headers: _controllerDB.headers())
                               .then((value) {
@@ -544,7 +546,7 @@ class _UserInfoState extends State<UserInfo>
                 onPressed: () async {
                   if (_formKeyDiolog.currentState.validate()) {
                     _formKeyDiolog.currentState.save();
-                    await _controllerDB.editFamilyPersonTaskDetailsWithPersonId(
+                    await _controllerFamily.editFamilyPersonTaskDetailsWithPersonId(
                         personId: _familyPerson.data.id,
                         points: points,
                         status: 1,
@@ -593,7 +595,7 @@ class _UserInfoState extends State<UserInfo>
   Future<void> userAddTaskBottom() async {
     FamilyTasks tasks;
     List<FamilyTaskData> taskData = [];
-    tasks = await _controllerDB.getAllFamilyTaskList(
+    tasks = await _controllerFamily.getAllFamilyTaskList(
         headers: _controllerDB.headers());
 
     taskData = tasks.data;
@@ -737,7 +739,7 @@ class _UserInfoState extends State<UserInfo>
       idList.add(element.id);
     });
 
-    int result = await _controllerDB.multipleInsertFamilyPersonTask(
+    int result = await _controllerFamily.multipleInsertFamilyPersonTask(
         headers: _controllerDB.headers(),
         personID: _familyPerson.data.id,
         familyID: _familyPerson.data.familyId,
@@ -754,7 +756,7 @@ class _UserInfoState extends State<UserInfo>
   }
 
   Future<void> insertFamilyPersonTaskLike(int familyPersonTaskId) async {
-    await _controllerDB.insertFamilyPersonTaskLike(
+    await _controllerFamily.insertFamilyPersonTaskLike(
         headers: _controllerDB.headers(),
         familyPersonTaskId: familyPersonTaskId);
   }

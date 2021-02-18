@@ -1,38 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobi/model/Customers/Customers.dart';
 import 'package:mobi/model/Department/Department.dart';
-import 'package:mobi/model/Family/Budget/Budget.dart';
-import 'package:mobi/model/Family/Family.dart';
-import 'package:mobi/model/Family/FamilyPerson.dart';
-import 'package:mobi/model/Family/Gift/Gift.dart';
-import 'package:mobi/model/Family/Shop/ShopItem.dart';
-import 'package:mobi/model/Family/Shop/ShopOrder.dart';
-import 'package:mobi/model/Family/Task/FamilyTasks.dart';
-import 'package:mobi/model/Family/Task/RepeatTasks.dart';
-import 'package:mobi/model/Family/Task/TaskMessage.dart';
 import 'package:mobi/model/Office/Office.dart';
 import 'package:mobi/model/Personels/Personels.dart';
 import 'package:mobi/model/Project/Project.dart';
 import 'package:mobi/model/User/Plugins.dart';
-import 'package:path/path.dart';
 
 import 'ServiceUrl.dart';
 
 class DbService {
   final ServiceUrl _serviceUrl = ServiceUrl();
 
-  Future<Office> getOffice({Map headers}) async {
-    try {
-      var response = await http.get(_serviceUrl.getBuro, headers: headers);
-      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
-      return Office.fromJson(responseData);
-    } catch (e) {
-      print("office hata  service= " + e.toString());
-    }
-  }
 
   Future<Department> getDepartmentList({Map headers}) async {
     try {
@@ -78,7 +58,7 @@ class DbService {
     }
   }
 
-  Future<FamilyTasks> getAllFamilyTaskList(
+ /* Future<FamilyTasks> getAllFamilyTaskList(
       {Map<String, String> headers}) async {
     try {
       var response = await http.get(
@@ -202,7 +182,7 @@ class DbService {
       }
     }
   }
-
+*/
   Future<Customers> getCustomerList(
       {Map<String, String> headers, int pluginID}) async {
     try {
@@ -220,7 +200,7 @@ class DbService {
     }
   }
 
-  Future<ShopItem> getFamilyShopItemList({Map<String, String> headers}) async {
+ /* Future<ShopItem> getFamilyShopItemList({Map<String, String> headers}) async {
     var response = await http.get(
       _serviceUrl.getFamilyShopItemList,
       headers: headers,
@@ -401,7 +381,7 @@ log("reess edit budget id = " + response.body);
       print("family hata shop multiple  service= " + e.toString());
     }
   }
-
+*/
   Future<List<Plugins>> getPluginList({Map<String, String> headers}) async {
     try {
       var response = await http.get(
@@ -421,7 +401,7 @@ log("reess edit budget id = " + response.body);
     }
   }
 
-  Future<Family> createFamily(
+  /*Future<Family> createFamily(
       {Map<String, String> headers, String title, File file}) async {
     try {
       List<int> imageBytes = file.readAsBytesSync();
@@ -672,6 +652,6 @@ log("Reessss budget = " + response.body);
 
     return BudgetData.fromJson(responseData['data']);
   }
-
+*/
 
 }

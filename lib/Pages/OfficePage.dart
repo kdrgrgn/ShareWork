@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerOffice.dart';
 import 'package:mobi/model/Office/Office.dart';
 import 'package:mobi/model/Personels/PersonelData.dart';
 import 'package:mobi/model/Personels/Personels.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import '../widgets/MyCircularProgress.dart';
 
 
@@ -17,6 +17,7 @@ class _OfficePageState extends State<OfficePage> {
   Color themeColor;
 
   ControllerDB _controller=Get.put(ControllerDB());
+  ControllerOffice _controllerOffice=Get.put(ControllerOffice());
 
   Office _office;
   Personels _personels;
@@ -31,7 +32,7 @@ class _OfficePageState extends State<OfficePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
      _personels= await _controller.getPersonelList(headers: _controller.headers() );
      _personelData=_personels.data;
-   _office= await  _controller.getOffice(headers :_controller.headers());
+   _office= await  _controllerOffice.getOffice(headers :_controller.headers());
    setState(() {
      isLoading=false;
    });

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class AddGiftPage extends StatefulWidget {
   @override
@@ -24,6 +24,8 @@ class _AddGiftPageState extends State<AddGiftPage> {
     Color themeColor = Get.theme.accentColor;
     Color background = Get.theme.backgroundColor;
     final ControllerDB _controller = Get.put(ControllerDB());
+    ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
     Family family;
 
 
@@ -31,7 +33,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
     void initState() {
       // TODO: implement initState
       super.initState();
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
     }
 
 
@@ -82,7 +84,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
 
                            if (_formkey.currentState.validate()) {
                               _formkey.currentState.save();
-                              await _controller.insertFamilyGift(
+                              await _controllerFamily.insertFamilyGift(
                                 familyId:family.data.id,
                                   headers: _controller.headers(),
                                   title: title,

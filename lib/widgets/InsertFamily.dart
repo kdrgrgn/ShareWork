@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
 
 class InsertFamilyWidget extends StatefulWidget {
@@ -19,7 +20,8 @@ class _InsertFamilyWidgetState extends State<InsertFamilyWidget> {
   final _formkey = GlobalKey<FormState>();
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
-  final ControllerDB _controller = Get.put(ControllerDB());
+  final ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+  final ControllerDB _controllerDB = Get.put(ControllerDB());
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,8 @@ class _InsertFamilyWidgetState extends State<InsertFamilyWidget> {
 
                         if (_formkey.currentState.validate()) {
                           _formkey.currentState.save();
-                          await _controller.createFamily(
-                              headers: _controller.headers(),
+                          await _controllerFamily.createFamily(
+                              headers: _controllerDB.headers(),
                               title: title,
                               file: _image);
                         }

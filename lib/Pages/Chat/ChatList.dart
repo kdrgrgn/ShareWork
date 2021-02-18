@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerChat.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'MySharedPreferencesForChat.dart';
@@ -21,6 +22,7 @@ class _ChatListState extends State<ChatList> {
 
   ControllerChat _controllerChat = Get.put(ControllerChat());
   ControllerDB _controllerDB = Get.put(ControllerDB());
+  ControllerChange _controllerChange = Get.put(ControllerChange());
   MySharedPreferencesForChat _countDB;
 
   @override
@@ -90,6 +92,7 @@ class _ChatListState extends State<ChatList> {
                       }
 
                     });
+
                     return Container(
                       decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(width: 0.2))),
@@ -131,13 +134,13 @@ class _ChatListState extends State<ChatList> {
                           ),
                         ),
                         leading: CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(_chatC.chatData[index]
-                                  .groupPhoto
-                                  .isEmpty
-                              ? "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                              : _chatC.chatData[index].groupPhoto),
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage( _chatC.chatData[index].isGroup == 1
+                              ? _controllerChange.urlUsers +
+                              "DefaultGroupThumbnail.png"
+                              : _controllerChange.urlUsers +_chatC.chatData[index].userList.first.profilePhoto)
                         ),
+
                         onTap: () {
                           Navigator.of(context, rootNavigator: true)
                               .pushReplacement(MaterialPageRoute(
@@ -154,7 +157,4 @@ class _ChatListState extends State<ChatList> {
     );
   }
 
-  String dateCut(String date) {
-    date.substring(11);
-  }
 }

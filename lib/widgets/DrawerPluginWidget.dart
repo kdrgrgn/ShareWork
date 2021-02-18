@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
-import 'package:mobi/widgets/FolderManager.dart';
+import 'file:///G:/flutterProjects/mobi/lib/Pages/FileManager/FolderManager.dart';
 
 // ignore: must_be_immutable
 class PluginDrawer extends StatefulWidget {

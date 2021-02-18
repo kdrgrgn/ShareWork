@@ -105,6 +105,7 @@ class MessageList {
   int isUpload;
   String uploadPath;
   String message;
+  String mediaLength;
   UserData ownerUser;
   String createDate;
 
@@ -113,6 +114,7 @@ class MessageList {
         this.chatId,
         this.isUpload,
         this.uploadPath,
+        this.mediaLength,
         this.message,
         this.ownerUser,
         this.createDate});
@@ -121,6 +123,7 @@ class MessageList {
     id = json['id'];
     chatId = json['chatId'];
     isUpload = json['isUpload'];
+    mediaLength = json['mediaLength'];
     uploadPath = json['uploadPath'];
     message = json['message'];
     ownerUser = json['ownerUser'] != null
@@ -134,6 +137,7 @@ class MessageList {
     data['id'] = this.id;
     data['chatId'] = this.chatId;
     data['isUpload'] = this.isUpload;
+    data['mediaLength'] = this.mediaLength;
     data['uploadPath'] = this.uploadPath;
     data['message'] = this.message;
     if (this.ownerUser != null) {

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerChat.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/Account.dart';
 import 'package:mobi/Pages/Chat/CommunicationPage.dart';
 import 'package:mobi/Pages/Dashboard/Dashboard.dart';
-import 'package:mobi/Pages/MailPage.dart';
-import 'package:mobi/widgets/FolderManager.dart';
+import 'file:///G:/flutterProjects/mobi/lib/Pages/FileManager/FolderManager.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import '../Pages/Chat/MySharedPreferencesForChat.dart';
 
-import '../NotificationHandler.dart';
 
 class BuildBottomNavigationBar extends StatefulWidget {
   int page;
@@ -43,7 +41,8 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
 
   final ControllerDB _controllerDB = Get.put(ControllerDB());
   ControllerChat _controllerChat = Get.put(ControllerChat());
-
+  MySharedPreferencesForChat _countDB= MySharedPreferencesForChat.instance;
+  String count;
   @override
   void initState() {
     // TODO: implement initState
@@ -51,7 +50,6 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
 
     _controller= PersistentTabController(initialIndex: widget.page??0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
 
       _controllerChat.setContext(context);
 
@@ -61,6 +59,21 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+
+      _countDB.getCount("chat").then((value) {
+
+        if(value!=null) {
+          setState(() {
+            count = value.first;
+          });
+        }
+        else {
+        setState(() {
+        count = null;
+        });
+        }
+
+      });
     return PersistentTabView(
         context,
 
@@ -104,99 +117,7 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
         NavBarStyle.style9, // Choose the nav bar style with this property.
 
     );
-    /*GetBuilder<ControllerChange>(builder: (c) {
-      return WillPopScope(
-        onWillPop: () async {
-          c.removeTab();
-          return true;
-        },
-        child: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 12,
-          color: Colors.white,
-          child: Container(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () async {
-                    if (c.tabIndexList.last == 0) {
-                      c.removeTab();
-                      Get.back();
-                    } else {
-                      c.updateTabState(0);
-                      Get.to(_tabPage[0]);
-                    }
-                  },
-                  child: Image.network(
-                    "https://www.share-work.com/newsIcons/thumbnail_ikon_5_7.png",
-                    height: c.tabIndex.value == 0 ? selectSize : size,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    if (c.tabIndexList.last == 1) {
-                      c.removeTab();
 
-                      Get.back();
-                    } else {
-                      c.updateTabState(1);
-                      Get.to(_tabPage[1]);
-                    }
-                  },
-                  child: Image.network(
-                    "https://share-work.com/newsIcons/thumbnail_ikon_3_3.png",
-                    height: c.tabIndex.value == 1 ? selectSize : size,
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    if (c.tabIndexList.last == 2) {
-                      c.removeTab();
-
-                      Get.back();
-                    } else {
-                      c.updateTabState(2);
-                      Get.to(_tabPage[2]);
-                    }
-                  },
-                  child: Image.network(
-                    "https://share-work.com/newsIcons/thumbnail_ikon_5_2.png",
-                    height: c.tabIndex.value == 2 ? selectSize : size,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    if (c.tabIndexList.last == 3) {
-                      c.removeTab();
-
-                      Get.back();
-                    } else {
-                      c.updateTabState(3);
-                      Get.to(_tabPage[3]);
-                    }
-                  },
-                  child: _controller.user.value.data.profilePhoto == null?Image.network(
-                         "https://share-work.com/newsIcons/thumbnail_ikonlar_ek_4.png",
-                    height: c.tabIndex.value == 3 ? selectSize : size,
-                  ):CircleAvatar(
-                    backgroundImage:Image.network(
-                      _controller.user.value.data.profilePhoto,
-                    ).image ,
-                    radius: c.tabIndex.value == 3 ? 15 : 12,
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });*/
   }
 
   _navBarsItems() {
@@ -210,8 +131,26 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
         inactiveColor: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: Image.asset(
-            "assets/newsIcons/thumbnail_ikon_3_3.png",
+        icon: Stack(
+          children: [
+
+            Image.asset(
+                "assets/newsIcons/thumbnail_ikon_3_3.png",
+            ),
+            Align(alignment:Alignment.topLeft,
+              child:  count
+                  == null
+                  ? Container()
+                  : CircleAvatar(
+                radius: 6,
+                backgroundColor: Get.theme.backgroundColor,
+                child: Text(
+                  count,
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+              ,)
+          ],
         ),
         title: ("Message"),
         activeColor: Colors.blue,

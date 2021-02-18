@@ -109,9 +109,25 @@ int chatid=_controllerChat.chatIdGet();
     } else {
       _countDB.setCount(key, ["1"]);
     }
+    NotificationHandler.updateTotalCount();
+
+  }
+  static void updateTotalCount() async {
+    print("buraya girdi => updateTotalCount");
+    String key='chat';
+
+    MySharedPreferencesForChat _countDB = MySharedPreferencesForChat.instance;
+    List<String> a = await _countDB.getCount(key);
+    if (a != null) {
+      int old = int.parse(a.first);
+      old++;
+      _countDB.setCount(key, [old.toString()]);
+    } else {
+      _countDB.setCount(key, ["1"]);
+    }
   }
 
-  static void updateChatList(String message, String id) async {
+    static void updateChatList(String message, String id) async {
     ControllerChat _controllerChat = Get.put(ControllerChat());
 
     _controllerChat.chatListUpdate(int.parse(id), message);

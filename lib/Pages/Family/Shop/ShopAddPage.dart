@@ -3,11 +3,11 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/model/Family/Shop/ShopItem.dart';
 import 'package:mobi/model/Family/Shop/ShopOrder.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class ShopAddPage extends StatefulWidget {
   @override
@@ -47,6 +47,8 @@ class _ShopAddPageState extends State<ShopAddPage> {
   bool isLoading = true;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
 
   @override
   void initState() {
@@ -54,11 +56,11 @@ class _ShopAddPageState extends State<ShopAddPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
 
-      _shopItem = await _controller.getFamilyShopItemList(
+      _shopItem = await _controllerFamily.getFamilyShopItemList(
           headers: _controller.headers());
-      _shopOrder = await _controller.getFamilyShopOrderList(
+      _shopOrder = await _controllerFamily.getFamilyShopOrderList(
           headers: _controller.headers(), familyId: family.data.id);
 
       _selectedItemState = List(_shopItem.data.length);
@@ -418,7 +420,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
   }
 
   Future<void> insertFamilyShopOrder(value) async {
-    ShopOrder result = await _controller.insertFamilyShopOrder(
+    ShopOrder result = await _controllerFamily.insertFamilyShopOrder(
         headers: _controller.headers(),
         itemID: int.parse(value),
         familyID: family.data.id);
@@ -493,7 +495,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
       firstDay = DateTime(today.year, today.month, 1);
     }
 
-    ShopOrder result = await _controller.insertFamilyShopOrderMultiple(
+    ShopOrder result = await _controllerFamily.insertFamilyShopOrderMultiple(
         familyID: family.data.id,
         itemID: _itemIdList,
         date: buildStringDate(firstDay),
@@ -502,7 +504,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
 
     if (result.data.length != 0) {
       setState(() async {
-        _shopOrder = await _controller.getFamilyShopOrderList(
+        _shopOrder = await _controllerFamily.getFamilyShopOrderList(
             headers: _controller.headers(), familyId: family.data.id);
         updateOrder(type: listTabState.indexOf(true));
       });
@@ -1150,12 +1152,12 @@ class _ShopAddPageState extends State<ShopAddPage> {
   }
 
   editFamilyShopOrder({int unit, int count, int id}) async {
-    await _controller.editFamilyShopOrder(
+    await _controllerFamily.editFamilyShopOrder(
         unit: unit, count: count, id: id, headers: _controller.headers());
   }
 
   deleteFamilyShopOrder({int id, ShopOrderData data}) async {
-    await _controller.deleteFamilyShopOrder(
+    await _controllerFamily.deleteFamilyShopOrder(
         id: id, headers: _controller.headers());
     setState(() {
       _orderData.remove(data);
@@ -1168,7 +1170,7 @@ class _ShopAddPageState extends State<ShopAddPage> {
       ids.add(i.id);
     }
 
-    await _controller.buyFamilyShopOrder(
+    await _controllerFamily.buyFamilyShopOrder(
         familyId: family.data.id,
         headers: _controller.headers(),
         fsoIds: ids,

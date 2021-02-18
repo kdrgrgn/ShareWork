@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Pages/Chat/CommunicationPage.dart';
 import 'package:mobi/Pages/Family/AddUserPage.dart';
@@ -11,7 +12,6 @@ import 'package:mobi/model/Family/Task/FamilyTasks.dart';
 import 'package:mobi/model/Family/Task/TaskMessage.dart';
 import 'package:mobi/widgets/InsertFamily.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 import '../../../widgets/BuildDaysWidget.dart';
 
 class FamilyViewPage extends StatefulWidget {
@@ -24,6 +24,8 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
 
   Family family;
   List<PersonList> _personList;
@@ -41,12 +43,12 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
     _selectedDate = _controllerChange.selectedDay.value;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = await _controller.getFamily(
+      family = await _controllerFamily.getFamily(
           headers: _controller.headers(),
           date: buildStringDate(_controllerChange.selectedDay.value));
       if (family.data.personList != null) {
         _personList = family.data.personList;
-        _familyPerson = await _controller.getFamilyPersonWithId(
+        _familyPerson = await _controllerFamily.getFamilyPersonWithId(
             headers: _controller.headers(),
             id: _personList[personIndex].id,
             date: buildStringDate(DateTime.now()));
@@ -60,20 +62,20 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ControllerDB>(builder: (controllerDB) {
-      if (controllerDB.family.value != family) {
-        _controller
+    return GetBuilder<ControllerFamily>(builder: (controllerF) {
+      if (controllerF.family.value != family) {
+        _controllerFamily
             .getFamilyPersonWithId(
                 headers: _controller.headers(),
-                id: controllerDB.family.value.data.personList[personIndex].id,
+                id: controllerF.family.value.data.personList[personIndex].id,
                 date: buildStringDate(DateTime.now()))
             .then((value) {
           setState(() {
             isLoading = true;
           });
           setState(() {
-            family = controllerDB.family.value;
-            _personList = controllerDB.family.value.data.personList;
+            family = controllerF.family.value;
+            _personList = controllerF.family.value.data.personList;
             _familyPerson = value;
           });
 
@@ -83,11 +85,11 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
         });
       }
 
-      return controllerDB.family.value.data.personList == null
+      return controllerF.family.value.data.personList == null
           ? InsertFamilyWidget()
           : GetBuilder<ControllerChange>(builder: (c) {
               if (c.selectedDay.value != _selectedDate) {
-                _controller
+                _controllerFamily
                     .getFamily(
                         headers: _controller.headers(),
                         date: buildStringDate(c.selectedDay.value))
@@ -98,7 +100,7 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
                   });
                 });
 
-                _controller
+                _controllerFamily
                     .getFamilyPersonWithId(
                         headers: _controller.headers(),
                         id: _personList[personIndex].id,
@@ -377,7 +379,7 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
 
       person.add(InkWell(
         onTap: () async {
-          FamilyPerson result = await _controller.getFamilyPersonWithId(
+          FamilyPerson result = await _controllerFamily.getFamilyPersonWithId(
               headers: _controller.headers(),
               id: e.id,
               date: buildStringDate(_controllerChange.selectedDay.value));
@@ -432,7 +434,7 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
 
     String newMessage;
 
-    TaskMessage messages = await _controller.getFamilyPersonTaskMessageList(
+    TaskMessage messages = await _controllerFamily.getFamilyPersonTaskMessageList(
         id: id, headers: _controller.headers());
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -532,12 +534,12 @@ class _FamilyViewPageState extends State<FamilyViewPage> {
                         if (_formSheet.currentState.validate()) {
                           _formSheet.currentState.save();
 
-                              await _controller.insertFamilyPersonTaskMessage(
+                              await _controllerFamily.insertFamilyPersonTaskMessage(
                                   id: id,
                                   message: newMessage,
                                   headers: _controller.headers());
 
-                           _controller.getFamilyPersonTaskMessageList(
+                          _controllerFamily.getFamilyPersonTaskMessageList(
                               id: id, headers: _controller.headers()).then((value) {
                             setState((){
                               messages=value;

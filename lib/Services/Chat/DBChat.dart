@@ -6,8 +6,8 @@ import 'package:mobi/model/Chat/Chat.dart';
 import 'package:mobi/model/Chat/ChatMessage.dart';
 import 'package:path/path.dart';
 
-import 'ServiceUrl.dart';
-import 'ServiseBase/ChatServiceBase.dart';
+import '../ServiceUrl.dart';
+import 'ChatServiceBase.dart';
 import 'package:http/http.dart' as http;
 
 class DbChat implements ChatServiceBase {
@@ -19,7 +19,7 @@ class DbChat implements ChatServiceBase {
         await http.get(_serviceUrl.getChat + "?id=$id", headers: header);
     final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-    log("getChat=  " + response.body);
+    //log("getChat=  " + response.body);
 
     return ChatMessage.fromJson(responseData);
   }
@@ -84,26 +84,12 @@ class DbChat implements ChatServiceBase {
   }
 
   @override
-  Future<int> uploadFile({Map<String, String> header, int chatId, int userId, File file}) async {
+  Future<MessageList> uploadFile({Map<String, String> header, int chatId, int userId, File file,String mediaLength}) async {
 
     List<int> imageBytes = file.readAsBytesSync();
        String fileName = basename(file.path).toString();
           String content = base64Encode(imageBytes);
 
- /*         log("upload file post islemi = " + jsonEncode({
-            "files": [
-              {
-                "fileName": fileName,
-                "directory": "",
-                "fileContent": "",
-                "imageByteArray":imageBytes
-              }
-            ],
-            "chatUploadUserId": userId,
-            "chatUploadChatId": chatId
-          }));*/
-
-   // "imageByteArray":imageBytes
     var response = await http.post(
       _serviceUrl.chatFileUpload,
       body: jsonEncode({
@@ -116,12 +102,17 @@ class DbChat implements ChatServiceBase {
 
           }
         ],
-        "chatUploadUserId": userId,
+        "mediaLength":mediaLength??"",
+      "chatUploadUserId": userId,
         "chatUploadChatId": chatId
       }),
       headers: header,
     );
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-    log("uploadFile = " + response.body);
+    log("upload file =  " + response.body);
+
+    return MessageList.fromJson(responseData['data'][0]);
+
   }
 }

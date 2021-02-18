@@ -41,7 +41,6 @@ class FamilyPersonData {
   int id;
   int familyId;
   int point;
-
   int personType;
   int debt;
   int taskCount;

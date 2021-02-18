@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
-import 'package:mobi/widgets/buildFamilyBottomNavigationBar.dart';
 
 import 'ShopAddPage.dart';
 
@@ -25,6 +24,8 @@ class _ShopViewPageState extends State<ShopViewPage> {
   bool isLoading = true;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _ShopViewPageState extends State<ShopViewPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
       _personList = family.data.personList;
 
       setState(() {

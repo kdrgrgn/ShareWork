@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
-import 'package:mobi/Pages/Family/Budget/BudgetListPage.dart';
-import 'package:mobi/Pages/Family/FamilyTabBar.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
+
 import 'package:mobi/model/Family/Budget/Budget.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class BudgetPage extends StatefulWidget {
   BudgetData budgetData;
@@ -34,6 +33,8 @@ class _BudgetPageState extends State<BudgetPage> {
   bool isLoading = true;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   List<PersonList> _personList;
   final _formKey = GlobalKey<FormState>();
   List<bool> categoryState = [
@@ -74,14 +75,14 @@ class _BudgetPageState extends State<BudgetPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
 
       _personList = family.data.personList;
       _selecetedPersonState = List(_personList.length);
       int i = 0;
 
       if (widget.budgetData != null) {
-        _budgetData = await _controller.getFamilyBudgetItem(
+        _budgetData = await _controllerFamily.getFamilyBudgetItem(
             headers: _controller.headers(), id: widget.budgetData.id);
         print("budgettt = " + _budgetData.toString());
 
@@ -264,7 +265,7 @@ class _BudgetPageState extends State<BudgetPage> {
         }
       });
 
-      _controller.insertFamilyBudgetItem(
+      _controllerFamily.insertFamilyBudgetItem(
           headers: _controller.headers(),
           familyId: family.data.id,
           payerPerson: id,
@@ -272,7 +273,7 @@ class _BudgetPageState extends State<BudgetPage> {
           amount: int.parse(amountValue),
           personList: personId);
     } else {
-      _controller.editFamilyBudgetItem(
+      _controllerFamily.editFamilyBudgetItem(
           headers: _controller.headers(),
           budgetItemId: _budgetData.id,
           payerPerson: _budgetData.payerPerson.id,

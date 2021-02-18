@@ -11,9 +11,19 @@ class ServiceUrl {
 
   final String setUserToken = baseUrlShareWork + "/Account/SetUserToken";
 
+  final String deleteUserToken = baseUrlShareWork + "/Account/DeleteUserToken";
+
+  final String getCountryList = baseUrlShareWork + "/Account/GetCountryList";
+
+  final String getCityList = baseUrlShareWork + "/Account/GetCityList";
+
   final String changeProfilePhoto = baseUrlShareWork + "/Account/ChangeProfilePhoto";
 
-  final String getBuro = baseUrlShareWork + "/Office/getoffice";
+  final String getOffice = baseUrlShareWork + "/Office/getoffice";
+
+  final String getOfficeServiceList = baseUrlShareWork + "/Office/GetOfficeServiceList";
+
+  final String editOfficeService = baseUrlShareWork + "/Office/EditOfficeService";
 
   final String getPersonal = baseUrlShareWork + "/Personel/GetPersonelList";
 
@@ -22,17 +32,20 @@ class ServiceUrl {
 
   final String getCustomers = baseUrlShareWork + "/Customer/getcustomerlist";
 
-  final String foldersNew =
+  final String getFilesByUserIdForDirectory =
       baseUrlShareWork + "/File/GetFilesByUserIdForDirectory";
 
   final String filesUpload = baseUrlShareWork + "/File/UploadFiles";
 
-  final String deleteFileDirectory =
+  final String deleteMultiFileAndDirectory =
       baseUrlShareWork + "/File/DeleteMultiFileAndDirectory";
+
+  final String deleteDirectory =
+      baseUrlShareWork + "/File/DeleteDirectory";
 
   final String fileRename = baseUrlShareWork + "/File/FileRename";
 
-  final String createFolder = baseUrlShareWork + "/File/CreateDirectory";
+  final String createDirectory = baseUrlShareWork + "/File/CreateDirectory";
 
   final String renameDirectory = baseUrlShareWork + "/File/RenameDirectory";
 
@@ -103,6 +116,33 @@ class ServiceUrl {
       baseUrlShareWork + "/Family/GetFamilyPersonTaskMessageList";
 
 
+  final String getFamilySearch =
+      baseUrlShareWork + "/Family/GetFamilySearch";
+
+
+  final String getFamilySocialFamilyList =
+      baseUrlShareWork + "/Family/GetFamilySocialFamilyList";
+
+
+  final String insertFamilyshipInvite =
+      baseUrlShareWork + "/Family/InsertFamilyshipInvite";
+
+
+  final String acceptFamilyship =
+      baseUrlShareWork + "/Family/AcceptFamilyship";
+
+  final String ignoreFamilyship =
+      baseUrlShareWork + "/Family/IgnoreFamilyship";
+
+
+  final String getPersonFeedList =
+      baseUrlShareWork + "/Family/GetPersonFeedList";
+
+
+  final String getFamilyInviteList =
+      baseUrlShareWork + "/Family/GetFamilyInviteList";
+
+
   final String insertFamilyPersonTaskMessage =
       baseUrlShareWork + "/Family/InsertFamilyPersonTaskMessage";
 
@@ -155,6 +195,30 @@ class ServiceUrl {
 
   final String chatFileUpload =
       baseUrlShareWork +"/Chat/FileUpload";
+
+  final String getFamilyFeedListHome =
+      baseUrlShareWork +"/Family/GetFamilyFeedListHome";
+
+  final String insertFamilyFeedLike =
+      baseUrlShareWork +"/Family/InsertFamilyFeedLike";
+
+  final String deleteFamilyFeedLike =
+      baseUrlShareWork +"/Family/DeleteFamilyFeedLike";
+
+
+  final String getFamilyFeedReplyList =
+      baseUrlShareWork +"/Family/GetFamilyFeedReplyList";
+
+
+
+  final String insertFamilyFeed =
+      baseUrlShareWork +"/Family/InsertFamilyFeed";
+
+
+
+  final String insertFamilyFeedReply =
+      baseUrlShareWork +"/Family/InsertFamilyFeedReply";
+
 
 
 

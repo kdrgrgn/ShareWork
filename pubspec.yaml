@@ -29,8 +29,7 @@ dependencies:
   carousel_slider: ^2.3.1
   flutter_speed_dial_material_design: ^2.0.0
   animated_splash_screen: ^1.0.1+2
-  webview_flutter: ^1.0.7
-  syncfusion_flutter_pdfviewer: ^18.3.52-beta
+  syncfusion_flutter_pdfviewer: ^18.4.41-beta
   get: ^3.22.2
   http: ^0.12.2
   flutter_chat_bubble: ^1.0.2
@@ -47,11 +46,13 @@ dependencies:
   flutter_local_notifications: ^3.0.3
   audio_recorder: ^1.0.2
   audioplayers: ^0.17.3
-  flutter_document_picker: ^4.0.0
-
-
-
-
+  file_picker: ^2.1.6
+  flutter_downloader: ^1.5.2
+  path_provider: ^1.6.27
+  video_player: ^1.0.1
+  open_file: ^3.0.3
+  html_editor: ^1.0.1
+  flutter_widget_from_html_core: ^0.5.1+4
 
 
 

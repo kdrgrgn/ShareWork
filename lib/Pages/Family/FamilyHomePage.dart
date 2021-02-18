@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/Family/FamilyTabBar.dart';
 import 'package:mobi/model/Family/Family.dart';
@@ -18,7 +19,8 @@ class FamilyHomePage extends StatefulWidget {
 class _FamilyHomePageState extends State<FamilyHomePage> {
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
-  final ControllerDB _controller = Get.put(ControllerDB());
+   ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+   ControllerDB _controllerDB = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
   List<FamilyModules> modules;
 
@@ -33,8 +35,8 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
     super.initState();
     moduleBuilder();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = await _controller.getFamily(
-          headers: _controller.headers(),
+      family = await _controllerFamily.getFamily(
+          headers: _controllerDB.headers(),
           date: buildStringDate(DateTime.now()));
 
       setState(() {
@@ -47,12 +49,12 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? MyCircular()
-        : GetBuilder<ControllerDB>(builder: (db) {
+        : GetBuilder<ControllerFamily>(builder: (db) {
             if (family.data.personList == null) {
               if (db.family.value != family) {
                 db
                     .getFamily(
-                        headers: _controller.headers(),
+                        headers: _controllerDB.headers(),
                         date: buildStringDate(DateTime.now()))
                     .then((value) {
                   setState(() {
@@ -254,15 +256,15 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
               "assets/newsIcons/thumbnail_ikon_shopping.png",
           name: "Shop",
           route: 4),
-      FamilyModules(
+/*      FamilyModules(
           picture: "assets/newsIcons/thumbnail_ikon_dugun.png",
           name: "Düğün",
-          route: 4),
+          route: 4),*/
       FamilyModules(
           picture: "assets/newsIcons/thumbnail_ikon_hal.png",
           name: "Kampanya",
           route: 4),
-      FamilyModules(
+/*      FamilyModules(
           picture: "assets/newsIcons/thumbnail_ikon_takas.png",
           name: "Takas",
           route: 4),
@@ -270,7 +272,7 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           picture:
               "assets/newsIcons/thumbnail_ikon_yemektarifi.png",
           name: "Tarif",
-          route: 4),
+          route: 4),*/
     ];
   }
 
@@ -299,9 +301,9 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => AddUserPage()))
               .then((value) {
-            _controller
+            _controllerFamily
                 .getFamily(
-                    headers: _controller.headers(),
+                    headers: _controllerDB.headers(),
                     date: buildStringDate(DateTime.now()))
                 .then((value) {
               setState(() {

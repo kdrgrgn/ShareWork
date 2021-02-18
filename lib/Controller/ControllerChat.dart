@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobi/Services/DBChat.dart';
-import 'package:mobi/Services/ServiseBase/ChatServiceBase.dart';
+import 'package:mobi/Services/Chat/DBChat.dart';
+import 'package:mobi/Services/Chat/ChatServiceBase.dart';
 import 'package:mobi/model/Chat/Chat.dart';
 import 'package:mobi/model/Chat/ChatMessage.dart';
 import 'package:mobi/model/User/UserData.dart';
@@ -13,15 +13,15 @@ class ControllerChat extends GetxController implements ChatServiceBase {
 
   RxList<MessageList> messages = [null].obs;
   RxList<ChatData> chatData = [null].obs;
-  Rx<BuildContext>  context= null.obs;
-  RxInt chatID=0.obs ;
+  Rx<BuildContext> context = null.obs;
+  RxInt chatID = 0.obs;
 
   @override
   Future<ChatMessage> getChat({Map<String, String> header, int id}) async {
     ChatMessage _chat = await _chatService.getChat(header: header, id: id);
     messages = _chat.data.messageList.reversed.toList().obs;
     update();
-    chatID=id.obs;
+    chatID = id.obs;
     update();
     return _chat;
   }
@@ -31,8 +31,6 @@ class ControllerChat extends GetxController implements ChatServiceBase {
     Chat chat = await _chatService.getChatListWithoutMessages(header: header);
     chatData = chat.data.obs;
     update();
-
-
 
     return chat;
   }
@@ -57,18 +55,47 @@ class ControllerChat extends GetxController implements ChatServiceBase {
   }
 
   messagesUpdate(Map<String, dynamic> message) {
-    messages.insert(
-        0,
-        MessageList(
-            message: message['notification']['body'],
-            ownerUser:
-                UserData(id: int.parse(message['data']['SenderUserId']))));
+    if (message['data']['MediaPath'].isEmpty) {
+      messages.insert(
+          0,
+          MessageList(
+              message: message['notification']['body'],
+              id:  int.parse(message['data']['MessageId']),
+              isUpload: 0,
+
+              ownerUser: UserData(
+                  id: int.parse(message['data']['SenderUserId']),
+                  firstName: message['data']['SenderUserName'],
+                  lastName: " ",
+
+              profilePhoto: message['data']['Image'])));
+    } else {
+      messages.insert(
+          0,
+          MessageList(
+              message: message['notification']['body'],
+              id:  int.parse(message['data']['MessageId']),
+              uploadPath: message['data']['MediaPath'],
+              isUpload: 1,
+              mediaLength: message['data']['MediaLength'],
+              ownerUser: UserData(
+                  id: int.parse(message['data']['SenderUserId']),
+                  firstName: message['data']['SenderUserName'],
+                  lastName: " ", profilePhoto: message['data']['Image'])));
+    }
     update();
   }
 
-  messageSendUpdate(int id, String message) {
+  messageSendUpdate(UserData userData, String message) {
     messages.insert(
-        0, MessageList(message: message, ownerUser: UserData(id: id)));
+        0,
+        MessageList(
+            message: message,
+            ownerUser: UserData(
+                id: userData.id,
+                profilePhoto: userData.profilePhoto,
+                firstName: userData.firstName,
+                lastName: userData.lastName)));
     update();
   }
 
@@ -84,7 +111,7 @@ class ControllerChat extends GetxController implements ChatServiceBase {
     for (int i = 0; i < chatData.length; i++) {
       if (chatData[i].id == id) {
         chatData[i].messageList.first.message = message;
-        chatData[i].lastMessageDate = "11111111111"+time;
+        chatData[i].lastMessageDate = "11111111111" + time;
         update();
       }
     }
@@ -92,7 +119,7 @@ class ControllerChat extends GetxController implements ChatServiceBase {
       chatData.insert(
           0,
           ChatData(
-            id: id,
+              id: id,
               messageList: [MessageList(message: message)],
               lastMessageDate: time));
       update();
@@ -100,25 +127,40 @@ class ControllerChat extends GetxController implements ChatServiceBase {
   }
 
   @override
-  Future<int> uploadFile({Map<String, String> header, int chatId, int userId, File file}) async{
-  return await _chatService.uploadFile(header: header,chatId: chatId,userId: userId,file: file);
+  Future<MessageList> uploadFile(
+      {Map<String, String> header,
+      int chatId,
+      String mediaLength,
+      int userId,
+      File file}) async {
+    return await _chatService.uploadFile(
+        header: header,
+        chatId: chatId,
+        userId: userId,
+        file: file,
+        mediaLength: mediaLength);
   }
 
-  int chatIdGet(){
+  int chatIdGet() {
     return chatID.value;
   }
 
-  chatIdUpdate(){
-    chatID=0.obs;
+  chatIdUpdate() {
+    chatID = 0.obs;
     update();
   }
 
   void setContext(BuildContext myContext) {
-    context=myContext.obs;
+    context = myContext.obs;
     update();
   }
-  BuildContext getContext(){
+
+  BuildContext getContext() {
     return context.value;
   }
 
+  void messageSendFile(MessageList result) {
+    messages.insert(0, result);
+    update();
+  }
 }

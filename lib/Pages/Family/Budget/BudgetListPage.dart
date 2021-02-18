@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/model/Family/Budget/Budget.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
-import 'package:mobi/widgets/buildFamilyBottomNavigationBar.dart';
 
 import 'BudgetPage.dart';
 
@@ -23,6 +22,8 @@ class _BudgetListState extends State<BudgetList> {
   bool isLoading = true;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   Budget _budget;
 
   @override
@@ -31,9 +32,9 @@ class _BudgetListState extends State<BudgetList> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
 
-      _budget = await _controller.getFamilyBudgetItemList(
+      _budget = await _controllerFamily.getFamilyBudgetItemList(
           headers: _controller.headers(), familyId: family.data.id);
 
       setState(() {
@@ -45,7 +46,7 @@ class _BudgetListState extends State<BudgetList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-  //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           int id;
@@ -73,7 +74,7 @@ class _BudgetListState extends State<BudgetList> {
           ),
         ),
       ),
-    //  bottomNavigationBar: BuildBottomNavigationBar(),
+      //  bottomNavigationBar: BuildBottomNavigationBar(),
       body: isLoading
           ? MyCircular()
           : ListView.builder(
@@ -142,11 +143,12 @@ class _BudgetListState extends State<BudgetList> {
     } else {
       data = _budget.data[index];
     }
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            BudgetPage(
-              budgetData: data,
-            ))).then((value) async {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (context) => BudgetPage(
+                  budgetData: data,
+                )))
+        .then((value) async {
       await buildPage();
     });
   }
@@ -156,7 +158,7 @@ class _BudgetListState extends State<BudgetList> {
       isLoading = true;
     });
 
-    _controller
+    _controllerFamily
         .getFamilyBudgetItemList(
             headers: _controller.headers(), familyId: family.data.id)
         .then((value) {

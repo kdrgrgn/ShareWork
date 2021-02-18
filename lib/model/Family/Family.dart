@@ -1,5 +1,6 @@
 import 'package:mobi/model/User/UserData.dart';
 
+import 'Budget/Budget.dart';
 import 'Task/FamilyTasks.dart';
 
 class Family {
@@ -51,6 +52,8 @@ class FamilyData {
   List<PersonList> personList;
   List<FamilyTaskData> availableTaskList;
   List<FamilyTaskData> allTaskList;
+  List<BudgetData> budgetList;
+
 
   FamilyData(
       {this.id,
@@ -58,6 +61,7 @@ class FamilyData {
         this.createDate,
         this.picture,
         this.title,
+        this.budgetList,
         this.personList,
         this.availableTaskList,
         this.allTaskList});
@@ -86,6 +90,12 @@ class FamilyData {
         allTaskList.add(new FamilyTaskData.fromJson(v));
       });
     }
+    if (json['budgetList'] != null) {
+      budgetList = new List<BudgetData>();
+      json['budgetList'].forEach((v) {
+        budgetList.add(new BudgetData.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +114,9 @@ class FamilyData {
     }
     if (this.allTaskList != null) {
       data['allTaskList'] = this.allTaskList.map((v) => v.toJson()).toList();
+    }
+    if (this.budgetList != null) {
+      data['budgetList'] = this.budgetList.map((v) => v.toJson()).toList();
     }
     return data;
   }

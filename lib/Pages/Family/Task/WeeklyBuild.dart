@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/model/Family/Task/FamilyTasks.dart';
@@ -26,6 +27,8 @@ class _WeeklyBuildState extends State<WeeklyBuild> {
   Color background = Get.theme.backgroundColor;
   final ControllerDB _controllerDB = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   DateTime today ;
   DateTime firstDay ;
   List<FamilyTaskData> taskData = [];
@@ -407,7 +410,7 @@ class _WeeklyBuildState extends State<WeeklyBuild> {
         ),
       );
     } else {
-      int result = await _controllerDB.multipleInsertFamilyPersonTask(
+      int result = await _controllerFamily.multipleInsertFamilyPersonTask(
           headers: _controllerDB.headers(),
           familyID: familyID,
           taskID: filtListID,
@@ -465,7 +468,7 @@ class _WeeklyBuildState extends State<WeeklyBuild> {
     });
 
 
-    _repeatTask = await _controllerDB.getFamilyPersonTaskListRepeat(
+    _repeatTask = await _controllerFamily.getFamilyPersonTaskListRepeat(
         familyId: family.data.id, headers: _controllerDB.headers());
     _repeatTaskData = [];
 

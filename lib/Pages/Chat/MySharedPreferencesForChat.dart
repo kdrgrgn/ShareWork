@@ -15,6 +15,17 @@ class MySharedPreferencesForChat {
   Future<List<String>> getCount(String key) async {
     SharedPreferences myPrefs = await SharedPreferences.getInstance();
     return myPrefs.getStringList(key) ?? null;
+
+  }
+  bool containsKey(String key)  {
+    print("contisss = ");
+
+    SharedPreferences.getInstance().then((myPrefs) {
+
+       return myPrefs.containsKey(key)??false;
+     });
+
+
   }
 
   Future<void> deleteCount(String key) async {

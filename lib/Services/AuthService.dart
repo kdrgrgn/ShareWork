@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:mobi/Services/ServiceUrl.dart';
+import 'package:mobi/model/CityServiceCountry/CityServiceCountry.dart';
 import 'package:mobi/model/User/User.dart';
 import 'package:mobi/model/User/UserData.dart';
 import 'package:path/path.dart';
@@ -26,11 +27,10 @@ class AuthService {
       var response = await http.post(_serviceUrl.login,
           headers: headers, body: jsonEncode(postValue));
 
-      //log("Usseerrr= "+response.body);
+      log("Usseerrr= "+response.body);
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
       User user = User.fromJson(responseData);
       String _token = await _firebaseMessaging.getToken();
-      print("firebaase mesag token = " + _token);
       await http.get(_serviceUrl.setUserToken + "?Token=$_token", headers: {
         "content-type": "application/json",
         "accept": "application/json",
@@ -40,10 +40,11 @@ class AuthService {
       return user.obs;
     } catch (e) {
       print("sign in hata = " + e.toString());
+      return null.obs;
     }
   }
 
-  signUp(
+  Future<bool> signUp (
       {String mail,
       String password,
       String firstName,
@@ -71,18 +72,21 @@ class AuthService {
         };
       }
 
+      log("reqq signop = " +postValue.toString());
+
       var response = await http.post(_serviceUrl.register,
           headers: headers, body: jsonEncode(postValue));
-
+log("resp signop = " +response.body);
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
-      Rx<User> user;
       if (responseData['data'] == true) {
-        user = await signIn(mail: mail, password: password);
+        return true;
+      }else{
+        return false;
       }
 
-      return user;
     } catch (e) {
       print("sign up hata = " + e.toString());
+      return false;
     }
   }
 
@@ -113,7 +117,6 @@ class AuthService {
             {"Directory": "", "FileContent": content, "FileName": fileName}));
     final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-    log("updateee photo body = " + response.body);
 
     return responseData['data']['fileName'];
   }
@@ -136,4 +139,33 @@ class AuthService {
     }
     return userList;
   }
+
+  Future<void> logOut(String userToken) async {
+    String _token = await _firebaseMessaging.getToken();
+
+    await http.get(_serviceUrl.deleteUserToken + "?Token=$_token", headers: {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "Authorization": "Bearer " + userToken
+    });
+  }
+
+  Future<Csc> getCountryList(Map<String,String> header) async {
+
+   var response=  await http.get(_serviceUrl.getCountryList , headers: header);
+   final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+   return Csc.fromJson(responseData);
+ }
+
+  Future<Csc> getCityList(Map<String,String> header ,int countryID) async {
+
+   var response=  await http.get(_serviceUrl.getCityList + "?CountryId=$countryID", headers: header);
+   final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+   return Csc.fromJson(responseData);
+ }
+
+
+
 }

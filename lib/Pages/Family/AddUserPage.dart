@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class AddUserPage extends StatefulWidget {
 //  Family family;
@@ -23,7 +23,10 @@ class _AddUserPageState extends State<AddUserPage> {
   final _formkey = GlobalKey<FormState>();
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
-  final ControllerDB _controller = Get.put(ControllerDB());
+  final ControllerDB _controllerDB = Get.put(ControllerDB());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
+
   Family family;
   bool isLoading=false;
 
@@ -31,7 +34,7 @@ class _AddUserPageState extends State<AddUserPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    family = _controller.family.value;
+    family = _controllerFamily.family.value;
   }
 
   @override
@@ -73,8 +76,8 @@ class _AddUserPageState extends State<AddUserPage> {
                           setState(() {
                             isLoading=true;
                           });
-                          await _controller.addPerson(
-                              headers: _controller.headers(),
+                          await _controllerFamily.addPerson(
+                              headers: _controllerDB.headers(),
                               email: email,
                               phone: phone,
                               firstName: firstName,

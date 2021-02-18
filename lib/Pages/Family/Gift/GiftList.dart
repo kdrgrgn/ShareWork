@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Pages/Family/Gift/AddGiftPage.dart';
 import 'package:mobi/model/Family/Family.dart';
 import 'package:mobi/model/Family/Gift/Gift.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class GiftList extends StatefulWidget {
   @override
@@ -21,6 +21,8 @@ class _GiftListState extends State<GiftList> {
   bool isLoading = true;
   final ControllerDB _controller = Get.put(ControllerDB());
   ControllerChange _controllerChange = Get.put(ControllerChange());
+  ControllerFamily _controllerFamily = Get.put(ControllerFamily());
+
   Gift _gift;
 
 //  List<PersonList> _personList;
@@ -31,9 +33,9 @@ class _GiftListState extends State<GiftList> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      family = _controller.family.value;
+      family = _controllerFamily.family.value;
 
-      _gift = await _controller.getFamilyGiftList(
+      _gift = await _controllerFamily.getFamilyGiftList(
           headers: _controller.headers(), familyId: family.data.id);
 
       setState(() {
@@ -52,7 +54,7 @@ class _GiftListState extends State<GiftList> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) =>
                   AddGiftPage())).then((value) {
-            _controller
+            _controllerFamily
                 .getFamilyGiftList(
                     headers: _controller.headers(), familyId: family.data.id)
                 .then((value) {
