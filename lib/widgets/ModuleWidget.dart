@@ -11,6 +11,7 @@ class ModuleWidget extends StatefulWidget {
   int notification;
   Widget page;
 
+
   ModuleWidget({this.title, this.path, this.notification, this.page});
 
   @override

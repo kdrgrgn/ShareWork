@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -169,6 +168,12 @@ if(result){
     return url;
   }
 
+  Future<List<UserData>> getUsersWithFCMTokens({List<int> ids, Map<String, String> header}) async {
+
+    return await _authService.getUsersWithFCMTokens(
+        ids: ids, header: header);
+  }
+
   Future<List<UserData>> getUserListExceptCurrent({Map<String, String> header}) async {
 
 return await _authService.getUserListExceptCurrent(header: header);
@@ -187,6 +192,10 @@ return await _authService.getUserListExceptCurrent(header: header);
   void updateUser() {
     user.value.data.officeServiceId=1;
     update();
+  }
+
+  Future<Csc> getDistrictList(Map<String, String> header, int id) async {
+    return   await _authService.getDistrictList(header, id);
   }
 
 }

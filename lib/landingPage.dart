@@ -7,7 +7,7 @@ import 'Controller/ControllerDB.dart';
 import 'NotificationHandler.dart';
 
 import 'Pages/Login/SignInPage.dart';
-import 'Pages/OfficeSetup.dart';
+import 'Pages/Setup/OfficeSetup.dart';
 import 'widgets/MyCircularProgress.dart';
 import 'widgets/buildBottomNavigationBar.dart';
 

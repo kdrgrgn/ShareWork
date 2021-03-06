@@ -1,16 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Pages/Family/FamilyHomePage.dart';
+import 'package:mobi/Pages/Product/ProductPage.dart';
 import 'package:mobi/Pages/Project/ProjectList.dart';
+import 'package:mobi/Pages/ServicePage/ServicePage.dart';
 import 'package:mobi/model/User/Plugins.dart';
 import 'package:mobi/widgets/DrawerMenuWidget.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import '../../NotificationHandler.dart';
 import 'PluginListPage.dart';
 import 'PluginPage.dart';
 
@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> title = [];
   int initialPage;
   int familyCount;
-  int projectCount;
+  int productCount;
   TextStyle drawerStyle;
   bool isloading = true;
   bool isloadingAppBar = true;
@@ -81,10 +81,19 @@ item=[];
         });
       } else if (plugins[i].pluginId == 6) {
         item.add(ProjectListPage());
+
+      }
+      else if(plugins[i].pluginId ==9){
+        item.add(ProductPage());
         setState(() {
-          projectCount = i ;
+          productCount = i ;
+
         });
-      } else {
+      } else if(plugins[i].pluginId ==10){
+        item.add(ServicePage());
+
+      }
+      else {
         item.add(PluginPage(plugin: plugins[i]));
       }
     }
@@ -137,7 +146,7 @@ title=[];
 
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      appBar: initialPage == familyCount
+      appBar: initialPage == familyCount || initialPage==productCount
           ? null
           : AppBar(
               automaticallyImplyLeading: false,

@@ -29,7 +29,6 @@ dependencies:
   carousel_slider: ^2.3.1
   flutter_speed_dial_material_design: ^2.0.0
   animated_splash_screen: ^1.0.1+2
-  syncfusion_flutter_pdfviewer: ^18.4.41-beta
   get: ^3.22.2
   http: ^0.12.2
   flutter_chat_bubble: ^1.0.2
@@ -53,7 +52,9 @@ dependencies:
   open_file: ^3.0.3
   html_editor: ^1.0.1
   flutter_widget_from_html_core: ^0.5.1+4
-
+  agora_rtc_engine: ^3.2.1
+  permission_handler: ^5.1.0+2
+  crypto: ^2.1.5
 
 
 

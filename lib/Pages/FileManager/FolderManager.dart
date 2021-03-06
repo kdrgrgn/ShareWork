@@ -32,9 +32,9 @@ class _FolderManagerState extends State<FolderManager> {
   FileData _fileData;
   List<FileResult> _fileResult;
   String _downloadPath;
- bool morePage=true;
- bool isUpload=false;
- int page=0;
+  bool morePage = true;
+  bool isUpload = false;
+  int page = 0;
 
   @override
   void initState() {
@@ -47,7 +47,6 @@ class _FolderManagerState extends State<FolderManager> {
 
       _fileM = await _fileManager.getFilesByUserIdForDirectory(
           _controllerDB.headers(),
-
           userId: _controllerDB.user.value.data.id,
           directory: _fileManager.getDirectory());
       _fileData = _fileM.data;
@@ -80,165 +79,164 @@ class _FolderManagerState extends State<FolderManager> {
   Widget build(BuildContext context) {
     themeColor = Theme.of(context).accentColor;
     return GetBuilder<ControllerFileManager>(builder: (f) {
-if(_fileResult!=f.fileResult){
-  _fileResult=f.fileResult;
-}
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("File Manager"),
-            actions: [
-
-              f.delete.value
-                  ? Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      f.deleteCancel();
-                    },
-                    child: Icon(
-                      Icons.clear,
-                      color: Colors.black,
-                      size: 32,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      String res=await  f.deleteMultiFileAndDirectory(_controllerDB.headers(),
-                        userId: _controllerDB.user.value.data.id,
-                        sourceOwnerId: _controllerDB.user.value.data.id,
-                        fileIdList: f.fileIdList.length == 1 &&
-                            f.fileIdList.first == 0
-                            ? []
-                            : f.fileIdList,);
-                      if(res=="true"){
-                        List<FileResult> deleting=[];
-                        _fileResult.forEach((element) {
-
-                          if(f.fileIdList.contains(element.id)){
-                            setState(() {
-                              deleting.add(element);
+      if (_fileResult != f.fileResult) {
+        _fileResult = f.fileResult;
+      }
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("File Manager"),
+          actions: [
+            f.delete.value
+                ? Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          f.deleteCancel();
+                        },
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.black,
+                          size: 32,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          String res = await f.deleteMultiFileAndDirectory(
+                            _controllerDB.headers(),
+                            userId: _controllerDB.user.value.data.id,
+                            sourceOwnerId: _controllerDB.user.value.data.id,
+                            fileIdList: f.fileIdList.length == 1 &&
+                                    f.fileIdList.first == 0
+                                ? []
+                                : f.fileIdList,
+                          );
+                          if (res == "true") {
+                            List<FileResult> deleting = [];
+                            _fileResult.forEach((element) {
+                              if (f.fileIdList.contains(element.id)) {
+                                setState(() {
+                                  deleting.add(element);
+                                });
+                              }
                             });
+                            deleting.forEach((element) {
+                              setState(() {
+                                f.deleteFolder(element);
+                                // _fileResult.remove(element);
+                              });
+                            });
+                            f.deleteCancel();
 
+                            //  _fileResult.removeWhere((element) =>f.fileIdList.contains(element.id));
                           }
-                        });
-                        deleting.forEach((element) {
-                          setState(() {
-                            f.deleteFolder(element);
-                           // _fileResult.remove(element);
-
-                          });
-                        });
-                        f.deleteCancel();
-
-                        //  _fileResult.removeWhere((element) =>f.fileIdList.contains(element.id));
-                      }
-                    },
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.black,
-                      size: 32,
-                    ),
+                        },
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                          size: 32,
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      InkWell(
+                        onTap: () => createShowDiolog(setState),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.add, color: Colors.black, size: 32),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            Icon(Icons.search, color: Colors.black, size: 32),
+                      ),
+                    ],
                   ),
-                ],
-              )
-                  :
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () => createShowDiolog(setState),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.add, color: Colors.black, size: 32),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.search, color: Colors.black, size: 32),
-                  ),
-                ],
-              ),
+          ],
+        ),
+        //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final picker = ImagePicker();
 
-            ],
-          ),
-          //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final picker = ImagePicker();
+            PickedFile image = await picker.getImage(
+                source: ImageSource.camera, imageQuality: 50);
+            setState(() {
+              isLoading = true;
+            });
 
-              PickedFile image = await picker.getImage(
-                  source: ImageSource.camera, imageQuality: 50);
+            await _fileManager
+                .uploadFiles(_controllerDB.headers(),
+                    userId: _controllerDB.user.value.data.id,
+                    files: [File(image.path)],
+                    directory: _fileManager.getDirectory().isEmpty
+                        ? _fileManager.getDirectory()
+                        : _fileManager.getDirectory())
+                .then((value) {
+              updateFiles(result: value);
               setState(() {
-                isLoading = true;
+                isLoading = false;
               });
-
-              await _fileManager
-                  .uploadFiles(_controllerDB.headers(),
-                  userId: _controllerDB.user.value.data.id,
-                  files: [File(image.path)],
-                  directory:
-                  _fileManager.getDirectory().isEmpty
-                      ? _fileManager.getDirectory()
-                      : _fileManager.getDirectory())
-                  .then((value) {
-                updateFiles(result: value);
-                setState(() {
-                  isLoading = false;
-                });
-              });
-
-            }      ,  child: Tab(
-              icon: Icon(
-                Icons.camera_alt_outlined,
-                color: Colors.white,
-                size: 30,
-              ),
+            });
+          },
+          child: Tab(
+            icon: Icon(
+              Icons.camera_alt_outlined,
+              color: Colors.white,
+              size: 30,
             ),
           ),
+        ),
 
-          body: WillPopScope(
-            onWillPop: () async {
-              _fileManager.updatePopDirectory();
-              return true;
-            },
-            child: isLoading
-                ? MyCircular()
-                : Column(
+        body: WillPopScope(
+          onWillPop: () async {
+            _fileManager.updatePopDirectory();
+            return true;
+          },
+          child: isLoading
+              ? MyCircular()
+              : Column(
                   children: [
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
-              // ignore: missing_return
-              onNotification: (ScrollNotification scrollInfo) {
-                      if (!isUpload && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-                        if(morePage) {
-
-                          _loadData();
-                        }
-                      }
-              },
+                        // ignore: missing_return
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!isUpload &&
+                              scrollInfo.metrics.pixels ==
+                                  scrollInfo.metrics.maxScrollExtent) {
+                            if (morePage) {
+                              _loadData();
+                            }
+                          }
+                        },
                         child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                buildRowButton(),
-                                isGridView
-                                    ? buildGridView()
-                                    : buildListView(),
-                                SizedBox(height: 50,)
-                              ],
-                            ),
+                          physics: BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              buildRowButton(),
+                              isGridView ? buildGridView() : buildListView(),
+                              SizedBox(
+                                height: 50,
+                              )
+                            ],
                           ),
+                        ),
                       ),
                     ),
-      Container(
-      height: isUpload ? 60.0 : 0,
-      child: MyCircular(),),
+                    Container(
+                      height: isUpload ? 60.0 : 0,
+                      child: MyCircular(),
+                    ),
                   ],
                 ),
-          ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   ListView buildListView() {
@@ -247,11 +245,10 @@ if(_fileResult!=f.fileResult){
       padding: const EdgeInsets.all(10),
       shrinkWrap: true,
       controller: ScrollController(keepScrollOffset: false),
-                          itemBuilder: (context, index) {
-                            return FileListView(
-                                _fileResult[index], _downloadPath,index);
-                          },
-                        );
+      itemBuilder: (context, index) {
+        return FileListView(_fileResult[index], _downloadPath, index);
+      },
+    );
   }
 
   Widget buildRowButton() {
@@ -260,59 +257,57 @@ if(_fileResult!=f.fileResult){
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
- Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 15,
-                        width: Get.width-180,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          children: _fileManager.directory.map((e) {
-                            return Text(
-                              e ,
-                              style: TextStyle(fontSize: 12),
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          }).toList(),
-                        ),
-                      )
-,
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isGridView = false;
-                              });
-                            },
-                            child: Icon(
-                              Icons.list,
-                              color:!isGridView?themeColor: Colors.grey,
-                              size: 32,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isGridView = true;
-                              });
-                            },
-                            child: Icon(
-                              Icons.grid_view,
-                              color:isGridView?themeColor: Colors.grey,
-                              size: 32,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 15,
+                  width: Get.width - 180,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: _fileManager.directory.map((e) {
+                      return Text(
+                        e,
+                        style: TextStyle(fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    }).toList(),
                   ),
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isGridView = false;
+                        });
+                      },
+                      child: Icon(
+                        Icons.list,
+                        color: !isGridView ? themeColor : Colors.grey,
+                        size: 32,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isGridView = true;
+                        });
+                      },
+                      child: Icon(
+                        Icons.grid_view,
+                        color: isGridView ? themeColor : Colors.grey,
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             Divider()
           ],
         ),
@@ -327,7 +322,7 @@ if(_fileResult!=f.fileResult){
       shrinkWrap: true,
       controller: ScrollController(keepScrollOffset: false),
       itemBuilder: (context, index) {
-        return FileGridList(_fileResult[index], _downloadPath,index);
+        return FileGridList(_fileResult[index], _downloadPath, index);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisSpacing: 0, crossAxisSpacing: 10, crossAxisCount: 2),
@@ -422,10 +417,14 @@ if(_fileResult!=f.fileResult){
                         Divider(),
                         ListTile(
                           onTap: () async {
-                            FilePickerResult result = await FilePicker.platform.pickFiles(allowMultiple: true);
+                            FilePickerResult result = await FilePicker.platform
+                                .pickFiles(
+                                    allowMultiple: true);
 
-                            if(result != null) {
-                              List<File> files = result.paths.map((path) => File(path)).toList();
+                            if (result != null) {
+                              List<File> files = result.paths
+                                  .map((path) => File(path))
+                                  .toList();
 
                               Navigator.pop(context);
                               mainSetState(() {
@@ -434,12 +433,12 @@ if(_fileResult!=f.fileResult){
 
                               await _fileManager
                                   .uploadFiles(_controllerDB.headers(),
-                                  userId: _controllerDB.user.value.data.id,
-                                  files: files,
-                                  directory:
-                                  _fileManager.getDirectory().isEmpty
-                                      ? _fileManager.getDirectory()
-                                      : _fileManager.getDirectory())
+                                      userId: _controllerDB.user.value.data.id,
+                                      files: files,
+                                      directory:
+                                          _fileManager.getDirectory().isEmpty
+                                              ? _fileManager.getDirectory()
+                                              : _fileManager.getDirectory())
                                   .then((value) {
                                 updateFiles(result: value);
                                 mainSetState(() {
@@ -447,7 +446,6 @@ if(_fileResult!=f.fileResult){
                                 });
                               });
                             }
-
                           },
                           title: Text("Upload File"),
                           trailing: Icon(Icons.upload_file),
@@ -478,7 +476,7 @@ if(_fileResult!=f.fileResult){
     } else {
       setState(() {
         _fileResult.addAll(result);
-        isLoading=false;
+        isLoading = false;
       });
     }
   }
@@ -486,29 +484,24 @@ if(_fileResult!=f.fileResult){
   Future _loadData() async {
     setState(() {
       page++;
-      isUpload=true;
-
+      isUpload = true;
     });
-    _fileManager.getFilesByUserIdForDirectory(
-        _controllerDB.headers(),
-page: page,
-        userId: _controllerDB.user.value.data.id,
-        directory: _fileManager.getDirectory()).then((value) {
-          setState(() {
-            if(value.data.result.length==0){
-              morePage=false;
-            }else {
-              _fileM = value;
-              _fileData = _fileM.data;
-              _fileResult.addAll(_fileM.data.result);
-
-            }
-            isUpload = false;
-
-          });
+    _fileManager
+        .getFilesByUserIdForDirectory(_controllerDB.headers(),
+            page: page,
+            userId: _controllerDB.user.value.data.id,
+            directory: _fileManager.getDirectory())
+        .then((value) {
+      setState(() {
+        if (value.data.result.length == 0) {
+          morePage = false;
+        } else {
+          _fileM = value;
+          _fileData = _fileM.data;
+          _fileResult.addAll(_fileM.data.result);
+        }
+        isUpload = false;
+      });
     });
   }
-
-
-
 }

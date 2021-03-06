@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../NotificationHandler.dart';
+import 'CallsPage.dart';
 import 'ChatList.dart';
+
 
 class CommunicationPage extends StatefulWidget {
 
@@ -83,7 +84,7 @@ class _CommunicationPageState extends State<CommunicationPage> {
             Container(child: Text(" Camera Page")),
             ChatList(),
             Container(child: Text(" story page")),
-            Container(child: Text(" Calls Page")),
+            CallsPage(),
           ],
         ),
 

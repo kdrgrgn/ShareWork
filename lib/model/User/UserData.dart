@@ -24,11 +24,13 @@ class UserData {
   String token;
   int selectedPluginId;
   List<Plugins> plugins;
+  List<FcmTokens> fcmTokens;
 
   UserData(
       {this.id,
         this.email,
         this.relationId,
+        this.fcmTokens,
         this.firstName,
         this.officeServiceId,
         this.lastName,
@@ -77,6 +79,13 @@ class UserData {
         plugins.add(new Plugins.fromJson(v));
       });
     }
+
+    if (json['fcmTokens'] != null) {
+      fcmTokens = new List<FcmTokens>();
+      json['fcmTokens'].forEach((v) {
+        fcmTokens.add(new FcmTokens.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -105,11 +114,33 @@ class UserData {
     if (this.plugins != null) {
       data['plugins'] = this.plugins.map((v) => v.toJson()).toList();
     }
+    if (this.fcmTokens != null) {
+      data['fcmTokens'] = this.fcmTokens.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 
   @override
   String toString() {
     return 'Data{id: $id, email: $email, relationId, :officeServiceId: $officeServiceId, relationId: $relationId, firstName: $firstName, lastName: $lastName, password: $password, title: $title, profilePhoto: $profilePhoto, ownedOfficeId: $ownedOfficeId, officeTitle: $officeTitle, userType: $userType, status: $status, lastLoginDate: $lastLoginDate, modifiedDate: $modifiedDate, createdDate: $createdDate, createdDateText: $createdDateText, token: $token, selectedPluginId: $selectedPluginId, plugins: $plugins}';
+  }
+}
+
+class FcmTokens {
+  String token;
+  int deviceType;
+
+  FcmTokens({this.token, this.deviceType});
+
+  FcmTokens.fromJson(Map<String, dynamic> json) {
+    token = json['token'];
+    deviceType = json['deviceType'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['token'] = this.token;
+    data['deviceType'] = this.deviceType;
+    return data;
   }
 }

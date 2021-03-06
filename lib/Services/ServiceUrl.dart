@@ -7,6 +7,8 @@ class ServiceUrl {
 
   final String updateUserInfo = baseUrlShareWork + "/Account/UpdateUserInfo";
 
+  final String getUsersWithFCMTokens = baseUrlShareWork + "/Account/GetUsersWithFCMTokens";
+
   final String getUserListExceptCurrent = baseUrlShareWork + "/Account/GetUserListExceptCurrent";
 
   final String setUserToken = baseUrlShareWork + "/Account/SetUserToken";
@@ -17,6 +19,8 @@ class ServiceUrl {
 
   final String getCityList = baseUrlShareWork + "/Account/GetCityList";
 
+  final String getDistrictList = baseUrlShareWork + "/Account/GetDistrictList";
+
   final String changeProfilePhoto = baseUrlShareWork + "/Account/ChangeProfilePhoto";
 
   final String getOffice = baseUrlShareWork + "/Office/getoffice";
@@ -24,6 +28,8 @@ class ServiceUrl {
   final String getOfficeServiceList = baseUrlShareWork + "/Office/GetOfficeServiceList";
 
   final String editOfficeService = baseUrlShareWork + "/Office/EditOfficeService";
+
+  final String insertOfficeImages = baseUrlShareWork + "/Office/InsertOfficeImages";
 
   final String getPersonal = baseUrlShareWork + "/Personel/GetPersonelList";
 
@@ -53,7 +59,9 @@ class ServiceUrl {
 
   final String getPluginList = baseUrlShareWork + "/Plugin/getpluginlist";
 
-  final String getAddUserPlugin = baseUrlShareWork + "/Plugin/adduserplugin";
+  final String addUserPlugin = baseUrlShareWork + "/Plugin/adduserplugin";
+
+  final String deleteuserplugin = baseUrlShareWork + "/Plugin/deleteuserplugin";
 
   final String getCustomeList = baseUrlShareWork + "/Customer/getcustomerlist";
 

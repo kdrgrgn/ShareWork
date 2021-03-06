@@ -1,12 +1,55 @@
+import 'package:mobi/model/Customers/Customers.dart';
+import 'package:mobi/model/Office/OfficeData.dart';
+
 import 'Modules.dart';
+class FirstPlugin {
+  int statusCode;
+  Null exceptionInfo;
+  Null pageSortSearch;
+  bool hasError;
+  List<Plugins> data;
+
+  FirstPlugin(
+      {this.statusCode,
+        this.exceptionInfo,
+        this.pageSortSearch,
+        this.hasError,
+        this.data});
+
+  FirstPlugin.fromJson(Map<String, dynamic> json) {
+    statusCode = json['statusCode'];
+    exceptionInfo = json['exceptionInfo'];
+    pageSortSearch = json['pageSortSearch'];
+    hasError = json['hasError'];
+    if (json['data'] != null) {
+      data = new List<Plugins>();
+      json['data'].forEach((v) {
+        data.add(new Plugins.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['statusCode'] = this.statusCode;
+    data['exceptionInfo'] = this.exceptionInfo;
+    data['pageSortSearch'] = this.pageSortSearch;
+    data['hasError'] = this.hasError;
+    if (this.data != null) {
+      data['data'] = this.data.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
 
 class Plugins {
   int pluginId;
   String pluginName;
   bool isActive;
   String iconUrl;
-  Null officeList;
-  Null customerList;
+  List<OfficeData> officeList;
+  List<CustomerData> customerList;
   List<Modules> modules;
 
   Plugins(
@@ -23,8 +66,24 @@ class Plugins {
     pluginName = json['pluginName'];
     isActive = json['isActive'];
     iconUrl = json['iconUrl'];
-    officeList = json['officeList'];
-    customerList = json['customerList'];
+
+    if (json['officeList'] != null) {
+      officeList = new List<OfficeData>();
+      json['officeList'].forEach((v) {
+        officeList.add(new OfficeData.fromJson(v));
+      });
+    }else{
+      officeList=null;
+    }
+
+    if (json['customerList'] != null) {
+      customerList = new List<CustomerData>();
+      json['customerList'].forEach((v) {
+        customerList.add(new CustomerData.fromJson(v));
+      });
+    }else{
+      customerList=null;
+    }
     if (json['modules'] != null) {
       modules = new List<Modules>();
       json['modules'].forEach((v) {

@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:agora_rtc_engine/rtc_engine.dart' as RtcEngine;
 import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobi/Pages/Chat/CallsPage.dart';
 import 'package:mobi/Pages/Chat/VideoPlayerPage.dart';
+import 'package:mobi/model/User/UserData.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
@@ -106,18 +112,17 @@ class _ChatRoomState extends State<ChatRoom> {
           header: _controllerDB.headers(), id: widget.id);
       MySharedPreferencesForChat _countDB = MySharedPreferencesForChat.instance;
       List<String> a = await _countDB.getCount("chat");
-      List<String> b=   await _countDB.getCount(widget.id.toString());
+      List<String> b = await _countDB.getCount(widget.id.toString());
 
-      if (a != null&&b!=null) {
+      if (a != null && b != null) {
         int olda = int.parse(a.first);
         int oldb = int.parse(b.first);
 
-        olda=olda-oldb;
-        if(olda>0) {
+        olda = olda - oldb;
+        if (olda > 0) {
           _countDB.setCount("chat", [olda.toString()]);
-        }else{
+        } else {
           await _countDB.deleteCount("chat");
-
         }
       }
       await _countDB.deleteCount(widget.id.toString());
@@ -183,7 +188,9 @@ class _ChatRoomState extends State<ChatRoom> {
                                     _chat.data.isGroup == 1
                                         ? _controllerChange.urlUsers +
                                             "DefaultGroupThumbnail.png"
-                                        :_controllerChange.urlUsers + _chat.data.userList.first.profilePhoto),
+                                        : _controllerChange.urlUsers +
+                                            _chat.data.userList.first
+                                                .profilePhoto),
                               ),
                             ),
                           ),
@@ -192,7 +199,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     ),
                     _chat.data.isGroup == 1
                         ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 _chat.data.title,
@@ -200,7 +207,7 @@ class _ChatRoomState extends State<ChatRoom> {
                               ),
                               Container(
                                 height: 15,
-                                width: Get.width-180,
+                                width: Get.width - 180,
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
@@ -220,12 +227,92 @@ class _ChatRoomState extends State<ChatRoom> {
                                 " " +
                                 _chat.data.userList.first.lastName,
                           ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: themeColor,
-                      ),
-                      onPressed: () {},
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.video_call,
+                            color: themeColor,
+                          ),
+                          onPressed: () async {
+                            List<int> ids = [];
+                            _chat.data.userList.forEach((element) {
+                              if (element.id !=
+                                  _controllerDB.user.value.data.id) {
+                                ids.add(element.id);
+                              }
+                            });
+
+                            List<UserData> data =
+                                await _controllerDB.getUsersWithFCMTokens(
+                                    header: _controllerDB.headers(), ids: ids);
+                            List<String> tokens = [];
+                            List<UserData> newData = [];
+
+                            data.forEach((element) {
+                              element.fcmTokens.forEach((token) {
+                                if (token.deviceType == 1) {
+                                  tokens.add(token.token);
+                                  newData.add(element);
+                                }
+                              });
+                            });
+
+                            tokens.forEach((element) async {
+                              await postCall(element, "Görüntülü Konuşma",true);
+                            });
+
+                            Navigator.of(context, rootNavigator: true)
+                                .push(MaterialPageRoute(
+                              builder: (context) => CallsPage(
+                                  channelName: widget.id.toString(),
+                                  role: RtcEngine.ClientRole.Broadcaster,
+                                  userData: newData),
+                            ));
+                          },
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.call,
+                              color: themeColor,
+                            ),
+                            onPressed: () async {
+                              List<int> ids = [];
+                              _chat.data.userList.forEach((element) {
+                                if (element.id !=
+                                    _controllerDB.user.value.data.id) {
+                                  ids.add(element.id);
+                                }
+                              });
+
+                              List<UserData> data =
+                                  await _controllerDB.getUsersWithFCMTokens(
+                                      header: _controllerDB.headers(),
+                                      ids: ids);
+                              List<String> tokens = [];
+                              List<UserData> newData = [];
+
+                              data.forEach((element) {
+                                element.fcmTokens.forEach((token) {
+                                  if (token.deviceType == 1) {
+                                    tokens.add(token.token);
+                                    newData.add(element);
+                                  }
+                                });
+                              });
+                              tokens.forEach((element) async {
+                                await postCall(element, "Sesli Konuşma",false);
+                              });
+
+                              Navigator.of(context, rootNavigator: true)
+                                  .push(MaterialPageRoute(
+                                builder: (context) => CallsPage(
+                                    channelName: widget.id.toString(),
+                                    role: RtcEngine.ClientRole.Audience,
+                                    userData: newData),
+                              ));
+                            })
+                      ],
                     ),
                   ],
                 ),
@@ -262,6 +349,38 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
             );
           });
+  }
+
+  Future<void> postCall(String token,String subTitle,bool isVideo) async {
+    String serverToken =
+        "AAAAXJZB9AU:APA91bEXLTt6P_iCQVI29N6tPByuoATm3inxgIiU6vNehI5cDcsPSpI4ckmKBFW6FGtrpLv3ScTid74MaD"+
+        "-HzuqvbkjXAFz6ngpxDt0vbfn7qNhzHT9KB1CQ47Mv4phdycRl5RccehDM";
+    String name = _controllerDB.user.value.data.firstName +" " +_controllerDB.user.value.data.lastName;
+String title = _chat.data.isGroup==1?_chat.data.title + " : " + name: name;
+
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$serverToken',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body': subTitle,
+            'title': title
+          },
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': _chat.data.id.toString(),
+            'type':'message',
+            'isVideo':isVideo?1:0
+          },
+          'to': token,
+        },
+      ),
+    );
   }
 
   Widget renderChatMessage(MessageList message) {
@@ -336,64 +455,67 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
             ),
           ),
-          if (isRecording) InkWell(
-                  onTap: () async {
-                    Recording rec = await AudioRecorder.stop();
-                    Directory(rec.path).deleteSync(recursive: true);
+          if (isRecording)
+            InkWell(
+              onTap: () async {
+                Recording rec = await AudioRecorder.stop();
+                Directory(rec.path).deleteSync(recursive: true);
 
-                    setState(() {
-                      isRecording = false;
-                    });
-                  },
-                  child: Text(
-                    "Iptal",
-                    style: TextStyle(color: Colors.red),
+                setState(() {
+                  isRecording = false;
+                });
+              },
+              child: Text(
+                "Iptal",
+                style: TextStyle(color: Colors.red),
+              ),
+            )
+          else
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.black,
                   ),
-                ) else Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                        final picker = ImagePicker();
+                  onPressed: () async {
+                    final picker = ImagePicker();
 
-                        PickedFile image = await picker.getImage(
-                            source: ImageSource.camera, imageQuality: 50);
+                    PickedFile image = await picker.getImage(
+                        source: ImageSource.camera, imageQuality: 50);
 
-                        MessageList _result = await _controllerChat.uploadFile(
-                            header: _controllerDB.headers(),
-                            chatId: _chat.data.id,
-                            userId: _controllerDB.user.value.data.id,
-                            file: File(image.path));
+                    MessageList _result = await _controllerChat.uploadFile(
+                        header: _controllerDB.headers(),
+                        chatId: _chat.data.id,
+                        userId: _controllerDB.user.value.data.id,
+                        file: File(image.path));
 
-                        _controllerChat.messageSendFile(_result);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.attach_file,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                            FilePickerResult result = await FilePicker.platform.pickFiles();
-
-                        if(result != null) {
-                          File file = File(result.files.single.path);
-                          MessageList _result = await _controllerChat.uploadFile(
-                              header: _controllerDB.headers(),
-                              chatId: _chat.data.id,
-                              userId: _controllerDB.user.value.data.id,
-                              file: file);
-
-                          _controllerChat.messageSendFile(_result);
-                        }
-
-                      },
-                    ),
-                  ],
+                    _controllerChat.messageSendFile(_result);
+                  },
                 ),
+                IconButton(
+                  icon: Icon(
+                    Icons.attach_file,
+                    color: Colors.black,
+                  ),
+                  onPressed: () async {
+                    FilePickerResult result =
+                        await FilePicker.platform.pickFiles();
+
+                    if (result != null) {
+                      File file = File(result.files.single.path);
+                      MessageList _result = await _controllerChat.uploadFile(
+                          header: _controllerDB.headers(),
+                          chatId: _chat.data.id,
+                          userId: _controllerDB.user.value.data.id,
+                          file: file);
+
+                      _controllerChat.messageSendFile(_result);
+                    }
+                  },
+                ),
+              ],
+            ),
           message.isEmpty
               ? isRecording
                   ? FloatingActionButton(
@@ -523,7 +645,8 @@ class _ChatRoomState extends State<ChatRoom> {
             CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
-              backgroundImage: Image.network(_controllerChange.urlUsers +message.ownerUser.profilePhoto)
+              backgroundImage: Image.network(_controllerChange.urlUsers +
+                      message.ownerUser.profilePhoto)
                   .image,
             ),
             SizedBox(

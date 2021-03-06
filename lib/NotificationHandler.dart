@@ -1,8 +1,9 @@
-import 'dart:developer';
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:mobi/Pages/Chat/CallsPage.dart';
 import 'dart:convert';
 
 import 'Controller/ControllerChat.dart';
@@ -51,24 +52,34 @@ class NotificationHandler {
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         ControllerChat _controllerChat = Get.put(ControllerChat());
 int chatid=_controllerChat.chatIdGet();
+if(message['data']['type']=="message"){
+  showNotification(message);
+}else{
+
         if (chatid!=0 &&
             chatid.toString() == message['data']['Id']) {
           _controllerChat.messagesUpdate(message);
         } else {
+
           updateCount(message['data']['Id']);
           showNotification(message);
           updateChatList(
               message["notification"]["body"], message['data']['Id']);
         }
+
+    }
       },
       onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
+        if(message['data']['type']=="message"){
+          onLorR(message);
+        }else{
+
         print("onLaunch: $message");
         final ControllerDB c = Get.put(ControllerDB());
 
@@ -78,13 +89,13 @@ int chatid=_controllerChat.chatIdGet();
           onLorR(message);
 
         }
-
+        }
 
         // showNotification(message);
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        onLorR(message);
+
+          onLorR(message);
 
         //  showNotification(message);
       },
@@ -92,11 +103,18 @@ int chatid=_controllerChat.chatIdGet();
   }
 
   void onLorR(Map<String, dynamic> message) {
+    if (message['data']['type'] == "message") {
+      onSelectNotification(jsonEncode(message));
+    }
+    else {
+
+
     NotificationHandler.updateChatList(
         message["notification"]["body"], message['data']['Id']);
 
     NotificationHandler.updateCount(message['data']['Id']);
     onSelectNotification(jsonEncode(message));
+  }
   }
 
   static void updateCount(String key) async {
@@ -171,13 +189,27 @@ int chatid=_controllerChat.chatIdGet();
     if (payload != null) {
       ControllerChat _controllerChat = Get.put(ControllerChat());
 
-      debugPrint("ife girdi tiklandiginda ${_controllerChat.getContext()} ");
-      Navigator.of(_controllerChat.getContext(), rootNavigator: true)
-          .pushReplacement(MaterialPageRoute(
-              fullscreenDialog: true,
-              builder: (context) => ChatRoom(
-                    id: int.parse(gelenBildirim['data']['Id']),
-                  )));
+      if(gelenBildirim['data']['type']=="message"){
+        Navigator.of(_controllerChat.getContext(), rootNavigator: true)
+            .pushReplacement(MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) =>
+                CallsPage(
+                  channelName: gelenBildirim['data']['id'],
+                  role: gelenBildirim['data']['isVideo']==1?ClientRole.Broadcaster:ClientRole.Audience,
+                )));
+
+      }else {
+
+        debugPrint("ife girdi tiklandiginda ${_controllerChat.getContext()} ");
+        Navigator.of(_controllerChat.getContext(), rootNavigator: true)
+            .pushReplacement(MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) =>
+                ChatRoom(
+                  id: int.parse(gelenBildirim['data']['Id']),
+                )));
+      }
     }
   }
 }

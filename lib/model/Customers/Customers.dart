@@ -142,7 +142,7 @@ class CustomerData {
   String email;
   int relationId;
   Null password;
-  Null title;
+  String title;
   String profilePhoto;
   int ownedOfficeId;
   Null officeTitle;

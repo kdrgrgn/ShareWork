@@ -106,8 +106,8 @@ class _InsertFamilyWidgetState extends State<InsertFamilyWidget> {
                               //   color: Colors.transparent,
                               width: 50,
                               height: 50,
-                              child: Image.network(
-                                "https://share-work.com/newsIcons/ikon_foto.png",
+                              child: Image.asset(
+                                "assets/newsIcons/ikon_foto.png",
                                 fit: BoxFit.contain,
                               ),
                             )

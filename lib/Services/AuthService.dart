@@ -27,15 +27,18 @@ class AuthService {
       var response = await http.post(_serviceUrl.login,
           headers: headers, body: jsonEncode(postValue));
 
-      log("Usseerrr= "+response.body);
+      log("Usseerrr= " + response.body);
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
       User user = User.fromJson(responseData);
       String _token = await _firebaseMessaging.getToken();
-      await http.get(_serviceUrl.setUserToken + "?Token=$_token", headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-        "Authorization": "Bearer " + user.data.token
-      });
+      log("tokenn = "+ _token);
+      await http.post(_serviceUrl.setUserToken,
+          body: jsonEncode({'token': _token, 'deviceType': 1}),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer " + user.data.token
+          });
 
       return user.obs;
     } catch (e) {
@@ -44,7 +47,7 @@ class AuthService {
     }
   }
 
-  Future<bool> signUp (
+  Future<bool> signUp(
       {String mail,
       String password,
       String firstName,
@@ -72,18 +75,17 @@ class AuthService {
         };
       }
 
-      log("reqq signop = " +postValue.toString());
+      log("reqq signop = " + postValue.toString());
 
       var response = await http.post(_serviceUrl.register,
           headers: headers, body: jsonEncode(postValue));
-log("resp signop = " +response.body);
+      log("resp signop = " + response.body);
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
       if (responseData['data'] == true) {
         return true;
-      }else{
+      } else {
         return false;
       }
-
     } catch (e) {
       print("sign up hata = " + e.toString());
       return false;
@@ -106,6 +108,29 @@ log("resp signop = " +response.body);
         }));
   }
 
+  Future<List<UserData>> getUsersWithFCMTokens({List<int> ids, Map<String, String> header}) async {
+    var response = await http.post(
+      _serviceUrl.getUsersWithFCMTokens,
+      headers: header,
+      body: jsonEncode({'userIds': ids}),
+    );
+    log("reess getUsersWithFCMTokens = " + response.body);
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+    List<UserData> userList = [];
+
+
+    if (responseData['data'] != null) {
+      responseData['data'].forEach((v) {
+        userList.add(new UserData.fromJson(v));
+      });
+    }
+
+    return userList;
+
+
+  }
+
   changeProfilePhoto({File file, Map<String, String> header}) async {
     List<int> imageBytes = file.readAsBytesSync();
     String fileName = basename(file.path).toString();
@@ -116,7 +141,6 @@ log("resp signop = " +response.body);
         body: jsonEncode(
             {"Directory": "", "FileContent": content, "FileName": fileName}));
     final responseData = jsonDecode(response.body) as Map<String, dynamic>;
-
 
     return responseData['data']['fileName'];
   }
@@ -130,7 +154,6 @@ log("resp signop = " +response.body);
     final responseData = jsonDecode(response.body) as Map<String, dynamic>;
     List<UserData> userList = [];
 
-    log("UserListExceptCurrent = " + response.body);
 
     if (responseData['data'] != null) {
       responseData['data'].forEach((v) {
@@ -150,22 +173,28 @@ log("resp signop = " +response.body);
     });
   }
 
-  Future<Csc> getCountryList(Map<String,String> header) async {
+  Future<Csc> getCountryList(Map<String, String> header) async {
+    var response = await http.get(_serviceUrl.getCountryList, headers: header);
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-   var response=  await http.get(_serviceUrl.getCountryList , headers: header);
-   final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+    return Csc.fromJson(responseData);
+  }
 
-   return Csc.fromJson(responseData);
- }
+  Future<Csc> getCityList(Map<String, String> header, int countryID) async {
+    var response = await http.get(
+        _serviceUrl.getCityList + "?CountryId=$countryID",
+        headers: header);
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-  Future<Csc> getCityList(Map<String,String> header ,int countryID) async {
+    return Csc.fromJson(responseData);
+  }
 
-   var response=  await http.get(_serviceUrl.getCityList + "?CountryId=$countryID", headers: header);
-   final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+  getDistrictList(Map<String, String> header, int id) async {
+    var response = await http.get(
+        _serviceUrl.getDistrictList + "?CityId=$id",
+        headers: header);
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
-   return Csc.fromJson(responseData);
- }
-
-
-
+    return Csc.fromJson(responseData);
+  }
 }
