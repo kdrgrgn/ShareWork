@@ -5,7 +5,7 @@ import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/Account.dart';
 import 'package:mobi/Pages/Chat/CommunicationPage.dart';
 import 'package:mobi/Pages/Dashboard/Dashboard.dart';
-import 'file:///G:/flutterProjects/mobi/lib/Pages/FileManager/FolderManager.dart';
+import 'package:mobi/Pages/FileManager/FolderManager.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../Pages/Chat/MySharedPreferencesForChat.dart';
 
@@ -33,12 +33,14 @@ class _BuildBottomNavigationBarState extends State<BuildBottomNavigationBar> {
     FolderManager(),
     AccountPage()
   ];
+/*
   List<GlobalKey<NavigatorState>> navigatorKeys = [
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
   ];
+*/
 
   PersistentTabController _controller;
 

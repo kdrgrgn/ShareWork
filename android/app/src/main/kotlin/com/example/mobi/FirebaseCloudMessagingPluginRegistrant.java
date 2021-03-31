@@ -2,12 +2,12 @@ package com.example.mobi;
 
 
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
+//import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
 
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
+//import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin;
 
 public final class FirebaseCloudMessagingPluginRegistrant{
@@ -16,7 +16,7 @@ public final class FirebaseCloudMessagingPluginRegistrant{
             return;
         }
         PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
-        FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
+      //  FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
         FlutterLocalNotificationsPlugin.registerWith(registry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
     }
 

@@ -6,7 +6,9 @@
 <key>NSAllowsArbitraryLoads</key>
   <true/>
 <key>NSMicrophoneUsageDescription</key>
+
 <string>Can We Use Your Microphone Please</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

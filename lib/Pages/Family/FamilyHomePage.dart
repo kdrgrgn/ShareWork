@@ -5,6 +5,7 @@ import 'package:mobi/Controller/ControllerFamily.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/Family/FamilyTabBar.dart';
 import 'package:mobi/model/Family/Family.dart';
+import 'package:mobi/widgets/GradientWidget.dart';
 import 'package:mobi/widgets/InsertFamily.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
 
@@ -77,7 +78,9 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           Container(
             width: Get.size.width,
             height: Get.size.height,
-            color: Colors.blue[200],
+            decoration: BoxDecoration(
+              gradient: MyGradientWidget().linear(start: Alignment.centerLeft,end: Alignment.centerRight)
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -149,6 +152,7 @@ class _FamilyHomePageState extends State<FamilyHomePage> {
           Align(
             alignment: Alignment(0, -0.80),
             child: CircleAvatar(
+              backgroundColor: Colors.white,
               backgroundImage: Image.network(
                 _controllerChange.urlFamilyPicture + family.data.picture,
                 fit: BoxFit.fill,

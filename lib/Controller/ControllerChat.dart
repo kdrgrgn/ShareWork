@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Services/Chat/DBChat.dart';
@@ -54,34 +55,34 @@ class ControllerChat extends GetxController implements ChatServiceBase {
     return await _chatService.insertChat(header: header, id: id);
   }
 
-  messagesUpdate(Map<String, dynamic> message) {
-    if (message['data']['MediaPath'].isEmpty) {
+  messagesUpdate(Map<String, dynamic> message,RemoteNotification notification) {
+    if (message['MediaPath'].isEmpty) {
       messages.insert(
           0,
           MessageList(
-              message: message['notification']['body'],
-              id:  int.parse(message['data']['MessageId']),
+              message: notification.body,
+              id:  int.parse(message['MessageId']),
               isUpload: 0,
 
               ownerUser: UserData(
-                  id: int.parse(message['data']['SenderUserId']),
-                  firstName: message['data']['SenderUserName'],
+                  id: int.parse(message['SenderUserId']),
+                  firstName: message['SenderUserName'],
                   lastName: " ",
 
-              profilePhoto: message['data']['Image'])));
+              profilePhoto: message['Image'])));
     } else {
       messages.insert(
           0,
           MessageList(
-              message: message['notification']['body'],
-              id:  int.parse(message['data']['MessageId']),
-              uploadPath: message['data']['MediaPath'],
+              message: notification.body,
+              id:  int.parse(message['MessageId']),
+              uploadPath: message['MediaPath'],
               isUpload: 1,
-              mediaLength: message['data']['MediaLength'],
+              mediaLength: message['MediaLength'],
               ownerUser: UserData(
-                  id: int.parse(message['data']['SenderUserId']),
-                  firstName: message['data']['SenderUserName'],
-                  lastName: " ", profilePhoto: message['data']['Image'])));
+                  id: int.parse(message['SenderUserId']),
+                  firstName: message['SenderUserName'],
+                  lastName: " ", profilePhoto: message['Image'])));
     }
     update();
   }

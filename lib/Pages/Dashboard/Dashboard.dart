@@ -33,6 +33,7 @@ class _DashboardState extends State<Dashboard> {
   int initialPage;
   int familyCount;
   int productCount;
+  int servicesCount;
   TextStyle drawerStyle;
   bool isloading = true;
   bool isloadingAppBar = true;
@@ -89,8 +90,17 @@ item=[];
           productCount = i ;
 
         });
+      }    else if(plugins[i].pluginId ==9){
+        item.add(ProductPage());
+        setState(() {
+          productCount = i ;
+
+        });
       } else if(plugins[i].pluginId ==10){
         item.add(ServicePage());
+        setState(() {
+          servicesCount = i ;
+        });
 
       }
       else {
@@ -146,7 +156,7 @@ title=[];
 
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      appBar: initialPage == familyCount || initialPage==productCount
+      appBar: initialPage == familyCount || initialPage==productCount || initialPage==servicesCount
           ? null
           : AppBar(
               automaticallyImplyLeading: false,

@@ -6,6 +6,7 @@ import 'package:mobi/Services/Office/OfficeBase.dart';
 import 'package:mobi/Services/Office/OfficeDB.dart';
 import 'package:mobi/model/CityServiceCountry/CityServiceCountry.dart';
 import 'package:mobi/model/Office/Office.dart';
+import 'package:mobi/model/Services/Services.dart';
 
 class ControllerOffice extends GetxController implements OfficeBase {
   OfficeDB _dbService = OfficeDB();
@@ -40,6 +41,12 @@ class ControllerOffice extends GetxController implements OfficeBase {
   @override
   Future insertOfficeImages(Map<String, String> header, {List<File> files}) async {
     return await _dbService.insertOfficeImages(header,files:files);
+
+  }
+
+  @override
+  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId}) async {
+    return await _dbService.getOfficeListWithService(header,serviceId:serviceId);
 
   }
 }

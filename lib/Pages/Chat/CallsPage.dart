@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:crypto/crypto.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -320,6 +319,7 @@ class _CallsPageState extends State<CallsPage> {
       muted = !muted;
     });
     _engine.muteLocalAudioStream(muted);
+
   }
 
   void _onSwitchCamera() {
@@ -329,9 +329,9 @@ class _CallsPageState extends State<CallsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+  /*    appBar: AppBar(
         title: Text('Agora Flutter QuickStart'),
-      ),
+      ),*/
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(
@@ -346,6 +346,7 @@ class _CallsPageState extends State<CallsPage> {
   }
 
 
+/*
   String buildTokenWithUid(){
     ControllerDB _controllerDB = Get.put(ControllerDB());
 
@@ -365,5 +366,6 @@ class _CallsPageState extends State<CallsPage> {
 
     return token;
   }
+*/
 
 }

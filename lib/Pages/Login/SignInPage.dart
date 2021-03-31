@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/Pages/Login/rememberMeControl.dart';
+import 'package:mobi/widgets/GradientWidget.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -66,9 +67,14 @@ class _SignInPageState extends State<SignInPage> {
 
        await signIn();
       },
-      child: Material(
-        color: themeColor,
-        borderRadius: BorderRadius.circular(25),
+      child: Container(
+        padding: EdgeInsets.only(
+            top: 0, bottom: 0, left: 70, right: 70),
+        decoration: BoxDecoration(
+            gradient: MyGradientWidget().linear(),
+
+            borderRadius: BorderRadius.circular(15)),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

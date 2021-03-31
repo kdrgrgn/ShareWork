@@ -1,7 +1,7 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Pages/Chat/CallsPage.dart';
 import 'dart:convert';
@@ -10,6 +10,9 @@ import 'Controller/ControllerChat.dart';
 import 'Controller/ControllerDB.dart';
 import 'Pages/Chat/ChatRoom.dart';
 import 'Pages/Chat/MySharedPreferencesForChat.dart';
+/*
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 Future<void> myBackgroundMessageHandler(RemoteMessage newMessage) async {
   Map<String, dynamic> message = newMessage.data;
@@ -39,30 +42,33 @@ class NotificationHandler {
   NotificationHandler._();
 
   Future<void> init() async {
-
-
-    AwesomeNotifications().actionStream.listen(
-            (receivedNotification){
-
-              if(receivedNotification.buttonKeyPressed=="response") {
-                ControllerChat _controllerChat = Get.put(ControllerChat());
-                ControllerDB _controllerDB = Get.put(ControllerDB());
-
-                _controllerChat.insertChatMessage(
-                    header: _controllerDB.headers(),
-                    id: receivedNotification.payload['Id'],
-                    message: receivedNotification.buttonKeyInput);
-
-              }
-              else if(receivedNotification.buttonKeyPressed=="callU"){
-
-              }
-              else {
-                onSelectNotification(jsonEncode(receivedNotification.payload));
-              }
-
-        }
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
+      'This channel is used for important notifications.', // description
+      importance: Importance.max,
     );
+
+    /// Create an Android Notification Channel.
+    ///
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    var initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+
+    var initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
 
     // Eski mesaj alma olayi burada
 
@@ -84,13 +90,13 @@ class NotificationHandler {
         }
       }
 
-/*      RemoteNotification notification = message.notification;
+*//*      RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
 
-      if (notification != null */ /*&& android != null*/ /*) {
+      if (notification != null *//* *//*&& android != null*//* *//*) {
 onLorR(message);
         showNotification(message.data,message.notification);
-*/ /*        flutterLocalNotificationsPlugin.show(
+*//* *//*        flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
             notification.body,
@@ -103,16 +109,16 @@ onLorR(message);
                 //      one that already exists in example app.
                 icon: 'launch_background',
               ),
-            ));*/ /*
-      }*/
+            ));*//* *//*
+      }*//*
     });
 
-    /* FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage onTapMessage) {
+    *//* FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage onTapMessage) {
       print('A new onMessageOpenedApp event was published! = ');
 
       onSelectNotification(onTapMessage);
     });
-*/
+*//*
   }
 
   void onLorR(RemoteMessage newMessage) {
@@ -163,38 +169,45 @@ onLorR(message);
   }
 
   static void showNotification(
-    Map<String, dynamic> messageData,
-    RemoteNotification messageNot,
-  ) async {
-    AwesomeNotifications().createNotification(
-      actionButtons:messageData['type']=='call'?[
-
-        NotificationActionButton(label: "Yanıtla",buttonType: ActionButtonType.Default,key: "callS" ),
-        NotificationActionButton(label: "Reddet",buttonType: ActionButtonType.DisabledAction ,key: "callU"),
-
-      ]: [
-
-        NotificationActionButton(label: "Yanıtla",buttonType: ActionButtonType.InputField,key: "response" ),
-      ],
-        content: NotificationContent(
-
-            id: 0,
-            channelKey:  messageData['type']=='call'?'custom_sound':'basic_channel',
-
-            title: messageNot.title == null
-                ? messageData["SenderUserName"]
-                : messageNot.title,
-            body: messageNot.body,
-        payload: messageData));
+      Map<String, dynamic> messageData,
+      RemoteNotification messageNot,
+      ) async {
+    print(" callim  = " + messageData['type']);
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      '1234', 'Yeni Mesaj', 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      sound: messageData['type']=='call'?RawResourceAndroidNotificationSound('audio'):null,
+      playSound: true,
+      enableVibration: true,
 
 
 
 
+      // styleInformation: mesajStyle,
+      *//*   importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker'*//*
+    );
 
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        messageNot.title == null
+            ? messageData["SenderUserName"]
+            : messageNot.title,
+        messageNot.body,
+        platformChannelSpecifics,
+        payload: jsonEncode(messageData));
   }
-/*
+
   Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) {}*/
+      int id, String title, String body, String payload) {}
 
   Future onSelectNotification(String payload) async {
     Map<String, dynamic> gelenBildirim = jsonDecode(payload);
@@ -204,26 +217,73 @@ onLorR(message);
       ControllerChat _controllerChat = Get.put(ControllerChat());
 
       if (gelenBildirim['type'] == "call") {
-        print("idd chattt = " + gelenBildirim.toString());
         Navigator.of(_controllerChat.getContext(), rootNavigator: true)
             .pushReplacement(MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => CallsPage(
-                      channelName: gelenBildirim['id'].toString(),
-                      role: gelenBildirim['isVideo'] == 1
-                          ? ClientRole.Broadcaster
-                          : ClientRole.Audience,
-                    )));
+            fullscreenDialog: true,
+            builder: (context) => CallsPage(
+              channelName: gelenBildirim['Id'],
+              role: gelenBildirim['isVideo'] == 1
+                  ? ClientRole.Broadcaster
+                  : ClientRole.Audience,
+            )));
       } else {
         debugPrint("ife girdi tiklandiginda ${_controllerChat.getContext()} ");
         Navigator.of(_controllerChat.getContext(), rootNavigator: true)
             .pushReplacement(MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => ChatRoom(
-                      id: int.parse(gelenBildirim['Id']),
-
-                    )));
+            fullscreenDialog: true,
+            builder: (context) => ChatRoom(
+              id: int.parse(gelenBildirim['Id']),
+            )));
       }
     }
   }
-}
+}*/
+
+/*    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        ControllerChat _controllerChat = Get.put(ControllerChat());
+int chatid=_controllerChat.chatIdGet();
+if(message['data']['type']=="call"){
+  showNotification(message);
+}else{
+
+        if (chatid!=0 &&
+            chatid.toString() == message['data']['Id']) {
+          _controllerChat.messagesUpdate(message);
+        } else {
+
+          updateCount(message['data']['Id']);
+          showNotification(message);
+          updateChatList(
+              message["notification"]["body"], message['data']['Id']);
+        }
+
+    }
+      },
+      onBackgroundMessage: myBackgroundMessageHandler,
+      onLaunch: (Map<String, dynamic> message) async {
+        if(message['data']['type']=="call"){
+          onLorR(message);
+        }else{
+
+        print("onLaunch: $message");
+        final ControllerDB c = Get.put(ControllerDB());
+
+        List<String> temp= await RememberMeControl.instance.getRemember("login");
+        if(temp!=null){
+          await c.signIn(mail: temp[0], password: temp[1],rememberMe:false);
+          onLorR(message);
+
+        }
+        }
+
+        // showNotification(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+
+          onLorR(message);
+
+        //  showNotification(message);
+      },
+    );*/

@@ -328,31 +328,34 @@ class FamilyService implements FamilyServiceBase {
   Future<Family> createFamily(
       {Map<String, String> headers, String title, File file}) async {
     try {
-      List<int> imageBytes = file.readAsBytesSync();
-      String fileName = basename(file.path).toString();
-      String content = base64Encode(imageBytes);
-      log("jsssoonn  = " +
-          jsonEncode({
+      var response;
+      if(file==null){
+        response = await http.post(
+          _serviceUrl.createFamily,
+          body: jsonEncode({
+            "f": {"Title": title},
+
+          }),
+          headers: headers,
+        );
+      }else {
+        List<int> imageBytes = file.readAsBytesSync();
+        String fileName = basename(file.path).toString();
+        String content = base64Encode(imageBytes);
+
+         response = await http.post(
+          _serviceUrl.createFamily,
+          body: jsonEncode({
             "f": {"Title": title},
             "Picture": {
               "Directory": "",
               "FileContent": content,
               "FileName": fileName
             }
-          }));
-
-      var response = await http.post(
-        _serviceUrl.createFamily,
-        body: jsonEncode({
-          "f": {"Title": title},
-          "Picture": {
-            "Directory": "",
-            "FileContent": content,
-            "FileName": fileName
-          }
-        }),
-        headers: headers,
-      );
+          }),
+          headers: headers,
+        );
+      }
       log("ress create family= " + response.body);
 
       if (response.statusCode == 200) {

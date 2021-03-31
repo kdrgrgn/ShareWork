@@ -2,8 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Pages/Product/ProfilePage.dart';
+import 'package:mobi/model/Product/Product.dart';
 
 class ProductDetails extends StatefulWidget {
+  ProductData product;
+
+  ProductDetails(this.product);
+
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
@@ -51,7 +56,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Az kullanilmis ayyakabi"),
+        title: Text(widget.product.title),
       ),
       body: Column(
         children: [
@@ -96,7 +101,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         leading: CircleAvatar(
                           radius: 30,
                           backgroundImage: Image.network(
-                            "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                            widget.product.user.profilePhoto??  "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                           ).image,
                         ),
 
@@ -105,12 +110,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ProductProfile()));
                         },
-                        title: Text("Kadir Gorgun"),
+                        title: Text(widget.product.user.firstName + " " + widget.product.user.lastName),
                         subtitle: Container(child: Column(
                           children: [
                             Row(
                               children: [
-                                Text("Istanbul"),
+                                Text(widget.product.city.name),
                               ],
                             ),
                             Row(
@@ -125,7 +130,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                           ],
                         )),
-                        trailing: Text("100 €"),
+                        trailing: Text(widget.product.price.toString() +  " €"),
                       ),
                     ),
                   ),
@@ -154,14 +159,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Column(
                           children: [
                             Text(
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-                              " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                              "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea"
-                              " commodo consequat. "
-                              "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore"
-                              " eu fugiat nulla pariatur. "
-                              "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui"
-                              " officia deserunt mollit anim id est laborum.",
+                              widget.product.description,
                               style:
                                   TextStyle(color: Colors.black, fontSize: 18),
                             ),

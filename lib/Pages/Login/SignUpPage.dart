@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/widgets/GradientWidget.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -64,16 +65,21 @@ class _SignUpPageState extends State<SignUpPage> {
       onTap: () async {
         await signUp();
       },
-      child: Material(
-        color: themeColor,
-        borderRadius: BorderRadius.circular(25),
+      child: Container(
+        padding: EdgeInsets.only(
+            top: 0, bottom: 0, left: 70, right: 70),
+        decoration: BoxDecoration(
+            gradient: MyGradientWidget().linear(),
+
+            borderRadius: BorderRadius.circular(15)),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                "Create Account",
+                "Login My Account",
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),

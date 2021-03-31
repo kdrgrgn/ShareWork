@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mobi/model/CityServiceCountry/CityServiceCountry.dart';
 import 'package:mobi/model/Office/Office.dart';
+import 'package:mobi/model/Services/Services.dart';
 import 'package:path/path.dart';
 import '../ServiceUrl.dart';
 
@@ -104,6 +105,20 @@ log("reqFile = " + jsonEncode(
 
     log("responsee insertOfficeImages = " + response.body);
 
+  }
+
+  @override
+  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId}) async {
+
+    String serviceID=serviceId==null?"":"?serviceId=$serviceId";
+
+print("getttt getOfficeListWithService = " +_serviceUrl.getOfficeListWithService+serviceID );
+    var response = await http.get(_serviceUrl.getOfficeListWithService+serviceID, headers: header);
+
+    log("responsee getOfficeListWithService = " + response.body);
+
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+    return Services.fromJson(responseData);
   }
 
 

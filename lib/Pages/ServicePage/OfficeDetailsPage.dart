@@ -1,16 +1,23 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/model/Services/Services.dart';
+import 'package:mobi/widgets/ButtonGradient.dart';
+import 'package:mobi/widgets/CircleGradient.dart';
+import 'package:mobi/widgets/GradientWidget.dart';
 
 class OfficeDetailsPage extends StatefulWidget {
+  ServiceData data;
+
+  OfficeDetailsPage(this.data);
+
   @override
   _OfficeDetailsPageState createState() => _OfficeDetailsPageState();
 }
 
-class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTickerProviderStateMixin {
+class _OfficeDetailsPageState extends State<OfficeDetailsPage>
+    with SingleTickerProviderStateMixin {
   List<Widget> itemsImage = [];
-
 
   List<Widget> listTab = [
     Tab(icon: Text("Description")),
@@ -28,6 +35,7 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
   TabController _controller;
   Color themeColor = Get.theme.accentColor;
   Color background = Get.theme.backgroundColor;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -69,179 +77,180 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Pin Software"),
-      ),
       body: Column(
         children: [
           Flexible(
             child: Container(
               height: Get.height,
-              child: SingleChildScrollView(
-                  child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: Get.width,
-                      child: CarouselSlider(
-                          items: itemsImage,
-                          options: CarouselOptions(
-                            height: 200,
-                            aspectRatio: 16 / 9,
-                            viewportFraction: 0.4,
-                            enableInfiniteScroll: false,
-                            reverse: false,
-                            autoPlay: true,
-                            autoPlayAnimationDuration: Duration(seconds: 2),
-                            pauseAutoPlayOnTouch: true,
-                            autoPlayInterval: Duration(seconds: 5),
-                            enlargeCenterPage: true,
-                            scrollDirection: Axis.horizontal,
-                          )),
-                    ),
-                  ),
-                /*  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: Get.width,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isInfo = true;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: isInfo
-                                        ? Colors.white
-                                        : Colors.grey[300],
-                                    border: Border.all()),
-                                child: Center(child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Info"),
-                                )),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isInfo = false;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  color:
-                                      !isInfo ? Colors.white : Colors.grey[200],
-                                ),
-                                child: Center(child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Description"),
-                                )),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
-                  Container(
-                    height: 60,
-                    child: TabBar(
-                      onTap: (index) {
-                        currentTab = index;
-                      },
-                      labelStyle: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      controller: _controller,
-                      indicatorColor: background,
-                      labelColor: themeColor,
-                      tabs: listTab,
-                    ),
-                  ),
-                  Container(
-                      height: 400,
-                    width: Get.width,
-                    child: TabBarView(
-                      dragStartBehavior: DragStartBehavior.start,
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: _controller,
+              decoration: BoxDecoration(
+                  gradient: MyGradientWidget().linear(
+                      end: Alignment.topCenter,
+                      start: Alignment(0, -0.2),
+                      startColor: Colors.white)),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-                                " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea"
-                                " commodo consequat. "
-                                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore"
-                                " eu fugiat nulla pariatur. "
-                                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui"
-                                " officia deserunt mollit anim id est laborum.",
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 18),
-                          ),
+                          padding: const EdgeInsets.all(12.0),
+                          child: InkWell(onTap:(){
+                            Navigator.pop(context);
+                          },child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
                         ),
-                        cardBuilder(),
 
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: InkWell(onTap:(){
+                            Navigator.pop(context);
+                          },child: Icon(Icons.more_horiz,color: Colors.white,)),
+                        ),
                       ],
                     ),
-                  ),
 
-                  SizedBox(
-                    height: 10,
-                  ),
-/*                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
+                    Container(
                       decoration: BoxDecoration(
-                        border:
-                            Border.all(color: Get.theme.accentColor, width: 6),
+                        borderRadius: BorderRadius.circular(20)
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: isInfo
-                            ? cardBuilder()
-                            : Text(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-                                " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea"
-                                " commodo consequat. "
-                                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore"
-                                " eu fugiat nulla pariatur. "
-                                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui"
-                                " officia deserunt mollit anim id est laborum.",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
+                      height: 200,
+                      width: Get.width-100,
+                      child: Image.network(
+                        "https://i.pinimg.com/originals/3f/3d/d9/3f3dd9219f7bb1c9617cf4f154b70383.jpg",
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  )*/
-                ],
-              )),
+
+
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                             widget.data.title,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),  Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                        Icon(Icons.star,color: Colors.yellow,),
+                        Icon(Icons.star,color: Colors.yellow,),
+                        Icon(Icons.star,color: Colors.yellow,),
+                        Icon(Icons.star,color: Colors.yellow,),
+                        Icon(Icons.star,color: Colors.yellow,),
+                          Text("   4.9",style: TextStyle(color: Colors.grey),)
+                        ],
+                      ),
+                    ),  Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left:12.0),
+                          child: Text(
+                            // widget.data.city.name
+                                 "Istanbul  ",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                                ),
+                          ),
+                        ),
+                        Icon(Icons.location_on_sharp,color: Colors.grey,)
+                      ],
+                    ),
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Description",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+ Padding(
+   padding: const EdgeInsets.all(12.0),
+   child: Container(
+     child: Text(
+       "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+           " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+           "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea"
+           " commodo consequat. "
+           "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore"
+           " eu fugiat nulla pariatur. "
+           "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui"
+           " officia deserunt mollit anim id est laborum.",
+       //widget.data.description,
+       style: TextStyle(
+           color: Colors.grey,
+         ),
+     ),
+   ),
+ ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: Get.width,
+                        child: CarouselSlider(
+                            items: itemsImage,
+                            options: CarouselOptions(
+                              height: 220,
+                              aspectRatio: 16 / 9,
+                              viewportFraction: 0.4,
+                              enableInfiniteScroll: false,
+                              reverse: false,
+                              autoPlay: true,
+                              autoPlayAnimationDuration: Duration(seconds: 2),
+                              pauseAutoPlayOnTouch: true,
+                              autoPlayInterval: Duration(seconds: 5),
+                              enlargeCenterPage: true,
+                              scrollDirection: Axis.horizontal,
+                            )),
+                      ),
+                    )
+                  ],
+                )),
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 25.0, top: 10),
-            child: Container(
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: Get.theme.backgroundColor,
-                //  borderRadius: BorderRadius.circular(10)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    "Contact Now",
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+            padding: const EdgeInsets.only(bottom: 25.0, top: 10,right: 30,left: 30),
+            child: InkWell(
+              onTap: (){
+                infoContact();
+              },
+              child: Container(
+                width: Get.width,
+                decoration: BoxDecoration(
+                  gradient: MyGradientWidget().linear(),
+                  color: Get.theme.backgroundColor,
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "Contact Now",
+                      style: TextStyle(color: Colors.white, fontSize: 22),
+                    ),
                   ),
                 ),
               ),
@@ -253,7 +262,10 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
   }
 
   Widget cardBuilder() {
-    return Padding(
+    return Container(
+      child: Text("infoooo"),
+    );
+    /*Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
@@ -279,7 +291,7 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
                   "Country",
                   style: TextStyle(color: Colors.black),
                 ),
-                Text("Turkiye"),
+                Text( widget.data.country.name??"ulke"),
               ],
             ),
           ),        Padding(
@@ -291,7 +303,7 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
                   "City",
                   style: TextStyle(color: Colors.black),
                 ),
-                Text("Istanbul"),
+                Text( widget.data.city.name??"ulke"),
               ],
             ),
           ),        Padding(
@@ -303,7 +315,8 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
                   "District",
                   style: TextStyle(color: Colors.black),
                 ),
-                Text("Kadikoy"),
+                Text( widget.data.district.name??"ulke"
+                ),
               ],
             ),
           ),
@@ -329,13 +342,93 @@ class _OfficeDetailsPageState extends State<OfficeDetailsPage>    with SingleTic
                   "Location",
                   style: TextStyle(color: Colors.black),
                 ),
-                Text("Turkiye"),
+                Text( widget.data.country.name??"ulke"),
               ],
             ),
           ),
         ],
       ),
-    );
+    );*/
+  }
+
+  infoContact() {
+    showModalBottomSheet(   shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        isScrollControlled: true,
+        context: context, builder: (context){
+      return Container(
+        height: 350,
+        child: Column(children: [
+          SizedBox(height: 30,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: CircleGradientContainer(Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Icon(Icons.mail_outline,color: Colors.white,size: 32,),
+                )),
+              ),
+  Expanded(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 20,20, 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: themeColor.withOpacity(0.2)
+
+        ),
+        child: Center(child: Text("info@pinSoftware.com")),
+      ),
+    ),
+  ),
+
+            ],
+          )      ,    Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: CircleGradientContainer(Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Icon(Icons.phone,color: Colors.white,size: 32,),
+                )),
+              ),
+  Expanded(
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 20,20, 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: themeColor.withOpacity(0.2)
+
+        ),
+        child: Center(child: Text("0 555 555 55 55")),
+      ),
+    ),
+  ),
+
+            ],
+          ),
+          SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              width: Get.width,
+              child: ButtonGradient(Padding(
+                padding: EdgeInsets.fromLTRB(0, 20,0, 20),
+                child: Center(child: Text("Sohbet Başlatın",style: TextStyle(color: Colors.white),)),
+              )),
+            ),
+          )
+
+        ],),
+      );
+        });
+
   }
 }
 

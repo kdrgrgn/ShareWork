@@ -155,6 +155,7 @@ class _ChatRoomState extends State<ChatRoom> {
     return isLoading
         ? Scaffold(body: MyCircular())
         : GetBuilder<ControllerChat>(builder: (_c) {
+
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
@@ -300,6 +301,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                   }
                                 });
                               });
+                              tokens=tokens.toSet().toList();
                               tokens.forEach((element) async {
                                 await postCall(element, "Sesli Konuşma",false);
                               });
@@ -358,6 +360,7 @@ class _ChatRoomState extends State<ChatRoom> {
     String name = _controllerDB.user.value.data.firstName +" " +_controllerDB.user.value.data.lastName;
 String title = _chat.data.isGroup==1?_chat.data.title + " : " + name: name;
 
+print("gidecek tokenn = " + token);
     await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
@@ -374,7 +377,7 @@ String title = _chat.data.isGroup==1?_chat.data.title + " : " + name: name;
           'data': <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'id': _chat.data.id.toString(),
-            'type':'message',
+            'type':'call',
             'isVideo':isVideo?1:0
           },
           'to': token,

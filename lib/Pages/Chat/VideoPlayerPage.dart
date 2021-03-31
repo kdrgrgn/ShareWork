@@ -58,7 +58,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
           ],
         ),
         body: Center(
-          child: _controller.value.initialized
+          child: _controller.value.isInitialized
               ? AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
                   child: VideoPlayer(_controller),

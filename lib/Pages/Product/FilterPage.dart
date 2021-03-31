@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Controller/ControllerProduct.dart';
 import 'package:mobi/model/CityServiceCountry/CityServiceCountry.dart';
 
-enum OptionType { service, city, country, district }
+enum OptionType { city, country, district }
 
 class FilterPage extends StatefulWidget {
   @override
@@ -31,6 +32,8 @@ class _FilterPageState extends State<FilterPage> {
     "Benzin",
     "Kira",
   ];
+  ControllerProduct _controllerProduct = Get.put(ControllerProduct());
+
   List<Color> categoryColor = [
     Colors.blue,
     Colors.red,
@@ -53,6 +56,16 @@ class _FilterPageState extends State<FilterPage> {
   String nameCountry = "";
   String nameDistrict = "";
   String nameCity = "";
+  String key = "";
+
+
+  int countryID=0;
+int min=0;
+  int max=0;
+
+  int cityID=0;
+
+  int districtID=0;
 
   @override
   void initState() {
@@ -62,6 +75,7 @@ class _FilterPageState extends State<FilterPage> {
       _controllerDB.getCountryList(_controllerDB.headers()).then((value) {
         _countryList = value.data;
       });
+
 
       setState(() {
         isLoading = false;
@@ -105,6 +119,12 @@ class _FilterPageState extends State<FilterPage> {
                   child: Container(
                     color: Colors.grey[200],
                     child: TextFormField(
+                      onChanged: (value){
+                        setState(() {
+                          key=value;
+
+                        });
+                      },
                       decoration: InputDecoration(hintText: "Kelime Arayin",border: OutlineInputBorder()),
                     ),
                   ),
@@ -117,7 +137,12 @@ class _FilterPageState extends State<FilterPage> {
                       Expanded(
                         child: Container(
                           color: Colors.grey[200],
-                          child: TextFormField(
+                          child: TextFormField(                      onChanged: (value){
+                            setState(() {
+                              min=int.parse(value);
+
+                            });
+                          },
                             decoration: InputDecoration(hintText: "Min Price",border: OutlineInputBorder()),
                           ),
                         ),
@@ -127,7 +152,12 @@ class _FilterPageState extends State<FilterPage> {
                       Expanded(
                         child: Container(
                           color: Colors.grey[200],
-                          child: TextFormField(
+                          child: TextFormField(    onChanged: (value){
+                            setState(() {
+                              max=int.parse(value);
+
+                            });
+                          },
                             decoration: InputDecoration(hintText: "Max Price",border: OutlineInputBorder()),
                           ),
                         ),
@@ -229,18 +259,31 @@ class _FilterPageState extends State<FilterPage> {
 
           Padding(
             padding: const EdgeInsets.only(bottom: 25.0, top: 10),
-            child: Container(
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: Get.theme.backgroundColor,
-                //  borderRadius: BorderRadius.circular(10)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    "Search Now",
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+            child: InkWell(
+              onTap: (){
+                _controllerProduct.keyString=key.obs;
+                _controllerProduct.minPrice=min.obs;
+                _controllerProduct.maxPrice=max.obs;
+                _controllerProduct.cityID=cityID.obs;
+                _controllerProduct.countryID=countryID.obs;
+                _controllerProduct.districtID=districtID.obs;
+                Navigator.pop(context,true);
+
+             //   _controllerProduct.categoryID=ca;
+              },
+              child: Container(
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: Get.theme.backgroundColor,
+                  //  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "Search Now",
+                      style: TextStyle(color: Colors.white, fontSize: 22),
+                    ),
                   ),
                 ),
               ),
@@ -312,27 +355,27 @@ class _FilterPageState extends State<FilterPage> {
                             case OptionType.city:
                               setState(() {
                                 _districtList = [];
+                                cityID=data[index].id;
+                                nameCity=data[index].name;
 
                               });
                               break;
                             case OptionType.district:
                               setState(() {
-
+                                districtID=data[index].id;
+                                nameDistrict=data[index].name;
                               });
                               break;
 
                             case OptionType.country:
                               setState(() {
                                 _cityList = [];
+                                countryID=data[index].id;
+                                nameCountry=data[index].name;
 
                               });
                               break;
 
-                            case OptionType.service:
-                              setState(() {
-
-                              });
-                              break;
                           }
                           if (service == OptionType.country) {
                             _controllerDB
@@ -366,22 +409,20 @@ class _FilterPageState extends State<FilterPage> {
           });
   }
 
-/*
-  int idFind(OptionType type, ControllerOffice office) {
+
+  int idFind(OptionType type) {
     switch (type) {
       case OptionType.city:
-        return office.idCity.value;
+        return cityID ;
         break;
       case OptionType.country:
-        return office.idCountry.value;
+        return countryID;
         break;
       case OptionType.district:
-        return office.idDistrict.value;
+        return districtID;
         break;
-      case OptionType.service:
-        return office.idService.value;
-        break;
+
     }
   }
-*/
+
 }

@@ -7,6 +7,31 @@ class ServiceUrl {
 
   final String updateUserInfo = baseUrlShareWork + "/Account/UpdateUserInfo";
 
+
+
+
+  final String getProductCategoryListWithSearch = baseUrlShareWork + "/Product/GetProductCategoryListWithSearch";
+
+
+
+  final String getProductCategoryList = baseUrlShareWork + "/Product/GetProductCategoryList";
+
+
+
+  final String getLastNProductWithFilter = baseUrlShareWork + "/Product/GetLastNProductWithFilter";
+
+
+  final String insertOrUpdateProduct = baseUrlShareWork + "/Product/InsertOrUpdateProduct";
+
+
+
+
+
+  final String deleteProduct = baseUrlShareWork + "/Product/DeleteProduct";
+
+
+
+
   final String getUsersWithFCMTokens = baseUrlShareWork + "/Account/GetUsersWithFCMTokens";
 
   final String getUserListExceptCurrent = baseUrlShareWork + "/Account/GetUserListExceptCurrent";
@@ -26,6 +51,8 @@ class ServiceUrl {
   final String getOffice = baseUrlShareWork + "/Office/getoffice";
 
   final String getOfficeServiceList = baseUrlShareWork + "/Office/GetOfficeServiceList";
+
+  final String getOfficeListWithService = baseUrlShareWork + "/Office/GetOfficeListWithService";
 
   final String editOfficeService = baseUrlShareWork + "/Office/EditOfficeService";
 
