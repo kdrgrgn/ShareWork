@@ -152,107 +152,122 @@ title=[];
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return isloading
+        ? MyCircular()
+        : GetBuilder(
 
-      resizeToAvoidBottomInset: false,
-      key: _scaffoldKey,
-      appBar: initialPage == familyCount || initialPage==productCount || initialPage==servicesCount
-          ? null
-          : AppBar(
-              automaticallyImplyLeading: false,
+      builder: (ControllerDB plugins) {
+        if(item.length!=plugins.user.value.data.plugins.length){
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            buildPlugin();
+            titleBuilder();
+          });
 
-              centerTitle: false,
-              // backgroundColor: Colors.white,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
-                    },
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      child: Image.asset(
-                        "assets/newsIcons/thumbnail_ikonlar_ek_4.png",
+
+        }
+
+
+        return Scaffold(
+
+          resizeToAvoidBottomInset: false,
+          key: _scaffoldKey,
+          appBar: initialPage == familyCount || initialPage==productCount || initialPage==servicesCount
+              ? null
+              : AppBar(
+                  automaticallyImplyLeading: false,
+
+                  centerTitle: false,
+                  // backgroundColor: Colors.white,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _scaffoldKey.currentState.openDrawer();
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          child: Image.asset(
+                            "assets/newsIcons/thumbnail_ikonlar_ek_4.png",
+                          ),
+                        ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: isloadingAppBar ? Container() : title[initialPage],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset(
+                                "assets/newsIcons/thumbnail_ikon_7_5.png"),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            width: 30,
+                            height: 30,
+                            child: Image.asset(
+                                "assets/newsIcons/ikonlar_ek_6.png"),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+          drawer: isloading
+              ? MyCircular()
+              :DrawerMenu(_controller),
+          body: Stack(children: [
+                  CarouselSlider(
+                      items: item,
+                      options: CarouselOptions(
+                        height: initialPage == familyCount
+                            ? MediaQuery.of(context).size.height
+                            : MediaQuery.of(context).size.height,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 1,
+                        initialPage: initialPage,
+                        enableInfiniteScroll: false,
+                        reverse: false,
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        onPageChanged: (current, reason) {
+                          _controllerChange.updateInitialPage(current);
+                          setState(() {
+                            initialPage = current;
+                          });
+                        },
+                        scrollDirection: Axis.horizontal,
+                      )),
+                  Align(
+                    alignment: Alignment(0, initialPage == familyCount ? 0.9 : 0.9),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: item.map((url) {
+                        int index = item.indexOf(url);
+                        return Container(
+                          width: index == initialPage ? 15 : 10.0,
+                          height: index == initialPage ? 15 : 10.0,
+                          margin:
+                              EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  initialPage == index ? backGround : Colors.grey),
+                        );
+                      }).toList(),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25),
-                    child: isloadingAppBar ? Container() : title[initialPage],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                            "assets/newsIcons/thumbnail_ikon_7_5.png"),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                            "assets/newsIcons/ikonlar_ek_6.png"),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-      drawer: isloading
-          ? MyCircular()
-          :DrawerMenu(_controller),
-      body: isloading
-          ? MyCircular()
-          : Stack(children: [
-              CarouselSlider(
-                  items: item,
-                  options: CarouselOptions(
-                    height: initialPage == familyCount
-                        ? MediaQuery.of(context).size.height
-                        : MediaQuery.of(context).size.height,
-                    aspectRatio: 16 / 9,
-                    viewportFraction: 1,
-                    initialPage: initialPage,
-                    enableInfiniteScroll: false,
-                    reverse: false,
-                    autoPlay: false,
-                    enlargeCenterPage: true,
-                    onPageChanged: (current, reason) {
-                      _controllerChange.updateInitialPage(current);
-                      setState(() {
-                        initialPage = current;
-                      });
-                    },
-                    scrollDirection: Axis.horizontal,
-                  )),
-              Align(
-                alignment: Alignment(0, initialPage == familyCount ? 0.9 : 0.9),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: item.map((url) {
-                    int index = item.indexOf(url);
-                    return Container(
-                      width: index == initialPage ? 15 : 10.0,
-                      height: index == initialPage ? 15 : 10.0,
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:
-                              initialPage == index ? backGround : Colors.grey),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ]),
+                ]),
 
-      floatingActionButton: buildFabPlugin(),
+          floatingActionButton: buildFabPlugin(),
+        );
+      }
     );
   }
 

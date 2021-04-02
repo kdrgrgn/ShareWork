@@ -26,17 +26,34 @@ class _ServicePageState extends State<ServicePage> {
   List<CscData> staticCat = [];
   Services service;
   List<ServiceData> data=[];
+
+  bool isUpload = false;
+  bool morePage = true;
+  int page = 1;
+  ScrollController _scrollController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (!isUpload &&
+          _scrollController.position.atEdge &&
+          _scrollController.position.pixels != 0) {
+        if (morePage) {
+          _loadData();
+        }
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await getOfficeServiceList();
 
 
           service = await _controllerOffice.getOfficeListWithService(
               _controllerDB.headers(),
-            serviceId: 0
+            serviceId: 0,
+            page: page,
+            perPage: 5
               );
           data = service.data;
 
@@ -47,6 +64,33 @@ class _ServicePageState extends State<ServicePage> {
       });
 
   }
+  Future<void> _loadData() async {
+    setState(() {
+      page++;
+      isUpload = true;
+    });
+    _controllerOffice.getOfficeListWithService(
+        _controllerDB.headers(),
+        serviceId: 0,
+      page: page,
+      perPage: 5,
+    )
+        .then((value) {
+      setState(() {
+
+
+        if(value.data.length==0){
+          morePage = false;
+        }else {
+          print("valuee dataa= " + value.data.length.toString());
+          service.data.addAll(value.data);
+
+        }
+        isUpload=false;
+      });
+    });
+  }
+
 
   Future<void> getOfficeServiceList() async {
     _controllerOffice
@@ -65,78 +109,91 @@ class _ServicePageState extends State<ServicePage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(primary: false, slivers: [
-      SliverAppBar(
-        expandedHeight: 280,
-        floating: true,
-        automaticallyImplyLeading: false,
-        flexibleSpace: FlexibleSpaceBar(
-          background: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    gradient: MyGradientWidget().linear(
-                        start: Alignment.bottomCenter,
-                        end: Alignment.topCenter)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 50.0, right: 25),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProductProfile()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundImage: Image.network(
-                          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                        ).image,
+    return Column(
+      children: [
+        Expanded(
+          child: CustomScrollView(
+              controller: _scrollController
+              ,primary: false, slivers: [
+            SliverAppBar(
+
+              expandedHeight: 280,
+              floating: true,
+              automaticallyImplyLeading: false,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          gradient: MyGradientWidget().linear(
+                              start: Alignment.bottomCenter,
+                              end: Alignment.topCenter)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50.0, right: 25),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ProductProfile()));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: Image.network(
+                                "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                              ).image,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 55.0, left: 25),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: buildFilterButton(context),
+                      ),
+                    ),
+                    Align(
+                      child: buildCustomAppBar(context).first,
+                      alignment: Alignment(0, 0.8),
+                    ),
+                    Align(
+                      child: Text(
+                        "Aradığınız Nedir?",
+                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      ),
+                      alignment: Alignment(-0.5, 0.0),
+                    ),
+                    Align(
+                      child: Text(
+                        "İstediniz hizmeti arayabilirsiniz",
+                        style: TextStyle(color: Colors.grey[300]),
+                      ),
+                      alignment: Alignment(-0.5, 0.3),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 55.0, left: 25),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: buildFilterButton(context),
-                ),
-              ),
-              Align(
-                child: buildCustomAppBar(context).first,
-                alignment: Alignment(0, 0.8),
-              ),
-              Align(
-                child: Text(
-                  "Aradığınız Nedir?",
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                alignment: Alignment(-0.5, 0.0),
-              ),
-              Align(
-                child: Text(
-                  "İstediniz hizmeti arayabilirsiniz",
-                  style: TextStyle(color: Colors.grey[300]),
-                ),
-                alignment: Alignment(-0.5, 0.3),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
 
-      SliverList(
-        delegate: SliverChildListDelegate(
-          buildServices(),
-        ),
-      ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                buildServices(),
+              ),
+            ),
 
-    ]);
+          ]),
+        ),
+        Container(
+          height: isUpload ? 60.0 : 0,
+          child: MyCircular(),
+        )
+      ],
+    );
 
 
   }
@@ -212,6 +269,7 @@ class _ServicePageState extends State<ServicePage> {
   }
 
   List<Widget> buildServices() {
+    print("data lentt = " + data.length.toString());
     return [
       Container(
         decoration: BoxDecoration(
@@ -267,12 +325,14 @@ class _ServicePageState extends State<ServicePage> {
               ),
               Row(
                 children: [
-                  Text(
-                    data[index].title,
-                    style: TextStyle(
-                      color: Colors.black,
+                  Container(
+                    child: Text(
+                      data[index].title,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

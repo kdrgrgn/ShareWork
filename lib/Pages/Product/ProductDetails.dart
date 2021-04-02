@@ -1,8 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mobi/Controller/ControllerChat.dart';
+import 'package:mobi/Controller/ControllerDB.dart';
+import 'package:mobi/Pages/Chat/ChatRoom.dart';
 import 'package:mobi/Pages/Product/ProfilePage.dart';
 import 'package:mobi/model/Product/Product.dart';
+import 'package:mobi/widgets/MyCircularProgress.dart';
 
 class ProductDetails extends StatefulWidget {
   ProductData product;
@@ -14,7 +18,11 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  ControllerChat _controllerChat = Get.put(ControllerChat());
+  ControllerDB _controllerDB = Get.put(ControllerDB());
+
   List<Widget> itemsImage = [];
+  bool isLoading=false;
 
   @override
   void initState() {
@@ -54,7 +62,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading?MyCircular():Scaffold(
       appBar: AppBar(
         title: Text(widget.product.title),
       ),
@@ -186,10 +194,32 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    "Contact Now",
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                child: InkWell(
+                  onTap: (){
+                    setState(() {
+                      isLoading = true;
+                    });
+                    _controllerChat.insertChat(
+                        header: _controllerDB.headers(), id: widget.product.user.id).then((value) {
+                      setState(() {
+                        isLoading=false;
+                      });
+
+                      Navigator.of(context, rootNavigator: true)
+                          .pushReplacement(MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => ChatRoom(
+                            id: value,
+                          )));
+                    });
+
+
+                  },
+                  child: Center(
+                    child: Text(
+                      "Contact Now",
+                      style: TextStyle(color: Colors.white, fontSize: 22),
+                    ),
                   ),
                 ),
               ),

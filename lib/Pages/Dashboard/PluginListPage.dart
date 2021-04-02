@@ -59,114 +59,126 @@ class _PluginListPageState extends State<PluginListPage> {
       body: isLoading
           ? MyCircular()
           : ListView.builder(
-              shrinkWrap: true,
-              controller: ScrollController(keepScrollOffset: true),
-              itemCount: plugins.length,
-              itemBuilder: (context, index) {
-                Plugins _plugin = plugins[index];
-                print("plugin = $index = " + _plugin.pluginName);
-                return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        shrinkWrap: true,
+        controller: ScrollController(keepScrollOffset: true),
+        itemCount: plugins.length,
+        itemBuilder: (context, index) {
+          Plugins _plugin = plugins[index];
+          print("plugin = $index = " + _plugin.pluginName);
+          return Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
+                        color: themeColor.withOpacity(0.05),
+                      ),
+                      child: Stack(
                         children: [
-                          Container(
-                            width: 50,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20)),
-                              color: themeColor.withOpacity(0.05),
-                            ),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    width: 40,
-                                    height: 30,
-                                    child: Image.network(_plugin.iconUrl==null?"":
-                                      _controllerChange.baseUrl +
-                                          _plugin.iconUrl,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 100,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: themeColor.withOpacity(0.05),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    _plugin.pluginName,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: (){
-                                      if(myPlugins.contains(_plugin.pluginId)){
-                                        _controllerPlugin.deleteuserplugin(_controller.headers(), _plugin.pluginId);
-                                        setState(() {
-                                          myPlugins.remove(_plugin.pluginId);
-
-                                        });
-                                      }else{
-                                        _controllerPlugin.adduserplugin(_controller.headers(), _plugin.pluginId);
-                                        setState(() {
-                                          myPlugins.add(_plugin.pluginId);
-
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: themeColor,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          myPlugins.contains(_plugin.pluginId)
-                                              ? "Uninstall"
-                                              : "Install",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 40,
+                              height: 30,
+                              child: Image.network(
+                                _plugin.iconUrl == null ? "" :
+                                _controllerChange.baseUrl +
+                                    _plugin.iconUrl,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width - 100,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: themeColor.withOpacity(0.05),
+                      ),
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _plugin.pluginName,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                if (myPlugins.contains(_plugin.pluginId)) {
+                                  _controllerPlugin.deleteuserplugin(
+                                      _controller.headers(), _plugin.pluginId);
+                                  _controller.user.value.data.plugins
+                                      .removeWhere((element) =>
+                                  element.pluginId == _plugin.pluginId);
+                                  _controller.update();
+                                  setState(() {
+                                    myPlugins.remove(_plugin.pluginId);
+                                  });
+                                } else {
+                                  Plugins newPlugin = await _controllerPlugin
+                                      .adduserplugin(
+                                      _controller.headers(), _plugin.pluginId);
+                                  _controller.user.value.data.plugins.add(
+                                      newPlugin);
+                                  _controller.update();
+                                  setState(() {
+                                    myPlugins.add(_plugin.pluginId);
+                                  });
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: themeColor,
+                                    borderRadius:
+                                    BorderRadius.circular(20)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    myPlugins.contains(_plugin.pluginId)
+                                        ? "Uninstall"
+                                        : "Install",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 }

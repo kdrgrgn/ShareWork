@@ -43,14 +43,16 @@ class NotificationHandler {
 
     AwesomeNotifications().actionStream.listen(
             (receivedNotification){
-
+print(receivedNotification.buttonKeyInput);
+print(receivedNotification.buttonKeyPressed);
               if(receivedNotification.buttonKeyPressed=="response") {
                 ControllerChat _controllerChat = Get.put(ControllerChat());
                 ControllerDB _controllerDB = Get.put(ControllerDB());
 
+
                 _controllerChat.insertChatMessage(
                     header: _controllerDB.headers(),
-                    id: receivedNotification.payload['Id'],
+                    id: int.parse(receivedNotification.payload['Id']),
                     message: receivedNotification.buttonKeyInput);
 
               }

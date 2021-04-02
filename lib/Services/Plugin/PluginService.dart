@@ -15,10 +15,8 @@ class PluginService implements PluginBase{
 
 
   @override
-  Future adduserplugin(Map<String, String> header, int pId) async {
-    log( "reqqq add = " + jsonEncode({
-      "pluginId": pId,
-    }));
+  Future<Plugins> adduserplugin(Map<String, String> header, int pId) async {
+
     var response = await http.post(_serviceUrl.addUserPlugin,
         headers: header,
         body: jsonEncode({
@@ -26,8 +24,8 @@ class PluginService implements PluginBase{
         }));
     log("adduserplugin = " + response.body);
 
-
-    //  final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+    final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+    return Plugins.fromJson(responseData['data']);
 
   }
 

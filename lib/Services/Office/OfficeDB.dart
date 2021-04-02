@@ -108,9 +108,9 @@ log("reqFile = " + jsonEncode(
   }
 
   @override
-  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId}) async {
+  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId,int page,int perPage}) async {
 
-    String serviceID=serviceId==null?"":"?serviceId=$serviceId";
+    String serviceID="?serviceId=$serviceId&perPage=$perPage&page=$page";
 
 print("getttt getOfficeListWithService = " +_serviceUrl.getOfficeListWithService+serviceID );
     var response = await http.get(_serviceUrl.getOfficeListWithService+serviceID, headers: header);

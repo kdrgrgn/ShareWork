@@ -6,11 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobi/Controller/ControllerChange.dart';
 import 'package:mobi/Controller/ControllerDB.dart';
 import 'package:mobi/landingPage.dart';
-import 'package:mobi/model/User/User.dart';
 
 import 'package:mobi/model/User/UserData.dart';
+import 'package:mobi/widgets/GradientWidget.dart';
 import 'package:mobi/widgets/MyCircularProgress.dart';
-import 'package:mobi/widgets/buildBottomNavigationBar.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -75,7 +74,9 @@ class _AccountPageState extends State<AccountPage> {
           Container(
             width: Get.size.width,
             height: Get.size.height,
-            color: Colors.blue[200],
+            decoration: BoxDecoration(
+                gradient: MyGradientWidget().linear(start: Alignment.centerLeft,end: Alignment.centerRight)
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -153,6 +154,7 @@ class _AccountPageState extends State<AccountPage> {
           Align(
             alignment: Alignment(0, -0.80),
             child: CircleAvatar(
+              backgroundColor: Colors.white,
               backgroundImage: Image.network(
                 user.profilePhoto,
                 fit: BoxFit.fill,

@@ -45,8 +45,8 @@ class ControllerOffice extends GetxController implements OfficeBase {
   }
 
   @override
-  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId}) async {
-    return await _dbService.getOfficeListWithService(header,serviceId:serviceId);
+  Future<Services> getOfficeListWithService(Map<String, String> header, {int serviceId,int page,int perPage}) async {
+    return await _dbService.getOfficeListWithService(header,serviceId:serviceId,page: page,perPage: perPage);
 
   }
 }

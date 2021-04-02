@@ -11,7 +11,7 @@ class PluginController extends GetxController implements PluginBase {
   PluginService _service = PluginService();
 
   @override
-  Future adduserplugin(Map<String, String> header, int pId) {
+  Future<Plugins> adduserplugin(Map<String, String> header, int pId) {
 return _service.adduserplugin(header, pId);
   }
 

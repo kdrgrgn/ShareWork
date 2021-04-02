@@ -8,7 +8,7 @@ import 'package:mobi/model/Services/Services.dart';
 abstract class OfficeBase {
   Future<Csc> getOfficeServiceList(Map<String, String> header);
 
-  Future<Services> getOfficeListWithService(Map<String, String> header,{int serviceId});
+  Future<Services> getOfficeListWithService(Map<String, String> header,{int serviceId,int page,int perPage});
 
   editOfficeService(Map<String, String> header,
       {
